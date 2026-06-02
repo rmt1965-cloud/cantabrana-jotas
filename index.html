@@ -103,6 +103,7 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 <div id="loading">
   <div class="ld-titulo">Cantabrana</div>
   <div class="ld-linea"></div>
+  <div id="ld-toca" style="font-family:'Cinzel',serif;font-size:clamp(9px,2.5vw,12px);letter-spacing:3px;color:rgba(200,146,42,.6);text-transform:uppercase;margin-top:16px;animation:ld-pulse 1.8s ease-in-out infinite;opacity:0;transition:opacity 1s ease;">&#10022; Toca para comenzar &#10022;</div>
 </div>
 
 <!-- VENTANAS INTRO -->
@@ -397,6 +398,22 @@ async function init() {
     jota = pool[Math.abs(seed) % pool.length];
     sessionStorage.setItem('lastJota', jota.a);
   }
+
+  // Mostrar 'toca para comenzar' tras 1.5s
+  setTimeout(() => {
+    document.getElementById('ld-toca').style.opacity = '1';
+  }, 1500);
+
+  // Esperar toque del usuario para iniciar audio y continuar
+  await new Promise(resolve => {
+    const el = document.getElementById('loading');
+    const handler = () => { el.removeEventListener('click', handler); el.removeEventListener('touchend', handler); resolve(); };
+    el.addEventListener('click', handler);
+    el.addEventListener('touchend', handler);
+  });
+
+  // Iniciar ambiente tras interaccion
+  iniciarAmbiente();
 
   // Ocultar loading
   setTimeout(() => {
