@@ -506,8 +506,8 @@ const CFG = {
   fotos_local: null, // se genera dinamicamente
 
   // Duración por foto (segundos)
-  dur_foto: 4,
-  dur_trans: 1.0,
+  dur_foto: 3,
+  dur_trans: 0.5,
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -716,8 +716,8 @@ async function iniciarJota(){
   document.getElementById('ambient-ind').classList.add('show');
 
   // Iniciar fotos y audio
+  mostrarFoto(0);
   setTimeout(() => {
-    mostrarFoto(0);
     aJota.play().catch(e => console.warn('Audio play error:', e));
     iniciarProgreso();
   }, 600);
