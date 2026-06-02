@@ -570,6 +570,13 @@ async function init(){
   // Cargar pergamino local (sin CORS)
   const pergUrl = CFG.pergaminos_local[Math.floor(Math.random() * CFG.pergaminos_local.length)];
   document.getElementById('perg-img').src = pergUrl;
+  if (pergUrl.includes('pergamino02')) {
+    document.querySelector('.aviso').style.color = 'rgba(245,235,220,.95)';
+    document.querySelector('.toca').style.color = 'rgba(220,200,160,.8)';
+  } else {
+    document.querySelector('.aviso').style.color = 'rgba(120,10,10,.92)';
+    document.querySelector('.toca').style.color = 'rgba(100,5,5,.75)';
+  }
 
   // Ocultar loading
   setTimeout(() => {
