@@ -657,7 +657,10 @@ async function init(){
   }
   
   // Si no encontró, jota aleatoria
-  if (!jota) jota = CFG.jotas[Math.floor(Math.random() * CFG.jotas.length)];
+  // Mejor aleatoriedad usando timestamp + crypto
+  const seed = Date.now() ^ (Math.random() * 0xFFFFFFFF | 0);
+  const idx = Math.abs(seed) % CFG.jotas.length;
+  if (!jota) jota = CFG.jotas[idx];
 
   // Cargar pergamino local (sin CORS)
   const pergUrl = CFG.pergaminos_local[Math.floor(Math.random() * CFG.pergaminos_local.length)];
