@@ -462,7 +462,7 @@ const CFG = {
   // Si usas GitHub Pages, pon aquí las URLs de las fotos
   // Por ahora usamos el servidor Render
   fotos_servidor: 'https://cantabrana-v22.onrender.com/api/media/random-foto?categoria=fotos/arcos_puertas',
-  pergaminos_servidor: 'https://cantabrana-v22.onrender.com/api/media/random-pergamino',
+  pergaminos_local: ['fotos/pergaminos/pergamino01.png','fotos/pergaminos/pergamino02.png','fotos/pergaminos/pergamino03.png','fotos/pergaminos/pergamino04.png','fotos/pergaminos/pergamino05.png'],
 
   // Duración por foto (segundos)
   dur_foto: 4,
@@ -563,11 +563,8 @@ async function init(){
 
   // Cargar pergamino
   try {
-    const resp = await fetch(CFG.pergaminos_servidor);
-    if (resp.ok) {
-      const data = await resp.json();
-      if (data?.url) document.getElementById('perg-img').src = data.url;
-    }
+    const pUrl = CFG.pergaminos_local[Math.floor(Math.random()*5)];
+    document.getElementById('perg-img').src = pUrl;
   } catch(e) {
     document.getElementById('perg-img').style.display = 'none';
     mostrarFallback();
