@@ -658,6 +658,7 @@ function mostrarFoto(idx){
   setTimeout(() => {
     img.src = url;
     blur.style.backgroundImage = `url('${url}')`;
+    img.onerror = () => { setTimeout(() => mostrarFoto(idx + 1), 300); };
     img.onload = () => {
       setTimeout(() => {
         trans.classList.remove('on');
