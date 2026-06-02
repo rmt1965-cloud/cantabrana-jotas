@@ -43,8 +43,9 @@ html,body{
 }
 #loading.fade{opacity:0;pointer-events:none}
 .ld-titulo{
+  text-shadow:0 0 40px rgba(200,146,42,.8), 0 0 80px rgba(200,146,42,.4);
   font-family:'Cinzel',serif;
-  font-size:clamp(14px,4vw,20px);
+  font-size:clamp(22px,7vw,36px);
   letter-spacing:8px;
   color:var(--gold);
   text-transform:uppercase;
@@ -55,6 +56,20 @@ html,body{
   animation:ld-pulse 1.8s ease-in-out infinite;
 }
 @keyframes ld-pulse{0%,100%{width:30px;opacity:.3}50%{width:80px;opacity:1}}
+
+
+#ventanas-slide{
+  position:fixed;inset:0;z-index:8;
+  background:#000;
+  display:none;align-items:center;justify-content:center;
+}
+#ventanas-slide.show{display:flex}
+#ventana-img{
+  max-width:100%;max-height:100%;
+  object-fit:contain;
+  opacity:0;transition:opacity 1.5s ease;
+}
+#ventana-img.show{opacity:1}
 
 /* PERGAMINO */
 #pant-pergamino{
@@ -327,6 +342,11 @@ html,body{
 
 <canvas id="bg"></canvas>
 
+<!-- VENTANAS SLIDESHOW -->
+<div id="ventanas-slide">
+  <img id="ventana-img" src="" alt="Cantabrana">
+</div>
+
 <!-- LOADING -->
 <div id="loading">
   <div class="ld-titulo">Cantabrana</div>
@@ -552,6 +572,37 @@ void main(){
 // ═══════════════════════════════════════════════════════════════
 // INICIO
 // ═══════════════════════════════════════════════════════════════
+
+const VENTANAS = ['fotos/ventanas/ventana1.jpg','fotos/ventanas/ventana3.jpg','fotos/ventanas/ventana4.png'];
+
+async function mostrarVentanas(){
+  return new Promise(resolve => {
+    let idx = 0;
+    const slide = document.getElementById('ventanas-slide');
+    const img = document.getElementById('ventana-img');
+    slide.classList.add('show');
+    
+    function siguiente(){
+      if (idx >= VENTANAS.length) {
+        slide.style.opacity = '0';
+        slide.style.transition = 'opacity 1s ease';
+        setTimeout(() => { slide.style.display='none'; resolve(); }, 1000);
+        return;
+      }
+      img.classList.remove('show');
+      setTimeout(() => {
+        img.src = VENTANAS[idx++];
+        img.onload = () => {
+          img.classList.add('show');
+          setTimeout(siguiente, 2500);
+        };
+        img.onerror = siguiente;
+      }, 500);
+    }
+    siguiente();
+  });
+}
+
 async function init(){
   // Detectar jota del QR
   const p = new URLSearchParams(location.search);
