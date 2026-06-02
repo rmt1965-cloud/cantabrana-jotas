@@ -116,7 +116,7 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 
 <!-- PERGAMINO -->
 <div id="pant-pergamino">
-  <div class="perg-outer" id="perg-outer" onclick="iniciarJota()">
+  <div class="perg-outer" id="perg-outer">
     <div class="aura"></div>
     <div class="particulas">
       <div class="part"></div><div class="part"></div><div class="part"></div>
@@ -125,7 +125,6 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
     <img id="perg-img" src="" alt="Pergamino">
     <div class="perg-texto">
       <div class="aviso">Estas canciones<br>son de otra &eacute;poca,<br>algunas pueden herir<br>su sensibilidad</div>
-      <div class="toca">&#10022; Toca para escuchar &#10022;</div>
     </div>
     <div class="sello" id="sello-wrap">
       <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -392,13 +391,15 @@ async function init() {
     jota = CFG.jotas.find(j => j.a.toLowerCase().includes(param.toLowerCase()));
   }
   if (!jota) {
-    // Aleatoriedad real — excluir la última jota escuchada
-    const lastJota = sessionStorage.getItem('lastJota') || '';
-    const disponibles = CFG.jotas.filter(j => j.a !== lastJota);
+    // Evitar las ultimas 20 jotas escuchadas
+    let historial = JSON.parse(localStorage.getItem('cantabrana_hist') || '[]');
+    const disponibles = CFG.jotas.filter(j => !historial.includes(j.a));
     const pool = disponibles.length > 0 ? disponibles : CFG.jotas;
     const seed = Date.now() ^ (performance.now() * 1000 | 0) ^ (Math.random() * 0xFFFFFFFF | 0);
     jota = pool[Math.abs(seed) % pool.length];
-    sessionStorage.setItem('lastJota', jota.a);
+    historial.push(jota.a);
+    if (historial.length > 20) historial = historial.slice(-20);
+    try { localStorage.setItem('cantabrana_hist', JSON.stringify(historial)); } catch(e) {}
   }
 
   // Mostrar 'toca para comenzar' tras 1.5s
@@ -430,6 +431,8 @@ async function init() {
       document.getElementById('perg-img').src = CFG.pergaminos[pIdx];
       // Mostrar pergamino
       document.getElementById('pant-pergamino').classList.add('show');
+      // Auto-iniciar jota tras 4 segundos
+      setTimeout(iniciarJota, 4000);
     }, 600);
   }, 1800);
 }
