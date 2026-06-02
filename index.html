@@ -134,7 +134,7 @@ html,body{
   font-style:italic;
   font-size:clamp(16px,5vw,24px);
   color:rgba(120,10,10,.92);
-  line-height:1.65;
+  line-height:1.8;word-break:break-word;
   text-shadow:0 1px 3px rgba(255,220,150,.4);
 }
 .toca{
@@ -571,8 +571,8 @@ async function init(){
   const pergUrl = CFG.pergaminos_local[Math.floor(Math.random() * CFG.pergaminos_local.length)];
   document.getElementById('perg-img').src = pergUrl;
   if (pergUrl.includes('pergamino02')) {
-    document.querySelector('.aviso').style.color = 'rgba(245,235,220,.95)';
-    document.querySelector('.toca').style.color = 'rgba(220,200,160,.8)';
+    document.querySelector('.aviso').style.color = 'rgba(10,5,5,.95)';
+    document.querySelector('.toca').style.color = 'rgba(10,5,5,.8)';
   } else {
     document.querySelector('.aviso').style.color = 'rgba(120,10,10,.92)';
     document.querySelector('.toca').style.color = 'rgba(100,5,5,.75)';
