@@ -482,6 +482,7 @@ let jota = null;
 let fotos = [];
 let fotoIdx = 0;
 let fotoTimer = null;
+let jotaFinalizada = false;
 let progresoInter = null;
 const aJota = document.getElementById('audio-jota');
 const aAmb  = document.getElementById('audio-amb');
@@ -698,6 +699,8 @@ function iniciarProgreso(){
 // FIN
 // ═══════════════════════════════════════════════════════════════
 function finJota(){
+  if (jotaFinalizada) return;
+  jotaFinalizada = true;
   clearTimeout(fotoTimer);
   clearInterval(progresoInter);
   document.getElementById('prog-fill').style.width = '100%';
