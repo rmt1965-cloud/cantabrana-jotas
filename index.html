@@ -533,8 +533,7 @@ function finJota() {
     fotoFinal.onload = () => { trans.classList.remove('on'); fotoFinal.classList.add('show'); };
   }, 500);
 
-  // Mostrar botones
-  document.getElementById('ui-bottom').classList.add('show');
+  // Botones solo en pantalla final - no mostrar durante portada
 
   // Pantalla final
   setTimeout(() => {
