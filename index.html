@@ -389,8 +389,13 @@ async function init() {
     jota = CFG.jotas.find(j => j.a.toLowerCase().includes(param.toLowerCase()));
   }
   if (!jota) {
-    const seed = Date.now() ^ (Math.random() * 0xFFFFFFFF | 0);
-    jota = CFG.jotas[Math.abs(seed) % CFG.jotas.length];
+    // Aleatoriedad real — excluir la última jota escuchada
+    const lastJota = sessionStorage.getItem('lastJota') || '';
+    const disponibles = CFG.jotas.filter(j => j.a !== lastJota);
+    const pool = disponibles.length > 0 ? disponibles : CFG.jotas;
+    const seed = Date.now() ^ (performance.now() * 1000 | 0) ^ (Math.random() * 0xFFFFFFFF | 0);
+    jota = pool[Math.abs(seed) % pool.length];
+    sessionStorage.setItem('lastJota', jota.a);
   }
 
   // Ocultar loading
