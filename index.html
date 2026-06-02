@@ -458,11 +458,16 @@ const CFG = {
     {a:'Salve--37.mp3',                c:'Grupal · Salve',                              m:'Cantabrana'},
   ],
 
-  // Fotos de arcos — URLs directas desde el servidor o GitHub
-  // Si usas GitHub Pages, pon aquí las URLs de las fotos
-  // Por ahora usamos el servidor Render
-  fotos_servidor: null,
-  pergaminos_local: ['fotos/pergaminos/pergamino01.png','fotos/pergaminos/pergamino02.png','fotos/pergaminos/pergamino03.png','fotos/pergaminos/pergamino04.png','fotos/pergaminos/pergamino05.png'],
+  // Pergaminos locales en GitHub Pages
+  pergaminos_local: [
+    'fotos/pergaminos/pergamino01.png',
+    'fotos/pergaminos/pergamino02.png',
+    'fotos/pergaminos/pergamino03.png',
+    'fotos/pergaminos/pergamino04.png',
+    'fotos/pergaminos/pergamino05.png',
+  ],
+  // Fotos desde Render (con CORS habilitado)
+  fotos_local: null, // se genera dinamicamente
 
   // Duración por foto (segundos)
   dur_foto: 4,
@@ -561,14 +566,9 @@ async function init(){
   // Si no encontró, jota aleatoria
   if (!jota) jota = CFG.jotas[Math.floor(Math.random() * CFG.jotas.length)];
 
-  // Cargar pergamino
-  try {
-    const pUrl = ['fotos/pergaminos/pergamino01.png','fotos/pergaminos/pergamino02.png','fotos/pergaminos/pergamino03.png','fotos/pergaminos/pergamino04.png','fotos/pergaminos/pergamino05.png'][Math.floor(Math.random()*5)];
-    document.getElementById('perg-img').src = pUrl;
-  } catch(e) {
-    document.getElementById('perg-img').style.display = 'none';
-    
-  }
+  // Cargar pergamino local (sin CORS)
+  const pergUrl = CFG.pergaminos_local[Math.floor(Math.random() * CFG.pergaminos_local.length)];
+  document.getElementById('perg-img').src = pergUrl;
 
   // Ocultar loading
   setTimeout(() => {
@@ -632,9 +632,9 @@ async function iniciarJota(){
 // FOTOS
 // ═══════════════════════════════════════════════════════════════
 async function cargarFotos(){
-  const lista = ["fotos/arcos/foto001.jpg", "fotos/arcos/foto002.jpg", "fotos/arcos/foto003.png", "fotos/arcos/foto004.jpg", "fotos/arcos/foto005.jpg", "fotos/arcos/foto006.jpg", "fotos/arcos/foto007.jpg", "fotos/arcos/foto008.jpg", "fotos/arcos/foto009.jpg", "fotos/arcos/foto010.jpg", "fotos/arcos/foto011.jpg", "fotos/arcos/foto012.png", "fotos/arcos/foto013.jpg", "fotos/arcos/foto014.jpg", "fotos/arcos/foto015.jpg", "fotos/arcos/foto016.jpg", "fotos/arcos/foto017.jpg", "fotos/arcos/foto018.jpg", "fotos/arcos/foto019.jpg", "fotos/arcos/foto020.png", "fotos/arcos/foto021.jpg", "fotos/arcos/foto022.jpg", "fotos/arcos/foto023.jpg", "fotos/arcos/foto024.jpg", "fotos/arcos/foto025.jpg", "fotos/arcos/foto026.jpg", "fotos/arcos/foto027.png", "fotos/arcos/foto028.jpg", "fotos/arcos/foto029.jpg", "fotos/arcos/foto030.jpg", "fotos/arcos/foto031.jpg", "fotos/arcos/foto032.jpg", "fotos/arcos/foto033.jpg", "fotos/arcos/foto034.jpg", "fotos/arcos/foto035.jpg", "fotos/arcos/foto036.jpg", "fotos/arcos/foto037.jpg", "fotos/arcos/foto038.jpg", "fotos/arcos/foto039.jpg", "fotos/arcos/foto040.jpg", "fotos/arcos/foto041.jpg", "fotos/arcos/foto042.jpg", "fotos/arcos/foto043.jpg", "fotos/arcos/foto044.jpg", "fotos/arcos/foto045.jpg", "fotos/arcos/foto046.png", "fotos/arcos/foto047.jpg", "fotos/arcos/foto048.jpg", "fotos/arcos/foto049.jpg", "fotos/arcos/foto050.jpg", "fotos/arcos/foto051.png", "fotos/arcos/foto052.jpg", "fotos/arcos/foto053.jpg", "fotos/arcos/foto054.jpg", "fotos/arcos/foto055.jpg", "fotos/arcos/foto056.png", "fotos/arcos/foto057.png", "fotos/arcos/foto058.png", "fotos/arcos/foto059.png", "fotos/arcos/foto060.png", "fotos/arcos/foto061.png", "fotos/arcos/foto062.jpg", "fotos/arcos/foto063.jpg", "fotos/arcos/foto064.png", "fotos/arcos/foto065.jpg", "fotos/arcos/foto066.JPG", "fotos/arcos/foto067.JPG", "fotos/arcos/foto068.JPG", "fotos/arcos/foto069.JPG", "fotos/arcos/foto070.png", "fotos/arcos/foto071.jpg", "fotos/arcos/foto072.png", "fotos/arcos/foto073.png", "fotos/arcos/foto074.png", "fotos/arcos/foto075.png", "fotos/arcos/foto076.png", "fotos/arcos/foto077.png", "fotos/arcos/foto078.png", "fotos/arcos/foto079.png", "fotos/arcos/foto080.png", "fotos/arcos/foto081.png", "fotos/arcos/foto082.png", "fotos/arcos/foto083.jpg", "fotos/arcos/foto084.png", "fotos/arcos/foto085.jpg", "fotos/arcos/foto086.jpg", "fotos/arcos/foto087.png", "fotos/arcos/foto088.png", "fotos/arcos/foto089.jpg", "fotos/arcos/foto090.png", "fotos/arcos/foto091.png", "fotos/arcos/foto092.png", "fotos/arcos/foto093.png", "fotos/arcos/foto094.jpg", "fotos/arcos/foto095.jpg", "fotos/arcos/foto096.png", "fotos/arcos/foto097.png"];
-  // Mezclar aleatoriamente
-  fotos = lista.sort(() => Math.random() - 0.5);
+  // Fotos locales mezcladas aleatoriamente
+  const todas = ["fotos/arcos/foto001.jpg", "fotos/arcos/foto001.JPG", "fotos/arcos/foto001.jpeg", "fotos/arcos/foto001.png", "fotos/arcos/foto002.jpg", "fotos/arcos/foto002.JPG", "fotos/arcos/foto002.jpeg", "fotos/arcos/foto002.png", "fotos/arcos/foto003.jpg", "fotos/arcos/foto003.JPG", "fotos/arcos/foto003.jpeg", "fotos/arcos/foto003.png", "fotos/arcos/foto004.jpg", "fotos/arcos/foto004.JPG", "fotos/arcos/foto004.jpeg", "fotos/arcos/foto004.png", "fotos/arcos/foto005.jpg", "fotos/arcos/foto005.JPG", "fotos/arcos/foto005.jpeg", "fotos/arcos/foto005.png", "fotos/arcos/foto006.jpg", "fotos/arcos/foto006.JPG", "fotos/arcos/foto006.jpeg", "fotos/arcos/foto006.png", "fotos/arcos/foto007.jpg", "fotos/arcos/foto007.JPG", "fotos/arcos/foto007.jpeg", "fotos/arcos/foto007.png", "fotos/arcos/foto008.jpg", "fotos/arcos/foto008.JPG", "fotos/arcos/foto008.jpeg", "fotos/arcos/foto008.png", "fotos/arcos/foto009.jpg", "fotos/arcos/foto009.JPG", "fotos/arcos/foto009.jpeg", "fotos/arcos/foto009.png", "fotos/arcos/foto010.jpg", "fotos/arcos/foto010.JPG", "fotos/arcos/foto010.jpeg", "fotos/arcos/foto010.png", "fotos/arcos/foto011.jpg", "fotos/arcos/foto011.JPG", "fotos/arcos/foto011.jpeg", "fotos/arcos/foto011.png", "fotos/arcos/foto012.jpg", "fotos/arcos/foto012.JPG", "fotos/arcos/foto012.jpeg", "fotos/arcos/foto012.png", "fotos/arcos/foto013.jpg", "fotos/arcos/foto013.JPG", "fotos/arcos/foto013.jpeg", "fotos/arcos/foto013.png", "fotos/arcos/foto014.jpg", "fotos/arcos/foto014.JPG", "fotos/arcos/foto014.jpeg", "fotos/arcos/foto014.png", "fotos/arcos/foto015.jpg", "fotos/arcos/foto015.JPG", "fotos/arcos/foto015.jpeg", "fotos/arcos/foto015.png", "fotos/arcos/foto016.jpg", "fotos/arcos/foto016.JPG", "fotos/arcos/foto016.jpeg", "fotos/arcos/foto016.png", "fotos/arcos/foto017.jpg", "fotos/arcos/foto017.JPG", "fotos/arcos/foto017.jpeg", "fotos/arcos/foto017.png", "fotos/arcos/foto018.jpg", "fotos/arcos/foto018.JPG", "fotos/arcos/foto018.jpeg", "fotos/arcos/foto018.png", "fotos/arcos/foto019.jpg", "fotos/arcos/foto019.JPG", "fotos/arcos/foto019.jpeg", "fotos/arcos/foto019.png", "fotos/arcos/foto020.jpg", "fotos/arcos/foto020.JPG", "fotos/arcos/foto020.jpeg", "fotos/arcos/foto020.png", "fotos/arcos/foto021.jpg", "fotos/arcos/foto021.JPG", "fotos/arcos/foto021.jpeg", "fotos/arcos/foto021.png", "fotos/arcos/foto022.jpg", "fotos/arcos/foto022.JPG", "fotos/arcos/foto022.jpeg", "fotos/arcos/foto022.png", "fotos/arcos/foto023.jpg", "fotos/arcos/foto023.JPG", "fotos/arcos/foto023.jpeg", "fotos/arcos/foto023.png", "fotos/arcos/foto024.jpg", "fotos/arcos/foto024.JPG", "fotos/arcos/foto024.jpeg", "fotos/arcos/foto024.png", "fotos/arcos/foto025.jpg"];
+  fotos = todas.sort(() => Math.random() - 0.5).slice(0, 20);
 }
 
 function mostrarFoto(idx){
@@ -717,6 +717,18 @@ function salir(){
 }
 
 // ARRANQUE
+
+  // Mantener pantalla encendida
+  let wakeLock = null;
+  async function keepScreenOn() {
+    try {
+      if ('wakeLock' in navigator) {
+        wakeLock = await navigator.wakeLock.request('screen');
+      }
+    } catch(e) {}
+  }
+  keepScreenOn();
+
 document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
