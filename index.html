@@ -634,6 +634,12 @@ async function iniciarJota(){
   }, 600);
 
   aJota.onended = finJota;
+  aJota.addEventListener('loadedmetadata', () => {
+    const dur = aJota.duration;
+    if (dur && isFinite(dur)) {
+      setTimeout(finJota, (dur + 1) * 1000);
+    }
+  });
 }
 
 // ═══════════════════════════════════════════════════════════════
