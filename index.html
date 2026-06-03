@@ -468,8 +468,7 @@ async function init() {
     document.getElementById('loading').classList.add('fade');
     // Mostrar ventanas
     setTimeout(async () => {
-      await reproducirVideoIntro();
-      await mostrarVentanas();
+        await mostrarVentanas();
       // Cargar sello real
         // Cargar pergamino
       const pIdx = Math.floor(Math.random() * CFG.pergaminos.length);
