@@ -401,7 +401,7 @@ async function init(){
   await new Promise(resolve=>{
     const el=document.getElementById('loading');
     const h=()=>{el.removeEventListener('click',h);el.removeEventListener('touchend',h);resolve();};
-    el.addEventListener('click',h);el.addEventListener('touchend',h);
+    el.addEventListener('click',h);el.addEventListener('touchend',h);el.addEventListener('touchstart',h);
   });
 
   // Iniciar ambiente
