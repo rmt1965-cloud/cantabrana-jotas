@@ -542,7 +542,12 @@ async function init() {
     return a;
   }
   
-  const frasesAleatorias = cryptoShuffle(FRASES_POOL);
+    // Elegir grupo aleatorio de frases
+  const GRUPOS_FRASES = [["Cantabrana llama al pasado", "a través de sus ventanas", "sus arcos y sus puertas centenarias"], ["Aquí vivieron tus ancestros", "Aquí sonó esta música por primera vez", "Ahora te toca a ti escucharla"], ["Siglos de historia en tres minutos", "Esto no es nostalgia. Es identidad.", "Bienvenido a Cantabrana"], ["Algunas puertas nunca se cerraron del todo", "Detrás hay voces que esperaban ser escuchadas", "Esta es una de ellas"], ["Lo que somos viene de donde venimos", "Cantabrana no es un lugar, es una raíz", "Y esa raíz eres tú"]];
+  const idxGrupo = crypto.getRandomValues(new Uint32Array(1))[0] % GRUPOS_FRASES.length;
+  const grupoElegido = GRUPOS_FRASES[idxGrupo];
+  
+  const frasesAleatorias = grupoElegido;
   const fotosAleatorias = cryptoShuffle(FOTOS_POOL);
   
   // 3 ventanas aleatorias del pool
