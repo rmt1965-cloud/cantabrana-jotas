@@ -8,6 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <title>Cantabrana — Retazos de Vida</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%238B1A1A' stroke='%23c8922a' stroke-width='3'/><text y='65' x='50' text-anchor='middle' font-size='50' font-family='serif' fill='%23f0c060'>C</text></svg>">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -713,7 +714,7 @@ function mostrarDespedida(callback) {
   const txt = document.getElementById('desp-texto');
   const KB_ANIMS = ['kenburns1','kenburns2','kenburns3','kenburns4'];
   const idxKB = crypto.getRandomValues(new Uint32Array(1))[0] % KB_ANIMS.length;
-  img.style.animation = KB_ANIMS[idxKB] + ' 8s ease-in-out forwards';
+  img.style.animation = KB_ANIMS[idxKB] + ' 12s ease-in-out forwards';
   img.src = VISTAS[idxV];
   txt.textContent = TEXTOS[idxT];
   div.classList.add('show');
@@ -721,7 +722,7 @@ function mostrarDespedida(callback) {
     div.style.transition = 'opacity 1.5s ease';
     div.style.opacity = '0';
     setTimeout(() => { div.style.display='none'; callback(); }, 1500);
-  }, 5000);
+  }, 8000);
 }
 
 function cargarSelloFinal() {
@@ -774,7 +775,7 @@ function mostrarDespedida(callback) {
   const txt = document.getElementById('desp-texto');
   const KB_ANIMS = ['kenburns1','kenburns2','kenburns3','kenburns4'];
   const idxKB = crypto.getRandomValues(new Uint32Array(1))[0] % KB_ANIMS.length;
-  img.style.animation = KB_ANIMS[idxKB] + ' 8s ease-in-out forwards';
+  img.style.animation = KB_ANIMS[idxKB] + ' 12s ease-in-out forwards';
   img.src = VISTAS[idxV];
   txt.textContent = TEXTOS[idxT];
   div.classList.add('show');
@@ -782,7 +783,7 @@ function mostrarDespedida(callback) {
     div.style.transition = 'opacity 1.5s ease';
     div.style.opacity = '0';
     setTimeout(() => { div.style.display='none'; callback(); }, 1500);
-  }, 5000);
+  }, 8000);
 }
 
 function cargarSelloFinal() {
