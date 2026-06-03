@@ -95,6 +95,13 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 .btn:active{background:rgba(200,146,42,.25);border-color:var(--gold)}
 
 /* PANTALLA FINAL */
+
+#video-final{position:fixed;inset:0;z-index:45;background:#000;display:none;align-items:center;justify-content:center;}
+#video-final.show{display:flex}
+#vid-final{width:100%;height:100%;object-fit:cover;}
+#video-final-fade{position:absolute;inset:0;background:#000;opacity:0;transition:opacity 1.5s ease;}
+#video-final-fade.on{opacity:1}
+
 #pant-final{display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.93);align-items:center;justify-content:center;flex-direction:column;gap:20px;text-align:center;padding:40px;}
 #pant-final.show{display:flex}
 .fin-titulo{font-family:'Cinzel',serif;font-size:clamp(18px,5vw,28px);letter-spacing:5px;color:var(--gold);text-transform:uppercase;}
@@ -179,6 +186,12 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
     <button class="btn" onclick="reiniciar()">&#8635; Reiniciar</button>
     <button class="btn" onclick="salir()">Salir &#10005;</button>
   </div>
+</div>
+
+<!-- VIDEO FINAL -->
+<div id="video-final">
+  <video id="vid-final" src="" playsinline muted></video>
+  <div id="video-final-fade"></div>
 </div>
 
 <!-- PANTALLA FINAL -->
@@ -598,10 +611,50 @@ function iniciarProgreso() {
 // ================================================================
 // FIN JOTA
 // ================================================================
+
+function reproducirVideoFinal(callback) {
+  const VIDEOS = [
+    'video/final/video_08.mp4','video/final/video_09.mp4',
+    'video/final/video10.mp4','video/final/video11.mp4','video/final/video99.mp4'
+  ];
+  const src = VIDEOS[Math.floor(Math.random() * VIDEOS.length)];
+  const div  = document.getElementById('video-final');
+  const vid  = document.getElementById('vid-final');
+  const fade = document.getElementById('video-final-fade');
+  div.classList.add('show');
+  vid.src = src;
+  vid.play().catch(() => callback());
+  vid.onended = () => {
+    fade.classList.add('on');
+    setTimeout(() => { div.style.display='none'; callback(); }, 1500);
+  };
+  setTimeout(() => { div.style.display='none'; callback(); }, 20000);
+}
+
 function cargarSelloFinal() {
   const sellos = ['fotos/sellos/sello1.jpg','fotos/sellos/sello4.jpg','fotos/sellos/sello5.jpg'];
   const idx = Math.floor(Math.random() * sellos.length);
   document.getElementById('sello-final').src = sellos[idx];
+}
+
+
+function reproducirVideoFinal(callback) {
+  const VIDEOS = [
+    'video/final/video_08.mp4','video/final/video_09.mp4',
+    'video/final/video10.mp4','video/final/video11.mp4','video/final/video99.mp4'
+  ];
+  const src = VIDEOS[Math.floor(Math.random() * VIDEOS.length)];
+  const div  = document.getElementById('video-final');
+  const vid  = document.getElementById('vid-final');
+  const fade = document.getElementById('video-final-fade');
+  div.classList.add('show');
+  vid.src = src;
+  vid.play().catch(() => callback());
+  vid.onended = () => {
+    fade.classList.add('on');
+    setTimeout(() => { div.style.display='none'; callback(); }, 1500);
+  };
+  setTimeout(() => { div.style.display='none'; callback(); }, 20000);
 }
 
 function cargarSelloFinal() {
