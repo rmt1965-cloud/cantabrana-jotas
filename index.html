@@ -115,7 +115,7 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 
 #pant-despedida{position:fixed;inset:0;z-index:42;background:#000;display:none;align-items:center;justify-content:center;flex-direction:column;}
 #pant-despedida.show{display:flex}
-#desp-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.6;}
+#desp-img{position:absolute;inset:-10%;width:120%;height:120%;object-fit:cover;opacity:0.6;animation:kenburns1 8s ease-in-out forwards;}
 #desp-texto{position:absolute;bottom:15%;left:50%;transform:translateX(-50%);width:85%;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,5.5vw,28px);font-weight:600;color:rgba(245,230,190,.95);text-shadow:0 2px 20px rgba(0,0,0,.95),0 0 40px rgba(200,146,42,.3);line-height:1.7;}
 
 #pant-final{display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.93);align-items:center;justify-content:center;flex-direction:column;gap:20px;text-align:center;padding:40px;}
@@ -707,6 +707,9 @@ function mostrarDespedida(callback) {
   const div = document.getElementById('pant-despedida');
   const img = document.getElementById('desp-img');
   const txt = document.getElementById('desp-texto');
+  const KB_ANIMS = ['kenburns1','kenburns2','kenburns3','kenburns4'];
+  const idxKB = crypto.getRandomValues(new Uint32Array(1))[0] % KB_ANIMS.length;
+  img.style.animation = KB_ANIMS[idxKB] + ' 8s ease-in-out forwards';
   img.src = VISTAS[idxV];
   txt.textContent = TEXTOS[idxT];
   div.classList.add('show');
@@ -765,6 +768,9 @@ function mostrarDespedida(callback) {
   const div = document.getElementById('pant-despedida');
   const img = document.getElementById('desp-img');
   const txt = document.getElementById('desp-texto');
+  const KB_ANIMS = ['kenburns1','kenburns2','kenburns3','kenburns4'];
+  const idxKB = crypto.getRandomValues(new Uint32Array(1))[0] % KB_ANIMS.length;
+  img.style.animation = KB_ANIMS[idxKB] + ' 8s ease-in-out forwards';
   img.src = VISTAS[idxV];
   txt.textContent = TEXTOS[idxT];
   div.classList.add('show');
