@@ -551,14 +551,12 @@ async function init() {
   const frasesAleatorias = grupoElegido;
   const fotosAleatorias = cryptoShuffle(FOTOS_POOL);
   
-  // 3 ventanas aleatorias del pool
-  const ventanasAleatorias = fotosAleatorias.slice(0,3).map((src,i) => ({
-    src, leyenda: frasesAleatorias[i]
-  }));
-  
-  // Mezclar con las 3 fijas y elegir 3 en total
-  const todasVentanas = cryptoShuffle([...ventanasAleatorias, ...[{"src": "fotos/ventanas/ventana1.jpg", "leyenda": "Cantabrana llama al pasado"}, {"src": "fotos/ventanas/ventana3.jpg", "leyenda": "a través de sus ventanas"}, {"src": "fotos/ventanas/ventana4.png", "leyenda": "sus arcos y sus puertas centenarias"}]]);
-  CFG.ventanas = todasVentanas.slice(0,3);
+  // 3 fotos aleatorias con frases del grupo en orden estricto
+  CFG.ventanas = [
+    { src: fotosAleatorias[0], leyenda: frasesAleatorias[0] },
+    { src: fotosAleatorias[1], leyenda: frasesAleatorias[1] },
+    { src: fotosAleatorias[2], leyenda: frasesAleatorias[2] },
+  ];
 
     await mostrarVentanas();
       // Cargar sello real
