@@ -694,38 +694,6 @@ function reproducirVideoFinal(callback) {
 
 
 function mostrarDespedida(callback) {
-  const VISTAS = [
-    'fotos/vistas/A01.jpg','fotos/vistas/A02.png','fotos/vistas/A03.jpg',
-    'fotos/vistas/A04.jpg','fotos/vistas/A05.jpg','fotos/vistas/A06.jpg',
-    'fotos/vistas/A07.jpg','fotos/vistas/A08.jpg','fotos/vistas/A09.png',
-    'fotos/vistas/A10.jpg'
-  ];
-  const TEXTOS = [
-    'Cantabrana siempre estará aquí. Vuelve cuando quieras.',
-    'Gracias por escuchar. Gracias por recordar.',
-    'Esta música seguirá sonando. Como siempre ha sonado.',
-    'Lo que acabas de escuchar no se olvida fácilmente.',
-    'Cantabrana, donde el tiempo respira despacio.',
-    'Gracias por ser parte de esta memoria.',
-    'La tradición vive porque hay quien la escucha.'
-  ];
-  const idxV = crypto.getRandomValues(new Uint32Array(1))[0] % VISTAS.length;
-  const idxT = crypto.getRandomValues(new Uint32Array(1))[0] % TEXTOS.length;
-  const div = document.getElementById('pant-despedida');
-  const img = document.getElementById('desp-img');
-  const txt = document.getElementById('desp-texto');
-  const KB_ANIMS = ['kenburns1','kenburns2','kenburns3','kenburns4'];
-  const idxKB = crypto.getRandomValues(new Uint32Array(1))[0] % KB_ANIMS.length;
-  img.style.animation = KB_ANIMS[idxKB] + ' 12s ease-in-out forwards';
-  img.src = VISTAS[idxV];
-  txt.textContent = TEXTOS[idxT];
-  div.classList.add('show');
-  setTimeout(() => {
-    div.style.transition = 'opacity 1.5s ease';
-    div.style.opacity = '0';
-    setTimeout(() => { div.style.display='none'; callback(); }, 1500);
-  }, 8000);
-}
 
 function cargarSelloFinal() {
   const sellos = ['fotos/sellos/sello1.jpg','fotos/sellos/sello4.jpg','fotos/sellos/sello5.jpg'];
