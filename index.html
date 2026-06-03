@@ -368,14 +368,14 @@ function iniciarAmbiente() {
 async function reproducirVideoIntro() {
   return new Promise(resolve => {
     const MEDIA = [
-      {t:'v',s:'video/intro/video_02.mp4'},{t:'v',s:'video/intro/video_03.mp4'},
-      {t:'v',s:'video/intro/video_04.mp4'},{t:'v',s:'video/intro/video_05.mp4'},
-      {t:'v',s:'video/intro/video_06.mp4'},{t:'v',s:'video/intro/video_07.mp4'},
-      {t:'v',s:'video/intro/video_12.mp4'},{t:'v',s:'video/intro/video_13.mp4'},
-      {t:'v',s:'video/intro/video_14.mp4'},{t:'v',s:'video/intro/video_16.mp4'},
-      {t:'v',s:'video/intro/video_17.mp4'},{t:'v',s:'video/intro/video_19.mp4'},
-      {t:'i',s:'video/intro/rustico1.jpg'},{t:'i',s:'video/intro/rustico2.jpg'},
-      {t:'i',s:'video/intro/rustico3.jpg'},{t:'i',s:'video/intro/rustico4.jpg'},
+      {t:'v',s:'video/intro_web/video_02.mp4'},{t:'v',s:'video/intro_web/video_03.mp4'},
+      {t:'v',s:'video/intro_web/video_04.mp4'},{t:'v',s:'video/intro_web/video_05.mp4'},
+      {t:'v',s:'video/intro_web/video_06.mp4'},{t:'v',s:'video/intro_web/video_07.mp4'},
+      {t:'v',s:'video/intro_web/video_12.mp4'},{t:'v',s:'video/intro_web/video_13.mp4'},
+      {t:'v',s:'video/intro_web/video_14.mp4'},{t:'v',s:'video/intro_web/video_16.mp4'},
+      {t:'v',s:'video/intro_web/video_17.mp4'},{t:'v',s:'video/intro_web/video_19.mp4'},
+      {t:'i',s:'video/intro_web/rustico1.jpg'},{t:'i',s:'video/intro_web/rustico2.jpg'},
+      {t:'i',s:'video/intro_web/rustico3.jpg'},{t:'i',s:'video/intro_web/rustico4.jpg'},
     ];
     const item=MEDIA[Math.floor(Math.random()*MEDIA.length)];
     const div=document.getElementById('video-intro');
@@ -614,8 +614,8 @@ function iniciarProgreso() {
 
 function reproducirVideoFinal(callback) {
   const VIDEOS = [
-    'video/final/video_08.mp4','video/final/video_09.mp4',
-    'video/final/video10.mp4','video/final/video11.mp4','video/final/video99.mp4'
+    'video/final_web/video_08.mp4','video/final_web/video_09.mp4',
+    'video/final_web/video10.mp4','video/final_web/video11.mp4','video/final_web/video99.mp4'
   ];
   const src = VIDEOS[Math.floor(Math.random() * VIDEOS.length)];
   const div  = document.getElementById('video-final');
@@ -640,8 +640,8 @@ function cargarSelloFinal() {
 
 function reproducirVideoFinal(callback) {
   const VIDEOS = [
-    'video/final/video_08.mp4','video/final/video_09.mp4',
-    'video/final/video10.mp4','video/final/video11.mp4','video/final/video99.mp4'
+    'video/final_web/video_08.mp4','video/final_web/video_09.mp4',
+    'video/final_web/video10.mp4','video/final_web/video11.mp4','video/final_web/video99.mp4'
   ];
   const src = VIDEOS[Math.floor(Math.random() * VIDEOS.length)];
   const div  = document.getElementById('video-final');
