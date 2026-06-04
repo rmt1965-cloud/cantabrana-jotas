@@ -6,7 +6,6 @@
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="manifest" href="manifest.json">
 <title>Cantabrana v2 &mdash; Retazos de Vida</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%238B1A1A' stroke='%23c8922a' stroke-width='3'/><text y='65' x='50' text-anchor='middle' font-size='50' font-family='serif' fill='%23f0c060'>C</text></svg>">
 <style>
@@ -17,12 +16,12 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 #bg{position:fixed;inset:0;width:100%;height:100%;z-index:0}
 
 /* LOADING */
-#loading{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;transition:opacity 1.2s ease;cursor:pointer;}
+#loading{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity 1.2s ease;cursor:pointer;}
 #loading.fade{opacity:0;pointer-events:none}
-.ld-titulo{font-family:'Cinzel',serif;font-size:clamp(22px,6vw,36px);letter-spacing:6px;color:var(--gold);text-transform:uppercase;text-shadow:0 0 30px rgba(200,146,42,1),0 0 60px rgba(200,146,42,.7),0 0 100px rgba(200,146,42,.4);}
-.ld-linea{width:140px;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);animation:pulse 2s ease-in-out infinite;}
-.ld-subtitulo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(15px,4.5vw,22px);color:rgba(240,192,96,.95);letter-spacing:3px;text-shadow:0 0 30px rgba(200,146,42,1),0 0 60px rgba(200,146,42,.6);}
-.ld-linea2{width:110px;height:1px;background:linear-gradient(to right,transparent,rgba(200,146,42,.6),transparent);animation:pulse 2.5s ease-in-out infinite;}
+.ld-titulo{font-family:'Cinzel',serif;font-size:clamp(28px,8vw,44px);letter-spacing:8px;color:var(--gold);text-transform:uppercase;text-shadow:0 0 30px rgba(200,146,42,1),0 0 60px rgba(200,146,42,.7),0 0 100px rgba(200,146,42,.4);}
+.ld-linea{width:180px;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);animation:pulse 2s ease-in-out infinite;}
+.ld-subtitulo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,5.5vw,28px);color:rgba(240,192,96,.95);letter-spacing:3px;text-shadow:0 0 30px rgba(200,146,42,1),0 0 60px rgba(200,146,42,.6);}
+.ld-linea2{width:140px;height:1px;background:linear-gradient(to right,transparent,rgba(200,146,42,.6),transparent);animation:pulse 2.5s ease-in-out infinite;}
 .ld-autor{font-family:'Cinzel',serif;font-size:clamp(10px,2.8vw,13px);letter-spacing:4px;color:rgba(80,140,220,.9);text-transform:uppercase;text-shadow:0 0 20px rgba(80,140,220,.8);}
 #ld-btn{font-family:'Cinzel',serif;font-size:clamp(13px,4vw,17px);letter-spacing:4px;color:var(--gold);text-transform:uppercase;padding:16px 44px;border:2px solid rgba(200,146,42,.7);border-radius:4px;cursor:pointer;background:rgba(200,146,42,.12);min-width:200px;text-align:center;opacity:0;transition:opacity 1s ease;animation:pulse 1.8s ease-in-out infinite;margin-top:8px;}
 @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
@@ -31,7 +30,7 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 #ventanas{position:fixed;inset:0;z-index:8;background:#000;display:none;align-items:center;justify-content:center;overflow:hidden;}
 #ventanas.show{display:flex}
 #v-blur{position:absolute;inset:-20px;width:calc(100% + 40px);height:calc(100% + 40px);object-fit:cover;filter:blur(20px) brightness(.4);opacity:0;transition:opacity 1.5s ease;}
-#v-img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90%;max-width:500px;max-height:70vh;object-fit:contain;background:transparent;opacity:0;transition:opacity 1.5s ease;z-index:1;}
+#v-img{position:absolute;inset:0;width:100%;height:100%;max-height:60vh;top:50%;transform:translateY(-50%);object-fit:cover;background:transparent;opacity:0;transition:opacity 1.5s ease;z-index:1;}
 #v-ley{position:absolute;bottom:12%;left:50%;transform:translateX(-50%);width:88%;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:700;font-size:clamp(20px,6vw,32px);color:rgba(245,230,190,.97);text-shadow:0 2px 20px rgba(0,0,0,.95),0 0 40px rgba(200,146,42,.4);opacity:0;transition:opacity 1s ease;z-index:2;}
 #v-ley.show{opacity:1}
 
@@ -78,8 +77,7 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
 #ui-bot{position:fixed;bottom:0;left:0;right:0;z-index:30;padding:16px 20px;padding-bottom:max(16px,env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(0,0,0,.8),transparent);display:flex;gap:12px;justify-content:center;opacity:0;transition:opacity 1s ease;pointer-events:none;}
 #ui-bot.show{opacity:1;pointer-events:all}
-.btn{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;padding:11px 24px;border:1px solid rgba(200,146,42,.4);background:rgba(0,0,0,.55);color:var(--gold);cursor:pointer;border-radius:2px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:transform .12s ease,background .12s ease;-webkit-tap-highlight-color:transparent;}
-.btn:active{transform:scale(0.96);background:rgba(200,146,42,.2);}
+.btn{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;padding:11px 24px;border:1px solid rgba(200,146,42,.4);background:rgba(0,0,0,.55);color:var(--gold);cursor:pointer;border-radius:2px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}
 
 /* DESPEDIDA */
 #pant-desp{position:fixed;inset:0;z-index:42;background:#000;display:none;align-items:center;justify-content:center;overflow:hidden;}
@@ -450,7 +448,7 @@ async function init(){
 // ================================================================
 async function iniciarJota(){
   if(!jota)return;
-  const perg=document.getElementById('pant-perg');perg.style.transition='opacity 2s ease';perg.style.opacity='0';
+  document.getElementById('pant-perg').style.opacity='0';
 
   // Shuffle fotos arcos con historial
   let histF=[];try{histF=JSON.parse(localStorage.getItem('cant_fotos')||'[]');}catch(e){}
@@ -460,7 +458,7 @@ async function iniciarJota(){
   const nuevasVistas=[...histF,...fotos.slice(0,20)].slice(-97);
   try{localStorage.setItem('cant_fotos',JSON.stringify(nuevasVistas));}catch(e){}
 
-  const pr=document.getElementById('pant-repro');pr.style.opacity='0';pr.classList.add('show');pr.style.transition='opacity 1.5s ease';setTimeout(()=>{pr.style.opacity='1';},50);
+  document.getElementById('pant-repro').classList.add('show');
   document.getElementById('cantante').textContent=jota.c;
   document.getElementById('municipio').textContent=jota.m;
   document.getElementById('ticker-in').textContent='♪  '+jota.c+' · '+jota.m+' · Cantabrana · Retazos de Vida  ♪';
@@ -468,7 +466,6 @@ async function iniciarJota(){
   // Bajar ambiente
   let av=aAmb.volume;const fa=setInterval(()=>{av=Math.max(av-0.02,0.06);aAmb.volume=av;if(av<=0.06)clearInterval(fa);},80);
   document.getElementById('amb-ind').classList.add('show');
-  setTimeout(()=>{document.getElementById('ui-bot').classList.add('show');},3000);
 
   aJota.src=CFG.jotas_url+encodeURIComponent(jota.a);
   aJota.load();aJota.volume=1;
@@ -484,19 +481,17 @@ async function iniciarJota(){
 // ================================================================
 // FOTOS
 // ================================================================
-let _preload=null;
-function precargarFoto(idx){if(!fotos.length)return;_preload=new Image();_preload.src=fotos[(idx+1)%fotos.length];}
 function mostrarFoto(idx){
   if(!fotos.length)return;
   const url=fotos[idx%fotos.length];
   const trans=document.getElementById('f-trans');
   const img=document.getElementById('f-img');
   const blur=document.getElementById('f-blur');
-  trans.classList.add('on');img.classList.remove('show');img.style.animation='none';
+  trans.classList.add('on');img.classList.remove('show');
   setTimeout(()=>{
     img.src=url;blur.style.backgroundImage="url('"+url+"')";
     img.onerror=()=>{trans.classList.remove('on');setTimeout(()=>mostrarFoto(idx+1),100);};
-    img.onload=()=>{const kbs=['kenburns1','kenburns2','kenburns3','kenburns4'];img.style.animation=kbs[idx%4]+' '+(CFG.dur_foto+CFG.dur_trans+1)+'s ease-in-out forwards';setTimeout(()=>{trans.classList.remove('on');img.classList.add('show');},150);precargarFoto(idx);};
+    img.onload=()=>{setTimeout(()=>{trans.classList.remove('on');img.classList.add('show');},150);};
   },350);
   fotoIdx=idx;clearTimeout(fotoTimer);
   fotoTimer=setTimeout(()=>mostrarFoto(idx+1),(CFG.dur_foto+CFG.dur_trans)*1000);
@@ -517,13 +512,11 @@ function iniciarProgreso(){
 // ================================================================
 function finJota(){
   if(jotaFin)return;jotaFin=true;
-  document.getElementById('ui-bot').style.opacity='0';
-  document.getElementById('ui-bot').style.pointerEvents='none';
   clearTimeout(fotoTimer);clearInterval(progresoInter);
   document.getElementById('prog-fill').style.width='100%';
 
   // Subir ambiente
-  let v=aAmb.volume;const fu=setInterval(()=>{v=Math.min(v+0.008,0.45);aAmb.volume=v;if(v>=0.45)clearInterval(fu);},60);
+  let v=aAmb.volume;const fu=setInterval(()=>{v=Math.min(v+0.02,0.45);aAmb.volume=v;if(v>=0.45)clearInterval(fu);},100);
 
   // Portada
   const fi=document.getElementById('f-img');
