@@ -527,7 +527,7 @@ function finJota(){
   const bl=document.getElementById('f-blur');
   const tr=document.getElementById('f-trans');
   tr.classList.add('on');
-  setTimeout(()=>{fi.src=CFG.portada;bl.style.backgroundImage="url('"+CFG.portada+"')";fi.onload=()=>{tr.classList.remove('on');fi.classList.add('show');};},500);
+  setTimeout(()=>{fi.src=CFG.portada;bl.style.backgroundImage="url('"+CFG.portada+"')";fi.style.maxWidth='75%';fi.style.maxHeight='65vh';fi.onload=()=>{tr.classList.remove('on');fi.classList.add('show');};},500);
 
   // Despedida tras 4s
   setTimeout(()=>{
