@@ -470,9 +470,10 @@ async function iniciarJota(){
   document.getElementById('amb-ind').classList.add('show');
 
   aJota.src=CFG.jotas_url+encodeURIComponent(jota.a);
-  aJota.load();aJota.volume=1;
+  aJota.load();aJota.volume=0;
   mostrarFoto(0);
   aJota.play().catch(e=>console.warn(e));
+  let vj=0;const fj=setInterval(()=>{vj=Math.min(vj+0.008,1);aJota.volume=vj;if(vj>=1)clearInterval(fj);},60);
   iniciarProgreso();
   aJota.onended=finJota;
   aJota.addEventListener('loadedmetadata',()=>{
