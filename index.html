@@ -357,7 +357,7 @@ async function mostrarVentanas(ventanas){
     function sig(){
       if(idx>=ventanas.length){
         div.style.transition='opacity 1.2s ease';div.style.opacity='0';
-        setTimeout(()=>{div.style.display='none';div.style.opacity='1';resolve();},3200);
+        setTimeout(()=>{div.style.display='none';div.style.opacity='1';resolve();},1500);
         return;
       }
       const data=ventanas[idx++];
@@ -439,7 +439,7 @@ async function init(){
     const tIdx=rnd(CFG.textos_perg.length);
     document.getElementById('p-aviso').innerHTML=CFG.textos_perg[tIdx];
     document.getElementById('pant-perg').classList.add('show');
-    setTimeout(iniciarJota,5000);
+    setTimeout(iniciarJota,2500);
   },600);
 }
 
