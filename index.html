@@ -468,6 +468,7 @@ async function iniciarJota(){
   // Bajar ambiente
   let av=aAmb.volume;const fa=setInterval(()=>{av=Math.max(av-0.02,0.06);aAmb.volume=av;if(av<=0.06)clearInterval(fa);},80);
   document.getElementById('amb-ind').classList.add('show');
+  setTimeout(()=>{document.getElementById('ui-bot').classList.add('show');},3000);
 
   aJota.src=CFG.jotas_url+encodeURIComponent(jota.a);
   aJota.load();aJota.volume=1;
@@ -516,6 +517,8 @@ function iniciarProgreso(){
 // ================================================================
 function finJota(){
   if(jotaFin)return;jotaFin=true;
+  document.getElementById('ui-bot').style.opacity='0';
+  document.getElementById('ui-bot').style.pointerEvents='none';
   clearTimeout(fotoTimer);clearInterval(progresoInter);
   document.getElementById('prog-fill').style.width='100%';
 
