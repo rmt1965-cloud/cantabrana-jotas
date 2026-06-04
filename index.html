@@ -381,6 +381,10 @@ async function mostrarVentanas(ventanas){
 function arrancar(){
   if(window._arrancado) return;
   window._arrancado = true;
+  // Desbloquear audio en Android con elemento temporal
+  const tmp = document.createElement('audio');
+  tmp.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+  tmp.play().then(()=>{ tmp.remove(); iniciarAmbiente(); }).catch(()=>{ iniciarAmbiente(); });
   iniciarAmbiente();
   document.getElementById('loading').removeEventListener('click', window._h);
   document.getElementById('loading').removeEventListener('touchend', window._h);
