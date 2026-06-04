@@ -195,7 +195,7 @@ const CFG = {
     'audio/ambiente/ambiente16.mp3','audio/ambiente/ambiente17.mp3','audio/ambiente/ambiente18.mp3',
   ],
   pergaminos: [
-    'fotos/pergaminos/pergamino01.jpg','fotos/pergaminos/pergamino02.jpg',
+    'fotos/pergaminos/pergamino01.jpg',
     'fotos/pergaminos/pergamino03.jpg','fotos/pergaminos/pergamino04.jpg',
     'fotos/pergaminos/pergamino05.jpg',
   ],
@@ -445,7 +445,7 @@ async function init(){
     const tIdx=rnd(CFG.textos_perg.length);
     document.getElementById('p-aviso').innerHTML=CFG.textos_perg[tIdx];
     document.getElementById('pant-perg').classList.add('show');
-    setTimeout(iniciarJota,5000);
+    setTimeout(iniciarJota,6000);
   },600);
 }
 
