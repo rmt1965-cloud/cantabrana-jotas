@@ -357,7 +357,7 @@ async function mostrarVentanas(ventanas){
     function sig(){
       if(idx>=ventanas.length){
         div.style.transition='opacity 1.2s ease';div.style.opacity='0';
-        setTimeout(()=>{div.style.display='none';div.style.opacity='1';resolve();},1200);
+        setTimeout(()=>{div.style.display='none';div.style.opacity='1';resolve();},3200);
         return;
       }
       const data=ventanas[idx++];
@@ -419,7 +419,12 @@ async function init(){
   setTimeout(async()=>{
     // Preparar ventanas
     const grupo=CFG.grupos_frases[rnd(CFG.grupos_frases.length)];
-    const fotos_intro=shuffle(CFG.fotos_intro);
+    let histI=[];try{histI=JSON.parse(localStorage.getItem("cant_intro")||"[]");}catch(e){}
+    let noVistasI=CFG.fotos_intro.filter(f=>!histI.includes(f));
+    if(noVistasI.length<3){histI=[];noVistasI=CFG.fotos_intro;}
+    const fotos_intro=shuffle(noVistasI);
+    const nvi=[...histI,...fotos_intro.slice(0,3)].slice(-Math.max(3,Math.floor(CFG.fotos_intro.length*0.6)));
+    try{localStorage.setItem("cant_intro",JSON.stringify(nvi));}catch(e){}
     const ventanas=[
       {src:fotos_intro[0], leyenda:grupo[0]},
       {src:fotos_intro[1], leyenda:grupo[1]},
