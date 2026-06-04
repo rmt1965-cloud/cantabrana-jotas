@@ -94,10 +94,10 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 #fin-frase{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,5.5vw,24px);color:rgba(255,255,255,.9);max-width:340px;line-height:1.9;margin-top:10px;text-shadow:0 0 20px rgba(200,146,42,.3);}
 .fin-btns{display:flex;gap:16px;margin-top:20px;flex-wrap:wrap;justify-content:center}
 @keyframes sello-glow{0%,100%{filter:drop-shadow(0 3px 8px rgba(140,20,20,.4))}50%{filter:drop-shadow(0 3px 24px rgba(180,30,30,.9))}}
-@keyframes kenburns1{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.05) translate(-1%,-1%)}}
-@keyframes kenburns2{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.05) translate(1%,-1%)}}
-@keyframes kenburns3{0%{transform:scale(1.03) translate(-1%,0)}100%{transform:scale(1) translate(1%,1%)}}
-@keyframes kenburns4{0%{transform:scale(1) translate(1%,1%)}100%{transform:scale(1.05) translate(-1%,0%)}}
+@keyframes kenburns1{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.15) translate(-3%,-2%)}}
+@keyframes kenburns2{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.12) translate(2%,-3%)}}
+@keyframes kenburns3{0%{transform:scale(1.1) translate(-2%,0)}100%{transform:scale(1) translate(2%,2%)}}
+@keyframes kenburns4{0%{transform:scale(1) translate(2%,2%)}100%{transform:scale(1.15) translate(-2%,-1%)}}
 </style>
 </head>
 <body>
@@ -110,7 +110,7 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
   <div class="ld-subtitulo">Retazos de Vida</div>
   <div class="ld-linea2"></div>
   <div class="ld-autor">Rafael Molina Toledo</div>
-  <div id="ld-btn" onclick="arrancar()" ontouchstart="arrancar()">Pulsar para iniciar</div>
+  <div id="ld-btn">Pulsar para iniciar</div>
 </div>
 
 <!-- VENTANAS -->
@@ -378,23 +378,6 @@ async function mostrarVentanas(ventanas){
 // ================================================================
 // INIT
 // ================================================================
-function arrancar(){
-  if(window._arrancado) return;
-  window._arrancado = true;
-  // Reproducir ambiente directamente en el gesto del usuario
-  const idx = Math.floor(Math.random() * CFG.ambiente.length);
-  aAmb.src = CFG.ambiente[idx];
-  aAmb.volume = 0.35;
-  aAmb.loop = true;
-  const playPromise = aAmb.play();
-  if (playPromise) playPromise.catch(()=>{});
-  iniciarAmbiente();
-  document.getElementById('loading').removeEventListener('click', window._h);
-  document.getElementById('loading').removeEventListener('touchend', window._h);
-  document.getElementById('loading').removeEventListener('touchstart', window._h);
-  if(window._resolve) window._resolve();
-}
-
 async function init(){
   keepScreen();
 
@@ -418,8 +401,11 @@ async function init(){
   await new Promise(resolve=>{
     const el=document.getElementById('loading');
     const h=()=>{el.removeEventListener('click',h);el.removeEventListener('touchend',h);resolve();};
-    el.addEventListener('click',h);el.addEventListener('touchend',h);el.addEventListener('touchstart',h);
+    el.addEventListener('click',h);el.addEventListener('touchend',h);
   });
+
+  // Iniciar ambiente
+  iniciarAmbiente();
 
   // Ocultar loading
   document.getElementById('loading').classList.add('fade');
