@@ -381,11 +381,6 @@ async function mostrarVentanas(ventanas){
 function arrancar(){
   if(window._arrancado) return;
   window._arrancado = true;
-  // Desbloquear AudioContext en iOS
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    ctx.resume();
-  } catch(e){}
   iniciarAmbiente();
   document.getElementById('loading').removeEventListener('click', window._h);
   document.getElementById('loading').removeEventListener('touchend', window._h);
