@@ -6,7 +6,6 @@
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="manifest" href="manifest.json">
 <title>Cantabrana v2 &mdash; Retazos de Vida</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%238B1A1A' stroke='%23c8922a' stroke-width='3'/><text y='65' x='50' text-anchor='middle' font-size='50' font-family='serif' fill='%23f0c060'>C</text></svg>">
 <style>
@@ -24,14 +23,14 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 .ld-subtitulo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,5.5vw,28px);color:rgba(240,192,96,.95);letter-spacing:3px;text-shadow:0 0 30px rgba(200,146,42,1),0 0 60px rgba(200,146,42,.6);}
 .ld-linea2{width:140px;height:1px;background:linear-gradient(to right,transparent,rgba(200,146,42,.6),transparent);animation:pulse 2.5s ease-in-out infinite;}
 .ld-autor{font-family:'Cinzel',serif;font-size:clamp(10px,2.8vw,13px);letter-spacing:4px;color:rgba(80,140,220,.9);text-transform:uppercase;text-shadow:0 0 20px rgba(80,140,220,.8);}
-#ld-btn{font-family:'Cinzel',serif;font-size:clamp(11px,3.5vw,14px);letter-spacing:3px;color:var(--gold);text-transform:uppercase;padding:11px 32px;border:2px solid rgba(200,146,42,.7);border-radius:4px;cursor:pointer;background:rgba(200,146,42,.12);min-width:160px;text-align:center;opacity:0;transition:opacity 1s ease;animation:pulse 1.8s ease-in-out infinite;margin-top:4px;}
+#ld-btn{font-family:'Cinzel',serif;font-size:clamp(13px,4vw,17px);letter-spacing:4px;color:var(--gold);text-transform:uppercase;padding:16px 44px;border:2px solid rgba(200,146,42,.7);border-radius:4px;cursor:pointer;background:rgba(200,146,42,.12);min-width:200px;text-align:center;opacity:0;transition:opacity 1s ease;animation:pulse 1.8s ease-in-out infinite;margin-top:8px;}
 @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
 
 /* VENTANAS */
 #ventanas{position:fixed;inset:0;z-index:8;background:#000;display:none;align-items:center;justify-content:center;overflow:hidden;}
 #ventanas.show{display:flex}
 #v-blur{position:absolute;inset:-20px;width:calc(100% + 40px);height:calc(100% + 40px);object-fit:cover;filter:blur(20px) brightness(.4);opacity:0;transition:opacity 1.5s ease;}
-#v-img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90%;max-width:500px;max-height:70vh;object-fit:contain;background:transparent;opacity:0;transition:opacity 1.5s ease;z-index:1;}
+#v-img{position:absolute;inset:0;width:100%;height:100%;max-height:60vh;top:50%;transform:translateY(-50%);object-fit:cover;background:transparent;opacity:0;transition:opacity 1.5s ease;z-index:1;}
 #v-ley{position:absolute;bottom:12%;left:50%;transform:translateX(-50%);width:88%;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:700;font-size:clamp(20px,6vw,32px);color:rgba(245,230,190,.97);text-shadow:0 2px 20px rgba(0,0,0,.95),0 0 40px rgba(200,146,42,.4);opacity:0;transition:opacity 1s ease;z-index:2;}
 #v-ley.show{opacity:1}
 
@@ -55,15 +54,14 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 #pant-repro.show{display:flex}
 #f-wrap{position:fixed;inset:0;z-index:0;background:#000}
 #f-blur{position:absolute;inset:-30px;background-size:cover;background-position:center;filter:blur(22px) brightness(.28);transform:scale(1.1);transition:background-image 1.2s ease;}
-#f-main{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;}
-#f-img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;opacity:0;transition:opacity 1s ease;}
+#f-main{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+#f-img{max-width:100%;max-height:100%;object-fit:contain;opacity:0;transition:opacity 1s ease;}
 #f-img.show{opacity:1}
 #f-trans{position:fixed;inset:0;z-index:25;background:#000;opacity:0;pointer-events:none;transition:opacity .7s ease;}
 #f-trans.on{opacity:1}
 #ui-top{position:fixed;top:0;left:0;right:0;z-index:30;padding:24px 20px 50px;background:linear-gradient(to bottom,rgba(0,0,0,.75),transparent);display:flex;justify-content:space-between;align-items:flex-start;}
 .cantante{font-family:'Cinzel',serif;font-size:clamp(10px,2.8vw,14px);letter-spacing:2px;color:rgba(255,255,255,.85);text-transform:uppercase;}
 .municipio{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(12px,3.2vw,16px);color:var(--gold);margin-top:3px;}
-.titulo-jota{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(13px,3.5vw,18px);color:rgba(240,192,96,.75);margin-top:5px;letter-spacing:1px;opacity:0;transition:opacity 1.5s ease;}
 #amb-ind{display:flex;align-items:center;gap:5px;opacity:0;transition:opacity .8s ease;}
 #amb-ind.show{opacity:1}
 .bars{display:flex;align-items:flex-end;gap:2px;height:14px}
@@ -71,16 +69,15 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 .bar:nth-child(1){height:5px;animation-delay:0s}.bar:nth-child(2){height:10px;animation-delay:.2s}.bar:nth-child(3){height:14px;animation-delay:.35s}.bar:nth-child(4){height:7px;animation-delay:.1s}
 @keyframes bar{0%,100%{transform:scaleY(.35);opacity:.5}50%{transform:scaleY(1);opacity:1}}
 .amb-lbl{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:rgba(200,146,42,.7);text-transform:uppercase;}
-#prog{position:fixed;bottom:56px;left:20px;right:20px;z-index:30;}
+#prog{position:fixed;bottom:76px;left:20px;right:20px;z-index:30;}
 #prog-bar{height:2px;background:rgba(255,255,255,.12);border-radius:2px;overflow:hidden}
 #prog-fill{height:100%;width:0%;border-radius:2px;background:linear-gradient(to right,var(--gold),var(--gold-l));transition:width .5s linear;}
-
-
-
+#ticker{position:fixed;bottom:52px;left:0;right:0;z-index:30;overflow:hidden;height:28px;background:rgba(200,146,42,.85);}
+#ticker-in{display:inline-block;white-space:nowrap;padding-left:100%;font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;color:#000;text-transform:uppercase;animation:ticker 22s linear infinite;font-weight:700;line-height:28px;}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
 #ui-bot{position:fixed;bottom:0;left:0;right:0;z-index:30;padding:16px 20px;padding-bottom:max(16px,env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(0,0,0,.8),transparent);display:flex;gap:12px;justify-content:center;opacity:0;transition:opacity 1s ease;pointer-events:none;}
 #ui-bot.show{opacity:1;pointer-events:all}
-.btn{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;padding:11px 24px;border:1px solid rgba(200,146,42,.4);background:rgba(0,0,0,.55);color:var(--gold);cursor:pointer;border-radius:2px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:transform .12s ease,background .12s ease;-webkit-tap-highlight-color:transparent;}
-.btn:active{transform:scale(0.96);background:rgba(200,146,42,.2);}
+.btn{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;padding:11px 24px;border:1px solid rgba(200,146,42,.4);background:rgba(0,0,0,.55);color:var(--gold);cursor:pointer;border-radius:2px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}
 
 /* DESPEDIDA */
 #pant-desp{position:fixed;inset:0;z-index:42;background:#000;display:none;align-items:center;justify-content:center;overflow:hidden;}
@@ -89,12 +86,12 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 #d-txt{position:absolute;bottom:15%;left:50%;transform:translateX(-50%);width:85%;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,5.5vw,28px);font-weight:600;color:rgba(245,230,190,.97);text-shadow:0 2px 20px rgba(0,0,0,.95),0 0 40px rgba(200,146,42,.3);line-height:1.7;z-index:1;}
 
 /* PANTALLA FINAL */
-#pant-final{display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.93);align-items:center;justify-content:center;flex-direction:column;gap:8px;text-align:center;padding:24px;}
+#pant-final{display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.93);align-items:center;justify-content:center;flex-direction:column;gap:14px;text-align:center;padding:40px;}
 #pant-final.show{display:flex}
-.fin-tit{font-family:'Cinzel',serif;font-size:clamp(28px,8vw,48px);letter-spacing:5px;color:var(--gold);text-transform:uppercase;text-shadow:0 0 40px rgba(200,146,42,.6);}
-.fin-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,5.5vw,28px);color:rgba(240,192,96,.9);letter-spacing:3px;text-shadow:0 0 20px rgba(200,146,42,.5);}
-.fin-aut{font-family:'Cinzel',serif;font-size:clamp(12px,3.2vw,15px);letter-spacing:4px;color:rgba(80,140,220,.9);text-transform:uppercase;text-shadow:0 0 20px rgba(80,140,220,.8);}
-#fin-frase{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(17px,5vw,22px);color:rgba(255,255,255,.9);max-width:360px;line-height:1.8;margin-top:10px;text-shadow:0 0 20px rgba(200,146,42,.3);}
+.fin-tit{font-family:'Cinzel',serif;font-size:clamp(30px,9vw,52px);letter-spacing:5px;color:var(--gold);text-transform:uppercase;text-shadow:0 0 40px rgba(200,146,42,.6);}
+.fin-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(20px,6vw,30px);color:rgba(240,192,96,.9);letter-spacing:3px;text-shadow:0 0 20px rgba(200,146,42,.5);}
+.fin-aut{font-family:'Cinzel',serif;font-size:clamp(11px,3vw,14px);letter-spacing:4px;color:rgba(80,140,220,.9);text-transform:uppercase;text-shadow:0 0 20px rgba(80,140,220,.8);}
+#fin-frase{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,5.5vw,24px);color:rgba(255,255,255,.9);max-width:340px;line-height:1.9;margin-top:10px;text-shadow:0 0 20px rgba(200,146,42,.3);}
 .fin-btns{display:flex;gap:16px;margin-top:20px;flex-wrap:wrap;justify-content:center}
 @keyframes sello-glow{0%,100%{filter:drop-shadow(0 3px 8px rgba(140,20,20,.4))}50%{filter:drop-shadow(0 3px 24px rgba(180,30,30,.9))}}
 @keyframes kenburns1{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.15) translate(-3%,-2%)}}
@@ -146,7 +143,6 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
     <div>
       <div class="cantante" id="cantante">&#8212;</div>
       <div class="municipio" id="municipio">Cantabrana</div>
-      <div class="titulo-jota" id="titulo-jota"></div>
     </div>
     <div id="amb-ind">
       <div class="bars"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
@@ -154,7 +150,7 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
     </div>
   </div>
   <div id="prog"><div id="prog-bar"><div id="prog-fill"></div></div></div>
-  
+  <div id="ticker"><span id="ticker-in">&#9834; Cantabrana &middot; Retazos de Vida &middot; Patrimonio Musical &#9834;</span></div>
   <div id="ui-bot">
     <button class="btn" onclick="reiniciar()">&#8635; Volver al inicio</button>
     <button class="btn" onclick="salir()">Hasta pronto &#10022;</button>
@@ -172,7 +168,7 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
   <div class="fin-tit">Cantabrana</div>
   <div class="fin-sub">Retazos de Vida</div>
   <div class="fin-aut">Rafael Molina Toledo</div>
-  <div id="fin-frase"></div>
+  <div id="fin-frase">La tradic&oacute;n vive en cada nota,<br>entre puertas y arcos de piedra.<br><br>Gracias por escuchar.</div>
   <div class="fin-btns">
     <button class="btn" onclick="reiniciar()">&#8635; Volver al inicio</button>
     <button class="btn" onclick="salir()">Hasta pronto &#10022;</button>
@@ -197,7 +193,7 @@ const CFG = {
     'audio/ambiente/ambiente16.mp3','audio/ambiente/ambiente17.mp3','audio/ambiente/ambiente18.mp3',
   ],
   pergaminos: [
-    'fotos/pergaminos/pergamino01.jpg',
+    'fotos/pergaminos/pergamino01.jpg','fotos/pergaminos/pergamino02.jpg',
     'fotos/pergaminos/pergamino03.jpg','fotos/pergaminos/pergamino04.jpg',
     'fotos/pergaminos/pergamino05.jpg',
   ],
@@ -210,7 +206,7 @@ const CFG = {
     'fotos/vistas/A07.jpg','fotos/vistas/A08.jpg','fotos/vistas/A09.png','fotos/vistas/A10.jpg',
   ],
   portada: 'fotos/portada/portada1.png',
-  dur_foto: 4,
+  dur_foto: 3,
   dur_trans: 0.5,
 
   // GRUPOS DE FRASES para ventanas (cada grupo = 3 frases en orden)
@@ -258,43 +254,45 @@ const CFG = {
   ],
 
   jotas: [
-    {a:'Alboradas--01.mp3',c:'Alboradas',m:'Cantabrana',t:'ALBORADAS'},
-    {a:'Cecilio_Jose_Diaz_Linaje--09.mp3',c:'Cecilio José Díaz Linaje',m:'Cantabrana',t:'BILBAINADA'},
-    {a:'Cecilio_Jose_Diaz_Linaje--10.mp3',c:'Cecilio José Díaz Linaje',m:'Cantabrana',t:'QUE SON DE CANTABRANA (Jose)'},
-    {a:'Elena_Diaz_Linaje--39.mp3',c:'Elena Díaz Linaje',m:'Cantabrana',t:'DONDE VA LA NIÑA'},
-    {a:'Gregorio_Ojeda_Pena_y_Julian_Ojeda_Ojeda--02.mp3',c:'Gregorio Ojeda PeÑ±a y Julián Ojeda Ojeda',m:'Cantabrana',t:'CAMINITO DEL ARROYO'},
-    {a:'Grupal_himno_Cantabrana--27.mp3',c:'Grupal · Himno de Cantabrana',m:'Cantabrana',t:'HIMNO CANTABRANA (Mujeres)'},
-    {a:'julian-Ojeda-Ojeda--18.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'LA VERDAD EN VERSO'},
-    {a:'Julian-Ojeda-Ojeda--20.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'QUE TE TUMBO'},
-    {a:'Julian-Ojeda-Ojeda--22.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'VENIA DE REGAR'},
-    {a:'Julian-Ojeda-Ojeda--23.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'JUANITA YA SE HA CASADO'},
-    {a:'Julian-Ojeda-Ojeda-y-Gregorio-Ojeda-Pena--11.mp3',c:'Julián Ojeda Ojeda y Gregorio Ojeda PeÑ±a',m:'Cantabrana',t:'SEGUNDO'},
-    {a:'Julian_Ojeda_Ojeda--04.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'EL CONEJO'},
-    {a:'Julian_Ojeda_Ojeda--05.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'LAS MUJERES EN EL HORNO'},
-    {a:'Julian_Ojeda_Ojeda--08.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'QUE TE LA HAN TENTADO'},
-    {a:'Julian_Ojeda_Ojeda--14.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'A LA FERIA DE EXTREMADURA'},
-    {a:'Julian_Ojeda_Ojeda--15.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'Y TANTO QUE SABES COSER'},
-    {a:'Julian_Ojeda_Ojeda--16.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'UN CANTARILLO EN LA FUENTE'},
-    {a:'Julian_Ojeda_Ojeda--17.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'BRAGUETA'},
-    {a:'Julian_Ojeda_Ojeda--19.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'PARA DINERO LA HABANA'},
-    {a:'Julian_Ojeda_Ojeda--21.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'UN SACO MELONES'},
-    {a:'Julian_Ojeda_Ojeda--24.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'LA CADERECHANA'},
-    {a:'Julian_Ojeda_Ojeda--25.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'HAY QUE VER'},
-    {a:'Julian_Ojeda_Ojeda--26.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'EL QUE SE CASA DE VIEJO'},
-    {a:'Julian_Ojeda_Ojeda--28.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'LOS COLCHONES'},
-    {a:'Julian_Ojeda_Ojeda--30.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'SI TIENES MUJER GUAPA'},
-    {a:'Julian_Ojeda_Ojeda--31.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'LA PUERTA DE SIETE LLAVES'},
-    {a:'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--03.mp3',c:'Julián Ojeda Ojeda y Gregorio Ojeda PeÑ±a',m:'Cantabrana',t:'ÑCHALA CON FUERZA AL AIRE'},
-    {a:'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--06.mp3',c:'Julián Ojeda Ojeda y Gregorio Ojeda PeÑ±a',m:'Cantabrana',t:'CARRUSEL DE CANCIONES'},
-    {a:'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--13.mp3',c:'Julián Ojeda Ojeda y Gregorio Ojeda PeÑ±a',m:'Cantabrana',t:'VINO DE GALLIPEPE'},
-    {a:'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--34.mp3',c:'Julián Ojeda Ojeda y Gregorio Ojeda PeÑ±a',m:'Cantabrana',t:'NO HAY QUIEN PUEDA'},
-    {a:'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--35.mp3',c:'Julián Ojeda Ojeda y Gregorio Ojeda PeÑ±a',m:'Cantabrana',t:'SI TE QUIERES CASAR'},
-    {a:'Lucia_Ojeda_Pena_y_Julian_Ojeda_Ojeda--29.mp3',c:'Lucía Ojeda PeÑ±a y Julián Ojeda Ojeda',m:'Cantabrana',t:'EL CARLOR DE MI PATRIA'},
-    {a:'Pedro-Felix-Garcia-Linaje--38.mp3',c:'Pedro Félix García Linaje',m:'Cantabrana',t:'CANTAN LOS DE CANTABRANA'},
-    {a:'Pedro-Felix-Garcia-Linaje-07.mp3',c:'Pedro Félix García Linaje',m:'Cantabrana',t:'QUE SON DE CANTABRANA (Pedrín)'},
-    {a:'Pedro_Felix_Garcia_Linaje--12.mp3',c:'Pedro Félix García Linaje',m:'Cantabrana',t:'SI PASAS POR TERMINÑN'},
-    {a:'Pedro_Felix_Garcia_Linaje--32.mp3',c:'Pedro Félix García Linaje',m:'Cantabrana',t:'GUINDALERA'},
-    {a:'Pedro_Felix_Garcia_Linaje--33.mp3',c:'Pedro Félix García Linaje',m:'Cantabrana',t:'HIMNO CANTABRANA (Pedrín)'},
+    {a:'Alboradas--01.mp3',c:'Alboradas',m:'Cantabrana'},
+    {a:'Cecilio_Jose_Diaz_Linaje--09.mp3',c:'Cecilio José Díaz Linaje',m:'Cantabrana'},
+    {a:'Cecilio_Jose_Diaz_Linaje--10.mp3',c:'Cecilio José Díaz Linaje',m:'Cantabrana'},
+    {a:'Elena_Diaz_Linaje--39.mp3',c:'Elena Díaz Linaje',m:'Cantabrana'},
+    {a:'Gregorio_Ojeda_Pena_y_Julian_Ojeda_Ojeda--02.mp3',c:'Gregorio Ojeda Peña y Julián Ojeda Ojeda',m:'Cantabrana'},
+    {a:'Grupal_himno_Cantabrana--27.mp3',c:'Grupal · Himno de Cantabrana',m:'Cantabrana'},
+    {a:'julian-Ojeda-Ojeda--18.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana'},
+    {a:'Julian-Ojeda-Ojeda--20.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana'},
+    {a:'Julian-Ojeda-Ojeda--22.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana'},
+    {a:'Julian-Ojeda-Ojeda--23.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana'},
+    {a:'Julian-Ojeda-Ojeda-y-Gregorio-Ojeda-Pena--11.mp3',c:'Julián Ojeda Ojeda y Gregorio Ojeda Peña',m:'Cantabrana'},
+    {a:'Julian_Ojeda_Ojeda--04.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana'},
+    {a:'Julian_Ojeda_Ojeda--05.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana'},
+    {a:'Julian_Ojeda_Ojeda--08.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana'},
+    {a:'Julian_Ojeda_Ojeda--14.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana'},
+    {a:'Julian_Ojeda_Ojeda--15.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana'},
+    {a:'Julian_Ojeda_Ojeda--16.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana'},
+    {a:'Julian_Ojeda_Ojeda--17.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana'},
+    {a:'Julian_Ojeda_Ojeda--19.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana'},
+    {a:'Julian_Ojeda_Ojeda--21.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana'},
+    {a:'Julian_Ojeda_Ojeda--24.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana'},
+    {a:'Julian_Ojeda_Ojeda--25.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana'},
+    {a:'Julian_Ojeda_Ojeda--26.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana'},
+    {a:'Julian_Ojeda_Ojeda--28.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana'},
+    {a:'Julian_Ojeda_Ojeda--30.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana'},
+    {a:'Julian_Ojeda_Ojeda--31.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana'},
+    {a:'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--03.mp3',c:'Julián Ojeda Ojeda y Gregorio Ojeda Peña',m:'Cantabrana'},
+    {a:'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--06.mp3',c:'Julián Ojeda Ojeda y Gregorio Ojeda Peña',m:'Cantabrana'},
+    {a:'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--13.mp3',c:'Julián Ojeda Ojeda y Gregorio Ojeda Peña',m:'Cantabrana'},
+    {a:'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--34.mp3',c:'Julián Ojeda Ojeda y Gregorio Ojeda Peña',m:'Cantabrana'},
+    {a:'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--35.mp3',c:'Julián Ojeda Ojeda y Gregorio Ojeda Peña',m:'Cantabrana'},
+    {a:'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--36.mp3',c:'Julián Ojeda Ojeda y Gregorio Ojeda Peña',m:'Cantabrana'},
+    {a:'Lucia_Ojeda_Pena_y_Julian_Ojeda_Ojeda--29.mp3',c:'Lucía Ojeda Peña y Julián Ojeda Ojeda',m:'Cantabrana'},
+    {a:'Pedro-Felix-Garcia-Linaje--38.mp3',c:'Pedro Félix García Linaje',m:'Cantabrana'},
+    {a:'Pedro-Felix-Garcia-Linaje-07.mp3',c:'Pedro Félix García Linaje',m:'Cantabrana'},
+    {a:'Pedro_Felix_Garcia_Linaje--12.mp3',c:'Pedro Félix García Linaje',m:'Cantabrana'},
+    {a:'Pedro_Felix_Garcia_Linaje--32.mp3',c:'Pedro Félix García Linaje',m:'Cantabrana'},
+    {a:'Pedro_Felix_Garcia_Linaje--33.mp3',c:'Pedro Félix García Linaje',m:'Cantabrana'},
+    {a:'Salve--37.mp3',c:'Grupal · Salve',m:'Cantabrana'},
   ],
 };
 
@@ -423,20 +421,14 @@ async function init(){
     const grupo=CFG.grupos_frases[rnd(CFG.grupos_frases.length)];
     let histI=[];try{histI=JSON.parse(localStorage.getItem("cant_intro")||"[]");}catch(e){}
     let noVistasI=CFG.fotos_intro.filter(f=>!histI.includes(f));
-    if(noVistasI.length<3){histI=[];noVistasI=[...CFG.fotos_intro];}
+    if(noVistasI.length<3){histI=[];noVistasI=CFG.fotos_intro;}
     const fotos_intro=shuffle(noVistasI);
-    // Garantizar siempre 3 fotos distintas
-    const pool3=fotos_intro.slice(0,3);
-    while(pool3.length<3){
-      const extra=CFG.fotos_intro.find(f=>!pool3.includes(f));
-      if(extra)pool3.push(extra);else break;
-    }
-    const nvi=[...histI,...pool3].slice(-Math.max(3,Math.floor(CFG.fotos_intro.length*0.6)));
+    const nvi=[...histI,...fotos_intro.slice(0,3)].slice(-Math.max(3,Math.floor(CFG.fotos_intro.length*0.6)));
     try{localStorage.setItem("cant_intro",JSON.stringify(nvi));}catch(e){}
     const ventanas=[
-      {src:pool3[0], leyenda:grupo[0]},
-      {src:pool3[1], leyenda:grupo[1]},
-      {src:pool3[2], leyenda:grupo[2]},
+      {src:fotos_intro[0], leyenda:grupo[0]},
+      {src:fotos_intro[1], leyenda:grupo[1]},
+      {src:fotos_intro[2], leyenda:grupo[2]},
     ];
     await mostrarVentanas(ventanas);
 
@@ -447,7 +439,7 @@ async function init(){
     const tIdx=rnd(CFG.textos_perg.length);
     document.getElementById('p-aviso').innerHTML=CFG.textos_perg[tIdx];
     document.getElementById('pant-perg').classList.add('show');
-    setTimeout(iniciarJota,6000);
+    setTimeout(iniciarJota,5000);
   },600);
 }
 
@@ -456,7 +448,7 @@ async function init(){
 // ================================================================
 async function iniciarJota(){
   if(!jota)return;
-  const perg=document.getElementById('pant-perg');perg.style.transition='opacity 2s ease';perg.style.opacity='0';
+  document.getElementById('pant-perg').style.opacity='0';
 
   // Shuffle fotos arcos con historial
   let histF=[];try{histF=JSON.parse(localStorage.getItem('cant_fotos')||'[]');}catch(e){}
@@ -466,10 +458,10 @@ async function iniciarJota(){
   const nuevasVistas=[...histF,...fotos.slice(0,20)].slice(-97);
   try{localStorage.setItem('cant_fotos',JSON.stringify(nuevasVistas));}catch(e){}
 
-  const pr=document.getElementById('pant-repro');pr.style.opacity='0';pr.classList.add('show');pr.style.transition='opacity 1.5s ease';setTimeout(()=>{pr.style.opacity='1';},50);
+  document.getElementById('pant-repro').classList.add('show');
   document.getElementById('cantante').textContent=jota.c;
   document.getElementById('municipio').textContent=jota.m;
-  document.getElementById('ticker-in').textContent='âª  '+(jota.t||jota.c)+' · '+jota.c+' · Cantabrana  âª';
+  document.getElementById('ticker-in').textContent='♪  '+jota.c+' · '+jota.m+' · Cantabrana · Retazos de Vida  ♪';
 
   // Bajar ambiente
   let av=aAmb.volume;const fa=setInterval(()=>{av=Math.max(av-0.02,0.06);aAmb.volume=av;if(av<=0.06)clearInterval(fa);},80);
@@ -520,20 +512,18 @@ function iniciarProgreso(){
 // ================================================================
 function finJota(){
   if(jotaFin)return;jotaFin=true;
-  const ub=document.getElementById('ui-bot');ub.style.opacity='0';ub.style.pointerEvents='none';
-  document.getElementById('titulo-jota').style.opacity='0';
   clearTimeout(fotoTimer);clearInterval(progresoInter);
   document.getElementById('prog-fill').style.width='100%';
 
   // Subir ambiente
-  let v=aAmb.volume;const fu=setInterval(()=>{v=Math.min(v+0.008,0.45);aAmb.volume=v;if(v>=0.45)clearInterval(fu);},60);
+  let v=aAmb.volume;const fu=setInterval(()=>{v=Math.min(v+0.02,0.45);aAmb.volume=v;if(v>=0.45)clearInterval(fu);},100);
 
   // Portada
   const fi=document.getElementById('f-img');
   const bl=document.getElementById('f-blur');
   const tr=document.getElementById('f-trans');
   tr.classList.add('on');
-  setTimeout(()=>{fi.src=CFG.portada;bl.style.backgroundImage="url('"+CFG.portada+"')";fi.style.maxWidth='88%';fi.style.maxHeight='78vh';fi.onload=()=>{tr.classList.remove('on');fi.classList.add('show');};},500);
+  setTimeout(()=>{fi.src=CFG.portada;bl.style.backgroundImage="url('"+CFG.portada+"')";fi.onload=()=>{tr.classList.remove('on');fi.classList.add('show');};},500);
 
   // Despedida tras 4s
   setTimeout(()=>{
