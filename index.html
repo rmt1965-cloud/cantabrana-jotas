@@ -110,7 +110,7 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
   <div class="ld-subtitulo">Retazos de Vida</div>
   <div class="ld-linea2"></div>
   <div class="ld-autor">Rafael Molina Toledo</div>
-  <div id="ld-btn">Pulsar para iniciar</div>
+  <div id="ld-btn" onclick="arrancar()" ontouchstart="arrancar()">Pulsar para iniciar</div>
 </div>
 
 <!-- VENTANAS -->
@@ -378,6 +378,12 @@ async function mostrarVentanas(ventanas){
 // ================================================================
 // INIT
 // ================================================================
+function arrancar(){
+  if(window._arrancado) return;
+  window._arrancado = true;
+  if(window._resolve) window._resolve();
+}
+
 async function init(){
   keepScreen();
 
