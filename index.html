@@ -515,6 +515,7 @@ function iniciarProgreso(){
 function finJota(){
   if(jotaFin)return;jotaFin=true;
   const ub=document.getElementById('ui-bot');ub.style.opacity='0';ub.style.pointerEvents='none';
+  document.getElementById('ticker').style.display='none';
   clearTimeout(fotoTimer);clearInterval(progresoInter);
   document.getElementById('prog-fill').style.width='100%';
 
