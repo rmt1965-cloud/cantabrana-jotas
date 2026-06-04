@@ -450,7 +450,7 @@ async function init(){
 // ================================================================
 async function iniciarJota(){
   if(!jota)return;
-  document.getElementById('pant-perg').style.opacity='0';
+  const perg=document.getElementById('pant-perg');perg.style.transition='opacity 2s ease';perg.style.opacity='0';
 
   // Shuffle fotos arcos con historial
   let histF=[];try{histF=JSON.parse(localStorage.getItem('cant_fotos')||'[]');}catch(e){}
@@ -460,7 +460,7 @@ async function iniciarJota(){
   const nuevasVistas=[...histF,...fotos.slice(0,20)].slice(-97);
   try{localStorage.setItem('cant_fotos',JSON.stringify(nuevasVistas));}catch(e){}
 
-  document.getElementById('pant-repro').classList.add('show');
+  const pr=document.getElementById('pant-repro');pr.style.opacity='0';pr.classList.add('show');pr.style.transition='opacity 1.5s ease';setTimeout(()=>{pr.style.opacity='1';},50);
   document.getElementById('cantante').textContent=jota.c;
   document.getElementById('municipio').textContent=jota.m;
   document.getElementById('ticker-in').textContent='♪  '+jota.c+' · '+jota.m+' · Cantabrana · Retazos de Vida  ♪';
