@@ -381,6 +381,7 @@ async function mostrarVentanas(ventanas){
 function arrancar(){
   if(window._arrancado) return;
   window._arrancado = true;
+  iniciarAmbiente();
   document.getElementById('loading').removeEventListener('click', window._h);
   document.getElementById('loading').removeEventListener('touchend', window._h);
   document.getElementById('loading').removeEventListener('touchstart', window._h);
@@ -412,9 +413,6 @@ async function init(){
     const h=()=>{el.removeEventListener('click',h);el.removeEventListener('touchend',h);resolve();};
     el.addEventListener('click',h);el.addEventListener('touchend',h);el.addEventListener('touchstart',h);
   });
-
-  // Iniciar ambiente
-  iniciarAmbiente();
 
   // Ocultar loading
   document.getElementById('loading').classList.add('fade');
