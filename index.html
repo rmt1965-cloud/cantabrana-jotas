@@ -512,6 +512,7 @@ function iniciarProgreso(){
 // ================================================================
 function finJota(){
   if(jotaFin)return;jotaFin=true;
+  clearTimeout(fotoTimer);fotoIdx=0;
   clearTimeout(fotoTimer);clearInterval(progresoInter);
   document.getElementById('prog-fill').style.width='100%';
 
