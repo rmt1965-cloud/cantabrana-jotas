@@ -525,7 +525,7 @@ function finJota(){
   tr.classList.add('on');
   setTimeout(()=>{fi.src=CFG.portada;bl.style.backgroundImage="url('"+CFG.portada+"')";fi.onload=()=>{tr.classList.remove('on');fi.classList.add('show');};},500);
 
-  // Despedida tras 4s
+  // Despedida tras 8s
   setTimeout(()=>{
     document.getElementById('pant-repro').style.display='none';
     mostrarDespedida(()=>{
@@ -534,7 +534,7 @@ function finJota(){
       document.getElementById('fin-frase').innerHTML=CFG.frases_final[idx]+'<br><br>Gracias por escuchar.';
       document.getElementById('pant-final').classList.add('show');
     });
-  },4000);
+  },8000);
 }
 
 // ================================================================
