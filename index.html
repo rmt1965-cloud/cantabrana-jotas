@@ -117,6 +117,7 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 <div id="ventanas">
   <img id="v-blur" src="" alt="">
   <img id="v-img" src="" alt="">
+  <video id="v-vid" src="" autoplay muted playsinline loop style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:85%;max-width:360px;max-height:60vh;object-fit:contain;opacity:0;transition:opacity 1.5s ease;z-index:1;display:none;"></video>
   <div id="v-ley"></div>
 </div>
 
@@ -218,6 +219,17 @@ const CFG = {
     ['Siglos de historia en tres minutos','Esto no es nostalgia. Es identidad.','Bienvenido a Cantabrana'],
     ['Algunas puertas nunca se cerraron del todo','Detrás hay voces que esperaban ser escuchadas','Esta es una de ellas'],
     ['Lo que somos viene de donde venimos','Cantabrana no es un lugar, es una raíz','Y esa raíz eres tú'],
+  ],
+
+  // VIDEOS INTRO
+  videos_intro: [
+    'video/intro/video01.mp4','video/intro/video02.mp4','video/intro/video03.mp4',
+    'video/intro/video04.mp4','video/intro/video05.mp4','video/intro/video06.mp4',
+    'video/intro/video07.mp4','video/intro/video08.mp4','video/intro/video09.mp4',
+    'video/intro/video10.mp4','video/intro/video11.mp4','video/intro/video12.mp4',
+    'video/intro/video13.mp4','video/intro/video14.mp4','video/intro/video15.mp4',
+    'video/intro/video16.mp4','video/intro/video17.mp4','video/intro/video18.mp4',
+    'video/intro/video19.mp4',
   ],
 
   // FOTOS INTRO (extra + rusticos)
@@ -365,13 +377,22 @@ async function mostrarVentanas(ventanas){
       }
       const data=ventanas[idx++];
       vimg.style.opacity='0';vblur.style.opacity='0';vley.classList.remove('show');vley.textContent='';
+      const vvid=document.getElementById('v-vid');
+      vvid.style.opacity='0';vvid.style.display='none';vvid.pause&&vvid.pause();
       setTimeout(()=>{
-        vimg.src=data.src;vblur.src=data.src;
-        vimg.onload=()=>{
-          vimg.style.opacity='1';vblur.style.opacity='1';
-          setTimeout(()=>{vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,3200);},900);
-        };
-        vimg.onerror=()=>setTimeout(sig,500);
+        if(data.tipo==='video'){
+          vvid.style.display='block';vvid.src=data.src;vvid.load();
+          vvid.oncanplay=()=>{vvid.style.opacity='1';vblur.src='';vblur.style.opacity='0';
+            setTimeout(()=>{vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,3200);},900);};
+          vvid.onerror=()=>setTimeout(sig,500);
+        } else {
+          vimg.src=data.src;vblur.src=data.src;
+          vimg.onload=()=>{
+            vimg.style.opacity='1';vblur.style.opacity='1';
+            setTimeout(()=>{vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,3200);},900);
+          };
+          vimg.onerror=()=>setTimeout(sig,500);
+        }
       },600);
     }
     sig();
