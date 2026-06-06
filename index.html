@@ -461,11 +461,19 @@ async function init(){
     const fotos_intro=shuffle(noVistasI);
     const nvi=[...histI,...fotos_intro.slice(0,3)].slice(-Math.max(3,Math.floor(CFG.fotos_intro.length*0.6)));
     try{localStorage.setItem("cant_intro",JSON.stringify(nvi));}catch(e){}
-    const ventanas=[
-      {src:fotos_intro[0], leyenda:grupo[0]},
-      {src:fotos_intro[1], leyenda:grupo[1]},
-      {src:fotos_intro[2], leyenda:grupo[2]},
+    // Mezclar fotos y videos aleatoriamente
+    let histV=[];try{histV=JSON.parse(localStorage.getItem('cant_vids')||'[]');}catch(e){}
+    let noVistasV=CFG.videos_intro.filter(f=>!histV.includes(f));
+    if(noVistasV.length<1){histV=[];noVistasV=CFG.videos_intro;}
+    const vids_shuffle=shuffle(noVistasV);
+    const nviV=[...histV,...vids_shuffle.slice(0,2)].slice(-Math.floor(CFG.videos_intro.length*0.6));
+    try{localStorage.setItem('cant_vids',JSON.stringify(nviV));}catch(e){}
+    const mediaPool=[
+      {src:fotos_intro[0], leyenda:grupo[0], tipo:'foto'},
+      {src:vids_shuffle[0], leyenda:grupo[1], tipo:'video'},
+      {src:fotos_intro[1], leyenda:grupo[2], tipo:'foto'},
     ];
+    const ventanas=shuffle(mediaPool);
     await mostrarVentanas(ventanas);
 
     // Pergamino
