@@ -399,6 +399,8 @@ async function mostrarVentanas(ventanas){
         } else {
           vimg.src=data.src;vblur.src=data.src;
           vimg.onload=()=>{
+            const kbsv=['kenburns1','kenburns2','kenburns3','kenburns4'];
+            vimg.style.animation=kbsv[Math.floor(Math.random()*4)]+' 5s ease-in-out forwards';
             vimg.style.opacity='1';vblur.style.opacity='1';
             setTimeout(()=>{vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,3200);},900);
           };
