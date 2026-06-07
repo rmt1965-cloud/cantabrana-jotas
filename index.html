@@ -597,23 +597,30 @@ function mostrarDespedida(callback){
   img.style.animation=KB[idxKB]+' 12s ease-in-out forwards';
   txt.textContent=CFG.frases_desp[idxT];
   div.classList.add('show');
-  // Sello lacrado en esquina
-  const sellosD=['fotos/sellos/sello7.png','fotos/sellos/sello8.png','fotos/sellos/sello9.png','fotos/sellos/sello10.png','fotos/sellos/sello11.png'];
-  let selloEl=div.querySelector('.sello-corner');if(selloEl)selloEl.remove();
-  selloEl=document.createElement('img');
-  selloEl.className='sello-corner';
-  selloEl.src=sellosD[rnd(sellosD.length)];
-  selloEl.style.cssText='position:absolute;bottom:10%;right:5%;width:min(28vw,110px);height:auto;object-fit:contain;opacity:0.92;z-index:2;border-radius:4px;box-shadow:0 4px 20px rgba(0,0,0,0.7);';
-  div.appendChild(selloEl);
   setTimeout(()=>{
     div.style.transition='opacity 1.5s ease';div.style.opacity='0';
-    setTimeout(()=>{div.style.display='none';callback();},1500);
+    setTimeout(()=>{div.style.display='none';mostrarSello(callback);},1500);
   },8000);
 }
 
 // ================================================================
 // CONTROLES
 // ================================================================
+function mostrarSello(callback){
+  const sellos=['fotos/sellos/sello7.png','fotos/sellos/sello8.png','fotos/sellos/sello9.png','fotos/sellos/sello10.png','fotos/sellos/sello11.png'];
+  const div=document.getElementById('pant-desp');
+  const img=document.getElementById('d-img');
+  const txt=document.getElementById('d-txt');
+  img.src=sellos[rnd(sellos.length)];
+  img.style.animation='none';
+  txt.textContent='';
+  div.style.opacity='0';div.style.display='flex';
+  setTimeout(()=>{div.style.transition='opacity 1.5s ease';div.style.opacity='1';},50);
+  setTimeout(()=>{
+    div.style.opacity='0';
+    setTimeout(()=>{div.style.display='none';callback();},1500);
+  },5000);
+}
 function reiniciar(){aJota.pause();aJota.src='';clearTimeout(fotoTimer);clearInterval(progresoInter);location.reload();}
 function salir(){
   aJota.pause();aAmb.pause();
