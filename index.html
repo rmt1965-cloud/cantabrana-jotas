@@ -613,8 +613,17 @@ function mostrarSello(callback){
   const txt=document.getElementById('d-txt');
   img.src=sellos[rnd(sellos.length)];
   img.style.animation='none';
+  img.style.maxWidth='88%';
+  img.style.maxHeight='78vh';
+  img.style.width='auto';
+  img.style.height='auto';
+  img.style.position='relative';
+  img.style.margin='auto';
+  img.style.objectFit='contain';
+  img.onload=()=>{img.style.animation='kenburns1 5s ease-in-out forwards';};
   txt.textContent='';
   div.style.opacity='0';div.style.display='flex';
+  div.style.alignItems='center';div.style.justifyContent='center';
   setTimeout(()=>{div.style.transition='opacity 1.5s ease';div.style.opacity='1';},50);
   setTimeout(()=>{
     div.style.opacity='0';
