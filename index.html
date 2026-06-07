@@ -399,8 +399,6 @@ async function mostrarVentanas(ventanas){
         } else {
           vimg.src=data.src;vblur.src=data.src;
           vimg.onload=()=>{
-            const kbsv=['kenburns1','kenburns2','kenburns3','kenburns4'];
-            vimg.style.animation=kbsv[Math.floor(Math.random()*4)]+' 5s ease-in-out forwards';
             vimg.style.opacity='1';vblur.style.opacity='1';
             setTimeout(()=>{vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,3200);},900);
           };
@@ -532,13 +530,11 @@ function mostrarFoto(idx){
   const trans=document.getElementById('f-trans');
   const img=document.getElementById('f-img');
   const blur=document.getElementById('f-blur');
-  trans.classList.add('on');img.classList.remove('show');img.style.animation='none';
+  trans.classList.add('on');img.classList.remove('show');
   setTimeout(()=>{
     img.src=url;blur.style.backgroundImage="url('"+url+"')";
     img.onerror=()=>{trans.classList.remove('on');setTimeout(()=>mostrarFoto(idx+1),100);};
     img.onload=()=>{
-      const kbs=['kenburns1','kenburns2','kenburns3','kenburns4'];
-      img.style.animation=kbs[idx%4]+' '+(CFG.dur_foto+CFG.dur_trans+2)+'s ease-in-out forwards';
       setTimeout(()=>{trans.classList.remove('on');img.classList.add('show');},150);
     };
   },350);
