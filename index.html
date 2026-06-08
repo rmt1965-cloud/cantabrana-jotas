@@ -432,7 +432,7 @@ async function init(){
   setTimeout(()=>{document.getElementById('ld-btn').style.opacity='1';},1500);
 
   // Esperar interacción
-  await new Promise(resolve=>{
+  await new Promise(resolve=>{window._resolve=resolve;
     const el=document.getElementById('loading');
     const btn=document.getElementById('ld-btn');
     const h=()=>{el.removeEventListener('click',h);el.removeEventListener('touchend',h);
