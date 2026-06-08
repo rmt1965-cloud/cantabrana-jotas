@@ -377,11 +377,11 @@ async function mostrarVentanas(ventanas){
       const data=ventanas[idx++];
       vimg.style.opacity='0';vblur.style.opacity='0';vley.classList.remove('show');vley.textContent='';
       const vvid=document.getElementById('v-vid');
-      vvid.style.opacity='0';vvid.style.display='none';
       if(vvid.pause)vvid.pause();
-      vvid.src='';
-      vvid.load();
-      vimg.style.opacity='0';
+      vvid.removeAttribute('src');
+      vvid.style.opacity='0';vvid.style.display='none';
+      vimg.style.opacity='0';vimg.src='';
+      vblur.src='';
       setTimeout(()=>{
         if(data.tipo==='video'){
           vvid.style.display='block';vvid.src=data.src;vvid.load();
