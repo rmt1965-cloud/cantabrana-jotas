@@ -94,10 +94,10 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 #fin-frase{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,5.5vw,24px);color:rgba(255,255,255,.9);max-width:340px;line-height:1.9;margin-top:10px;text-shadow:0 0 20px rgba(200,146,42,.3);}
 .fin-btns{display:flex;gap:16px;margin-top:20px;flex-wrap:wrap;justify-content:center}
 @keyframes sello-glow{0%,100%{filter:drop-shadow(0 3px 8px rgba(140,20,20,.4))}50%{filter:drop-shadow(0 3px 24px rgba(180,30,30,.9))}}
-@keyframes kenburns1{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.15) translate(-3%,-2%)}}
-@keyframes kenburns2{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.12) translate(2%,-3%)}}
-@keyframes kenburns3{0%{transform:scale(1.1) translate(-2%,0)}100%{transform:scale(1) translate(2%,2%)}}
-@keyframes kenburns4{0%{transform:scale(1) translate(2%,2%)}100%{transform:scale(1.15) translate(-2%,-1%)}}
+@keyframes kenburns1{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.25) translate(-4%,-3%)}}
+@keyframes kenburns2{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.22) translate(3%,-4%)}}
+@keyframes kenburns3{0%{transform:scale(1.2) translate(-3%,0)}100%{transform:scale(1) translate(3%,3%)}}
+@keyframes kenburns4{0%{transform:scale(1) translate(2%,2%)}100%{transform:scale(1.25) translate(-3%,-2%)}}
 </style>
 </head>
 <body>
@@ -586,10 +586,19 @@ function mostrarDespedida(callback){
   const idxV=rnd(CFG.vistas.length);
   const idxT=rnd(CFG.frases_desp.length);
   const idxKB=rnd(KB.length);
-  img.src=CFG.vistas[idxV];
-  img.style.animation=KB[idxKB]+' 12s ease-in-out forwards';
-  txt.textContent=CFG.frases_desp[idxT];
+  img.src='';
+  img.style.opacity='0';
+  img.style.animation='none';
+  txt.textContent='';
   div.classList.add('show');
+  setTimeout(()=>{
+    img.src=CFG.vistas[idxV];
+    img.onload=()=>{
+      img.style.opacity='1';
+      img.style.animation=KB[idxKB]+' 12s ease-in-out forwards';
+    };
+    txt.textContent=CFG.frases_desp[idxT];
+  },200);
   setTimeout(()=>{
     div.style.transition='opacity 1.5s ease';div.style.opacity='0';
     setTimeout(()=>{div.style.display='none';mostrarSello(callback);},1500);
