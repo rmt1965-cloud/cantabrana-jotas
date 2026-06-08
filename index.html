@@ -434,8 +434,12 @@ async function init(){
   // Esperar interacción
   await new Promise(resolve=>{
     const el=document.getElementById('loading');
-    const h=()=>{el.removeEventListener('click',h);el.removeEventListener('touchend',h);resolve();};
+    const btn=document.getElementById('ld-btn');
+    const h=()=>{el.removeEventListener('click',h);el.removeEventListener('touchend',h);
+      if(btn){btn.removeEventListener('click',h);btn.removeEventListener('touchend',h);}
+      resolve();};
     el.addEventListener('click',h);el.addEventListener('touchend',h);
+    if(btn){btn.addEventListener('click',h);btn.addEventListener('touchend',h);}
   });
 
   // Iniciar ambiente
