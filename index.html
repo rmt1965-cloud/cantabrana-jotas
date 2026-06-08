@@ -104,13 +104,14 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 <canvas id="bg"></canvas>
 
 <!-- LOADING -->
-<div id="loading">
+<div id="loading"><div id="ld-fondo" style="position:absolute;inset:0;background-size:cover;background-position:center;z-index:0;opacity:0;transition:opacity 1s ease;"></div><div id="ld-ov" style="position:absolute;inset:0;background:rgba(0,0,0,0.35);z-index:1;"></div><div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;">
   <div class="ld-titulo">Cantabrana</div>
   <div class="ld-linea"></div>
   <div class="ld-subtitulo">Retazos de Vida</div>
   <div class="ld-linea2"></div>
   <div class="ld-autor">Rafael Molina Toledo</div>
   <div id="ld-btn" onclick="arrancar()" ontouchstart="arrancar()">Pulsar para iniciar</div>
+  </div>
 </div>
 
 <!-- VENTANAS -->
@@ -644,6 +645,16 @@ function salir(){
 }
 
 document.addEventListener('DOMContentLoaded',init);
+
+(function(){
+var fs=['fotos/fondos/agua1.png','fotos/fondos/agua2.png','fotos/fondos/agua3.png','fotos/fondos/agua4.png','fotos/fondos/agua5.png','fotos/fondos/agua6.png','fotos/fondos/agua7.png','fotos/fondos/agua8.png','fotos/fondos/agua9.png','fotos/fondos/agua10.png','fotos/fondos/agua11.png','fotos/fondos/agua12.png','fotos/fondos/agua13.png','fotos/fondos/agua14.png','fotos/fondos/agua15.png','fotos/fondos/agua16.png','fotos/fondos/agua17.png','fotos/fondos/agua18.png','fotos/fondos/agua19.png','fotos/fondos/agua20.png','fotos/fondos/agua21.png'];
+var f=fs[Math.floor(Math.random()*fs.length)];
+var bg=document.getElementById('ld-fondo');
+if(!bg)return;
+var im=new Image();
+im.onload=function(){bg.style.backgroundImage="url('"+f+"')";bg.style.opacity='1';};
+im.src=f;
+})();
 </script>
 </body>
 </html>
