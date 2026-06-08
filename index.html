@@ -395,7 +395,9 @@ async function mostrarVentanas(ventanas){
         if(data.tipo==='video'){
           vvid.style.display='block';vvid.src=data.src;vvid.load();
           vvid.oncanplay=()=>{vvid.style.opacity='1';vblur.src='';vblur.style.opacity='0';
-            setTimeout(()=>{vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,5200);},900);};
+            setTimeout(()=>{vley.textContent=data.leyenda;vley.classList.add('show');
+              setTimeout(()=>{vvid.style.transition='opacity 1.5s ease';vvid.style.opacity='0';},3500);
+              setTimeout(sig,5200);},900);};
           vvid.onerror=()=>setTimeout(sig,500);
         } else {
           vimg.src=data.src;vblur.src=data.src;
