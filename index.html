@@ -217,10 +217,10 @@ const CFG = {
   // GRUPOS DE FRASES para ventanas (cada grupo = 3 frases en orden)
   grupos_frases: [
     ['Cantabrana llama al pasado','A través de sus ventanas','sus arcos y sus puertas centenarias'],
-    ['Aquí vivieron tus ancestros','Aquí sonó esta música por primera vez','Ahora la escuchas. Valórala es un tesoro'],
-    ['Esto no es nostalgia es identidad.','Son siglos de historia en tres minutos','Bienvenido a Cantabrana.'],
+    ['Aquí vivieron tus ancestros','Aquí sonó esta música por primera vez','Ahora la escuchas. Valórala, es un tesoro'],
+    ['Esto no es nostalgia, es identidad.','Son siglos de historia en tres minutos','Bienvenido a Cantabrana.'],
     ['Algunas puertas nunca se cerraron del todo','Detrás hay voces que esperaban ser escuchadas','Esta es una de ellas.'],
-    ['Cantabrana no es un lugar es una raíz donde','su memoria y legado fueron su alimento','ahora esa raíz eres tú.'],
+    ['Cantabrana no es un lugar, es una raíz donde','su memoria y legado fueron su alimento','ahora esa raíz eres tú.'],
     ['Lo que vas a escuchar es','Patrimonio Cultural de Cantabrana','Poco nos queda de aquellas tradiciones casi extinguidas'],
   ],
 
@@ -479,7 +479,7 @@ async function init(){
       {src:vids_shuffle[0], leyenda:grupo[1], tipo:'video'},
       {src:fotos_intro[1], leyenda:grupo[2], tipo:'foto'},
     ];
-    const ventanas=shuffle(mediaPool);
+    const ventanas=mediaPool;
     await mostrarVentanas(ventanas);
 
     // Pergamino
