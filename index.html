@@ -376,18 +376,20 @@ async function mostrarVentanas(ventanas){
         var vvid=document.getElementById('v-vid');
         if(data.tipo==='video'&&vvid){
           vvid.style.display='block';vvid.style.opacity='0';
+          vvid.oncanplay=null;vvid.ontimeupdate=null;
           vvid.src=data.src;vvid.load();vvid.play().catch(function(){});
           var shown=false;
-          function showV(){if(shown)return;shown=true;vvid.style.opacity='1';
-            setTimeout(function(){vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,7000);},900);}
+          var showV=function(){if(shown)return;shown=true;vvid.style.opacity='1';
+            setTimeout(function(){vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,7000);},900);};
           vvid.oncanplay=showV;vvid.ontimeupdate=showV;setTimeout(showV,1500);
-          vvid.onerror=function(){setTimeout(sig,500);};
+          vvid.onerror=function(){vvid.onerror=null;setTimeout(sig,500);};
         } else {
-          if(vvid){if(vvid.pause)vvid.pause();vvid.removeAttribute('src');vvid.style.display='none';}
+          if(vvid){vvid.oncanplay=null;vvid.ontimeupdate=null;if(vvid.pause)vvid.pause();vvid.removeAttribute('src');vvid.style.display='none';}
           vimg.src=data.src;vblur.src=data.src;
           vimg.onload=function(){vimg.style.opacity='1';vblur.style.opacity='1';
             setTimeout(function(){vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,3200);},900);};
           vimg.onerror=function(){setTimeout(sig,500);};
+        }
         }
       },600);
     }
