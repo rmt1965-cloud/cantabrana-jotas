@@ -116,8 +116,7 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 <!-- VENTANAS -->
 <div id="ventanas">
   <img id="v-blur" src="" alt="">
-<img id="v-img" src="" alt="">
-  <video id="v-vid" autoplay muted playsinline loop style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:95%;max-width:480px;max-height:82vh;object-fit:cover;opacity:0;transition:opacity 1.5s ease;z-index:1;display:none;"></video>
+  <img id="v-img" src="" alt="">
   <div id="v-ley"></div>
 </div>
 
@@ -219,15 +218,6 @@ const CFG = {
     ['Lo que somos viene de donde venimos','Cantabrana no es un lugar, es una raíz','Y esa raíz eres tú'],
   ],
 
-videos_intro: [
-    "video/intro/video01.mp4","video/intro/video02.mp4","video/intro/video03.mp4",
-    "video/intro/video04.mp4","video/intro/video05.mp4","video/intro/video06.mp4",
-    "video/intro/video07.mp4","video/intro/video08.mp4","video/intro/video09.mp4",
-    "video/intro/video10.mp4","video/intro/video11.mp4","video/intro/video12.mp4",
-    "video/intro/video13.mp4","video/intro/video14.mp4","video/intro/video15.mp4",
-    "video/intro/video16.mp4","video/intro/video17.mp4","video/intro/video18.mp4",
-    "video/intro/video19.mp4",
-  ],
   // FOTOS INTRO (extra + rusticos)
   fotos_intro: ["fotos/extra/aldaba1.png", "fotos/extra/aldaba2.png", "fotos/extra/aldaba3.png", "fotos/extra/aldaba4.png", "fotos/extra/aldaba5.png", "fotos/extra/aldaba6.png", "fotos/extra/arandela01.jpg", "fotos/extra/arandela02.jpg", "fotos/extra/cerradura01.jpg", "fotos/extra/chaveta01.jpg", "fotos/extra/chaveta02.jpg", "fotos/extra/chaveta03.jpg", "fotos/extra/chaveta04.jpg", "fotos/extra/chaveta05.jpg", "fotos/extra/clavos01.png", "fotos/extra/dintel01.jpg", "fotos/extra/dintel02.jpg", "fotos/extra/dintel03.jpg", "fotos/extra/dintel04.jpg", "fotos/extra/dintel05.jpg", "fotos/extra/dintel06.jpg", "fotos/extra/dintel07.jpg", "fotos/extra/dintel08.jpg", "fotos/extra/dintel09.jpg", "fotos/extra/dintel10.jpg", "fotos/extra/dintel11.jpg", "fotos/extra/dintel12.jpg", "fotos/extra/dintel13.jpg", "fotos/extra/escudo01.jpg", "fotos/extra/escudo02.jpg", "fotos/extra/estela1.jpg", "fotos/extra/zaguan1.png", "fotos/extra/zaguan2.png", "fotos/extra/ventana6.png", "video/intro/rustico1.jpg", "video/intro/rustico2.jpg", "video/intro/rustico3.jpg", "video/intro/rustico4.jpg"],
 
@@ -369,28 +359,14 @@ async function mostrarVentanas(ventanas){
         return;
       }
       const data=ventanas[idx++];
-      var vvc=document.getElementById('v-vid');
-      if(vvc){if(vvc.pause)vvc.pause();vvc.removeAttribute('src');vvc.style.opacity='0';vvc.style.display='none';}
-      vimg.style.opacity='0';vimg.src='';vblur.style.opacity='0';vley.classList.remove('show');vley.textContent='';
+      vimg.style.opacity='0';vblur.style.opacity='0';vley.classList.remove('show');vley.textContent='';
       setTimeout(()=>{
-        var vvid=document.getElementById('v-vid');
-        if(data.tipo==='video'&&vvid){
-          vvid.style.display='block';vvid.style.opacity='0';
-          vvid.oncanplay=null;vvid.ontimeupdate=null;
-          vvid.src=data.src;vvid.load();vvid.play().catch(function(){});
-          var shown=false;
-          var showV=function(){if(shown)return;shown=true;vvid.style.opacity='1';
-            setTimeout(function(){vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,7000);},900);};
-          vvid.oncanplay=showV;vvid.ontimeupdate=showV;setTimeout(showV,1500);
-          vvid.onerror=function(){vvid.onerror=null;setTimeout(sig,500);};
-        } else {
-          if(vvid){vvid.oncanplay=null;vvid.ontimeupdate=null;if(vvid.pause)vvid.pause();vvid.removeAttribute('src');vvid.style.display='none';}
-          vimg.src=data.src;vblur.src=data.src;
-          vimg.onload=function(){vimg.style.opacity='1';vblur.style.opacity='1';
-            setTimeout(function(){vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,3200);},900);};
-          vimg.onerror=function(){setTimeout(sig,500);};
-        }
-        }
+        vimg.src=data.src;vblur.src=data.src;
+        vimg.onload=()=>{
+          vimg.style.opacity='1';vblur.style.opacity='1';
+          setTimeout(()=>{vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,3200);},900);
+        };
+        vimg.onerror=()=>setTimeout(sig,500);
       },600);
     }
     sig();
@@ -447,29 +423,11 @@ async function init(){
     const fotos_intro=shuffle(noVistasI);
     const nvi=[...histI,...fotos_intro.slice(0,3)].slice(-Math.max(3,Math.floor(CFG.fotos_intro.length*0.6)));
     try{localStorage.setItem("cant_intro",JSON.stringify(nvi));}catch(e){}
-    let histV=[];
-    try{histV=JSON.parse(localStorage.getItem('cant_vids')||'[]');}catch(e){}
-    let noVV=CFG.videos_intro.filter(f=>!histV.includes(f));
-    if(noVV.length<2){histV=[];noVV=CFG.videos_intro;}
-    const vids=shuffle([...noVV]);
-    const nviV=[...histV,...vids.slice(0,2)].slice(-Math.floor(CFG.videos_intro.length*0.6));
-    try{localStorage.setItem('cant_vids',JSON.stringify(nviV));}catch(e){}
-    let mediaPool;
-    if(grupo.length>=4){
-      mediaPool=[
-        {src:fotos_intro[0],leyenda:grupo[0],tipo:'foto'},
-        {src:vids[0],leyenda:grupo[1],tipo:'video'},
-        {src:fotos_intro[1],leyenda:grupo[2],tipo:'foto'},
-        {src:vids[1]||vids[0],leyenda:grupo[3],tipo:'video'},
-      ];
-    } else {
-      mediaPool=[
-        {src:fotos_intro[0],leyenda:grupo[0],tipo:'foto'},
-        {src:vids[0],leyenda:grupo[1],tipo:'video'},
-        {src:fotos_intro[1],leyenda:grupo[2],tipo:'foto'},
-      ];
-    }
-    const ventanas=mediaPool;
+    const ventanas=[
+      {src:fotos_intro[0], leyenda:grupo[0]},
+      {src:fotos_intro[1], leyenda:grupo[1]},
+      {src:fotos_intro[2], leyenda:grupo[2]},
+    ];
     await mostrarVentanas(ventanas);
 
     // Pergamino
