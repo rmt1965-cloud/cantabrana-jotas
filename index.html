@@ -117,7 +117,6 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 <div id="ventanas">
   <img id="v-blur" src="" alt="">
   <img id="v-img" src="" alt="">
-  <video id="v-vid" src="" autoplay muted playsinline loop style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:95%;max-width:480px;max-height:82vh;object-fit:cover;opacity:0;transition:opacity 1.5s ease;z-index:1;display:none;"></video>
   <div id="v-ley"></div>
 </div>
 
@@ -207,32 +206,16 @@ const CFG = {
     'fotos/vistas/A07.jpg','fotos/vistas/A08.jpg','fotos/vistas/A10.jpg',
   ],
   portada: 'fotos/portada/portada1.png',
-  dur_foto: 3,
+  dur_foto: 5,
   dur_trans: 0.5,
 
   // GRUPOS DE FRASES para ventanas (cada grupo = 3 frases en orden)
   grupos_frases: [
-    ['Cantabrana llama al pasado','a traves de sus ventanas','sus arcos y sus puertas centenarias'],
-    ['Aqui vivieron tus ancestros','Aqui sono esta musica por primera vez','Ahora te toca a ti escucharla'],
-    ['Siglos de historia en tres minutos','Esto no es nostalgia.','Es identidad.','Bienvenido a Cantabrana'],
-    ['Algunas puertas nunca se cerraron del todo','Detras hay voces que esperaban ser escuchadas','Esta es una de ellas'],
-    ['Cantabrana no es un lugar, es una raiz','su memoria y legado fue su alimento','ahora esa raiz eres tu'],
-    ['Lo que escuchas no es solo musica','es la voz de quien ya no esta','su herencia vive en cada nota','escuchala con respeto'],
-  ],
+    ['Cantabrana llama al pasado','a través de sus ventanas','sus arcos y sus puertas centenarias'],
     ['Aquí vivieron tus ancestros','Aquí sonó esta música por primera vez','Ahora te toca a ti escucharla'],
     ['Siglos de historia en tres minutos','Esto no es nostalgia. Es identidad.','Bienvenido a Cantabrana'],
     ['Algunas puertas nunca se cerraron del todo','Detrás hay voces que esperaban ser escuchadas','Esta es una de ellas'],
     ['Lo que somos viene de donde venimos','Cantabrana no es un lugar, es una raíz','Y esa raíz eres tú'],
-  ],
-
-  videos_intro: [
-    'video/intro/video01.mp4','video/intro/video02.mp4','video/intro/video03.mp4',
-    'video/intro/video04.mp4','video/intro/video05.mp4','video/intro/video06.mp4',
-    'video/intro/video07.mp4','video/intro/video08.mp4','video/intro/video09.mp4',
-    'video/intro/video10.mp4','video/intro/video11.mp4','video/intro/video12.mp4',
-    'video/intro/video13.mp4','video/intro/video14.mp4','video/intro/video15.mp4',
-    'video/intro/video16.mp4','video/intro/video17.mp4','video/intro/video18.mp4',
-    'video/intro/video19.mp4',
   ],
 
   // FOTOS INTRO (extra + rusticos)
@@ -243,12 +226,11 @@ const CFG = {
 
   // TEXTOS PERGAMINO
   textos_perg: [
-    'Lo que escuchas<br>es patrimonio cultural que se<br>desvanece en el tiempo.<br>Es memoria viva<br>de Cantabrana.',
-    'Estas voces transmiten<br>nuestra herencia cultural.<br>Ultimos vestigios de unas<br>tradiciones casi extinguidas.',
-    'Lo que vas a escuchar<br>es de otra epoca.<br>Puede herir<br>tu sensibilidad.',
-    'Canta quien recuerda.<br>Jotas y canciones<br>de otro tiempo.<br>Bienvenido.',
-    'Que estas jotas y canciones<br>se mantengan en<br>nuestra memoria cuando ya no<br>resuenen entre nuestras calles.',
-    'El sentimiento de pertenencia<br>es algo que no se negocia,<br>se interioriza y se graba<br>a fuego en nuestra identidad.',
+    'Esto no es una grabación.<br>Es memoria viva de Cantabrana.<br>Canciones de otra época,<br>algunas pueden herir tu sensibilidad.',
+    'Esta voz perteneció a alguien de aquí.<br>Son Jotas y canciones populares de otro tiempo.<br>Algunas pueden herir tu sensibilidad.<br>Escúchalas con respeto.',
+    'Cierra los ojos.<br>Lo que vas a escuchar es de otra época.<br>Puede herir tu sensibilidad.<br>Escúchalo. Vale la pena.',
+    'Canta quien recuerda.<br>Estas Jotas y canciones populares de otro tiempo.<br>Algunas pueden herir tu sensibilidad.<br>Bienvenido a Cantabrana.',
+    'Esto no debió olvidarse.<br>Son canciones de otra época.<br>Algunas pueden herir tu sensibilidad.<br>Acércate con respeto.',
   ],
 
   // FRASES DESPEDIDA
@@ -377,26 +359,14 @@ async function mostrarVentanas(ventanas){
         return;
       }
       const data=ventanas[idx++];
-var vvc=document.getElementById('v-vid');
-      if(vvc){if(vvc.pause)vvc.pause();vvc.removeAttribute('src');vvc.style.opacity='0';vvc.style.display='none';}
-      vimg.style.opacity='0';vimg.src='';vblur.style.opacity='0';
-      vley.classList.remove('show');vley.textContent='';
+      vimg.style.opacity='0';vblur.style.opacity='0';vley.classList.remove('show');vley.textContent='';
       setTimeout(()=>{
-var vvid=document.getElementById('v-vid');
-        if(data.tipo==='video'&&vvid){
-          vvid.style.display='block';vvid.style.opacity='0';
-          vvid.src=data.src;vvid.load();vvid.play().catch(function(){});
-          var shown=false;
-          function showV(){if(shown)return;shown=true;vvid.style.opacity='1';
-            setTimeout(function(){vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,7000);},900);}
-          vvid.oncanplay=showV;vvid.ontimeupdate=showV;setTimeout(showV,1500);
-          vvid.onerror=function(){setTimeout(sig,500);};
-        } else {
-          vimg.src=data.src;vblur.src=data.src;
-          vimg.onload=function(){vimg.style.opacity='1';vblur.style.opacity='1';
-            setTimeout(function(){vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,3200);},900);};
-          vimg.onerror=function(){setTimeout(sig,500);};
-        }
+        vimg.src=data.src;vblur.src=data.src;
+        vimg.onload=()=>{
+          vimg.style.opacity='1';vblur.style.opacity='1';
+          setTimeout(()=>{vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,3200);},900);
+        };
+        vimg.onerror=()=>setTimeout(sig,500);
       },600);
     }
     sig();
@@ -453,29 +423,11 @@ async function init(){
     const fotos_intro=shuffle(noVistasI);
     const nvi=[...histI,...fotos_intro.slice(0,3)].slice(-Math.max(3,Math.floor(CFG.fotos_intro.length*0.6)));
     try{localStorage.setItem("cant_intro",JSON.stringify(nvi));}catch(e){}
-let histV=[];
-    try{histV=JSON.parse(localStorage.getItem('cant_vids')||'[]');}catch(e){}
-    let noVV=CFG.videos_intro.filter(f=>!histV.includes(f));
-    if(noVV.length<2){histV=[];noVV=CFG.videos_intro;}
-    const vids=shuffle([...noVV]);
-    const nviV=[...histV,...vids.slice(0,2)].slice(-Math.floor(CFG.videos_intro.length*0.6));
-    try{localStorage.setItem('cant_vids',JSON.stringify(nviV));}catch(e){}
-    let mediaPool;
-    if(grupo.length>=4){
-      mediaPool=[
-        {src:fotos_intro[0],leyenda:grupo[0],tipo:'foto'},
-        {src:vids[0],leyenda:grupo[1],tipo:'video'},
-        {src:fotos_intro[1],leyenda:grupo[2],tipo:'foto'},
-        {src:vids[1]||vids[0],leyenda:grupo[3],tipo:'video'},
-      ];
-    } else {
-      mediaPool=[
-        {src:fotos_intro[0],leyenda:grupo[0],tipo:'foto'},
-        {src:vids[0],leyenda:grupo[1],tipo:'video'},
-        {src:fotos_intro[1],leyenda:grupo[2],tipo:'foto'},
-      ];
-    }
-    const ventanas=mediaPool;
+    const ventanas=[
+      {src:fotos_intro[0], leyenda:grupo[0]},
+      {src:fotos_intro[1], leyenda:grupo[1]},
+      {src:fotos_intro[2], leyenda:grupo[2]},
+    ];
     await mostrarVentanas(ventanas);
 
     // Pergamino
@@ -608,25 +560,6 @@ function mostrarDespedida(callback){
 // ================================================================
 // CONTROLES
 // ================================================================
-function mostrarSello(callback){
-  var sellos=["fotos/sellos/sello7.png","fotos/sellos/sello11.png"];
-  var div=document.getElementById("pant-desp");
-  var img=document.getElementById("d-img");
-  var txt=document.getElementById("d-txt");
-  img.src="";img.style.opacity="0";img.style.animation="none";
-  txt.textContent="";
-  div.style.opacity="0";div.style.display="flex";
-  div.style.alignItems="center";div.style.justifyContent="center";
-  setTimeout(function(){
-    img.src=sellos[rnd(sellos.length)];
-    img.style.maxWidth="92%";img.style.maxHeight="85vh";
-    img.style.width="auto";img.style.height="auto";
-    img.style.display="block";img.style.margin="auto";img.style.objectFit="contain";
-    img.onload=function(){img.style.opacity="1";img.style.animation="kenburns1 5s ease-in-out forwards";};
-  },100);
-  setTimeout(function(){div.style.transition="opacity 1.5s ease";div.style.opacity="1";},50);
-  setTimeout(function(){div.style.opacity="0";setTimeout(function(){div.style.display="none";callback();},1500);},5000);
-}
 function reiniciar(){aJota.pause();aJota.src='';clearTimeout(fotoTimer);clearInterval(progresoInter);location.reload();}
 function salir(){
   aJota.pause();aAmb.pause();
