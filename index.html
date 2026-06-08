@@ -441,11 +441,29 @@ async function init(){
     const fotos_intro=shuffle(noVistasI);
     const nvi=[...histI,...fotos_intro.slice(0,3)].slice(-Math.max(3,Math.floor(CFG.fotos_intro.length*0.6)));
     try{localStorage.setItem("cant_intro",JSON.stringify(nvi));}catch(e){}
-    const ventanas=[
-      {src:fotos_intro[0], leyenda:grupo[0]},
-      {src:fotos_intro[1], leyenda:grupo[1]},
-      {src:fotos_intro[2], leyenda:grupo[2]},
-    ];
+let histV=[];
+    try{histV=JSON.parse(localStorage.getItem('cant_vids')||'[]');}catch(e){}
+    let noVV=CFG.videos_intro.filter(f=>!histV.includes(f));
+    if(noVV.length<2){histV=[];noVV=CFG.videos_intro;}
+    const vids=shuffle([...noVV]);
+    const nviV=[...histV,...vids.slice(0,2)].slice(-Math.floor(CFG.videos_intro.length*0.6));
+    try{localStorage.setItem('cant_vids',JSON.stringify(nviV));}catch(e){}
+    let mediaPool;
+    if(grupo.length>=4){
+      mediaPool=[
+        {src:fotos_intro[0],leyenda:grupo[0],tipo:'foto'},
+        {src:vids[0],leyenda:grupo[1],tipo:'video'},
+        {src:fotos_intro[1],leyenda:grupo[2],tipo:'foto'},
+        {src:vids[1]||vids[0],leyenda:grupo[3],tipo:'video'},
+      ];
+    } else {
+      mediaPool=[
+        {src:fotos_intro[0],leyenda:grupo[0],tipo:'foto'},
+        {src:vids[0],leyenda:grupo[1],tipo:'video'},
+        {src:fotos_intro[1],leyenda:grupo[2],tipo:'foto'},
+      ];
+    }
+    const ventanas=mediaPool;
     await mostrarVentanas(ventanas);
 
     // Pergamino
