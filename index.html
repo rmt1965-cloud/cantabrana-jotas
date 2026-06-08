@@ -47,7 +47,7 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 @keyframes pfloat{0%{opacity:0;transform:translateY(0)}30%{opacity:.8}100%{opacity:0;transform:translateY(-60px)}}
 #p-img{width:100%;min-height:350px;display:block;border-radius:4px;background:#2a1a08;object-fit:cover;}
 .p-texto{position:absolute;top:50%;left:50%;transform:translate(-50%,-52%);width:78%;text-align:center;}
-.p-aviso{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(14px,4.5vw,20px);font-weight:800;color:rgba(10,5,5,.92);line-height:1.5;}
+.p-aviso{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(22px,7vw,34px);font-weight:800;color:rgba(10,5,5,.92);line-height:1.5;}
 
 /* REPRODUCTOR */
 #pant-repro{position:fixed;inset:0;z-index:20;display:none;flex-direction:column;}
@@ -117,7 +117,8 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 <div id="ventanas">
   <img id="v-blur" src="" alt="">
   <img id="v-img" src="" alt="">
-  <video id="v-vid" autoplay muted playsinline loop style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:95%;max-width:480px;max-height:82vh;object-fit:cover;opacity:0;transition:opacity 1.5s ease;z-index:1;display:none;"></video>
+  <video id="v-vid" src="" autoplay muted playsinline loop style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:85%;max-width:360px;max-height:60vh;object-fit:contain;opacity:0;transition:opacity 1.5s ease;z-index:1;display:none;"></video>
+  <video id="v-vid" src="" autoplay muted playsinline loop style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:85%;max-width:360px;max-height:60vh;object-fit:contain;opacity:0;transition:opacity 1.5s ease;z-index:1;display:none;"></video>
   <div id="v-ley"></div>
 </div>
 
@@ -204,7 +205,9 @@ const CFG = {
   vistas: [
     'fotos/vistas/A01.jpg','fotos/vistas/A02.JPG','fotos/vistas/A03.jpg',
     'fotos/vistas/A04.jpg','fotos/vistas/A05.jpg','fotos/vistas/A06.jpg',
-    'fotos/vistas/A07.jpg','fotos/vistas/A08.jpg','fotos/vistas/A10.jpg',
+    'fotos/vistas/A08.jpg','fotos/vistas/A10.jpg',
+    'fotos/sellos/sello7.png','fotos/sellos/sello8.png',
+    'fotos/sellos/sello9.png','fotos/sellos/sello10.png',
   ],
   portada: 'fotos/portada/portada1.png',
   dur_foto: 5,
@@ -212,27 +215,33 @@ const CFG = {
 
   // GRUPOS DE FRASES para ventanas (cada grupo = 3 frases en orden)
   grupos_frases: [
-    ['Cantabrana llama al pasado','a traves de sus ventanas','sus arcos y sus puertas centenarias'],
-    ['Aqui vivieron tus ancestros','Aqui sono esta musica por primera vez','Ahora te toca a ti escucharla'],
-    ['Siglos de historia en tres minutos','Esto no es nostalgia. Es identidad.','Bienvenido a Cantabrana'],
-    ['Algunas puertas nunca se cerraron del todo','Detras hay voces que esperaban ser escuchadas','Esta es una de ellas'],
-    ['Cantabrana no es un lugar, es una raiz','su memoria y legado fue su alimento','ahora esa raiz eres tu'],
-    ['Lo que vas a escuchar es','patrimonio cultural de Cantabrana','poco nos queda','de aquellas tradiciones'],
-  ],
+    ['Cantabrana llama al pasado','a través de sus ventanas','sus arcos y sus puertas centenarias'],
     ['Aquí vivieron tus ancestros','Aquí sonó esta música por primera vez','Ahora te toca a ti escucharla'],
     ['Siglos de historia en tres minutos','Esto no es nostalgia. Es identidad.','Bienvenido a Cantabrana'],
     ['Algunas puertas nunca se cerraron del todo','Detrás hay voces que esperaban ser escuchadas','Esta es una de ellas'],
     ['Lo que somos viene de donde venimos','Cantabrana no es un lugar, es una raíz','Y esa raíz eres tú'],
   ],
 
+  // VIDEOS INTRO
   videos_intro: [
-    "video/intro/video01.mp4","video/intro/video02.mp4","video/intro/video03.mp4",
-    "video/intro/video04.mp4","video/intro/video05.mp4","video/intro/video06.mp4",
-    "video/intro/video07.mp4","video/intro/video08.mp4","video/intro/video09.mp4",
-    "video/intro/video10.mp4","video/intro/video11.mp4","video/intro/video12.mp4",
-    "video/intro/video13.mp4","video/intro/video14.mp4","video/intro/video15.mp4",
-    "video/intro/video16.mp4","video/intro/video17.mp4","video/intro/video18.mp4",
-    "video/intro/video19.mp4",
+    'video/intro/video01.mp4','video/intro/video02.mp4','video/intro/video03.mp4',
+    'video/intro/video04.mp4','video/intro/video05.mp4','video/intro/video06.mp4',
+    'video/intro/video07.mp4','video/intro/video08.mp4','video/intro/video09.mp4',
+    'video/intro/video10.mp4','video/intro/video11.mp4','video/intro/video12.mp4',
+    'video/intro/video13.mp4','video/intro/video14.mp4','video/intro/video15.mp4',
+    'video/intro/video16.mp4','video/intro/video17.mp4','video/intro/video18.mp4',
+    'video/intro/video19.mp4',
+  ],
+
+  // VIDEOS INTRO
+  videos_intro: [
+    'video/intro/video01.mp4','video/intro/video02.mp4','video/intro/video03.mp4',
+    'video/intro/video04.mp4','video/intro/video05.mp4','video/intro/video06.mp4',
+    'video/intro/video07.mp4','video/intro/video08.mp4','video/intro/video09.mp4',
+    'video/intro/video10.mp4','video/intro/video11.mp4','video/intro/video12.mp4',
+    'video/intro/video13.mp4','video/intro/video14.mp4','video/intro/video15.mp4',
+    'video/intro/video16.mp4','video/intro/video17.mp4','video/intro/video18.mp4',
+    'video/intro/video19.mp4',
   ],
 
   // FOTOS INTRO (extra + rusticos)
@@ -243,11 +252,11 @@ const CFG = {
 
   // TEXTOS PERGAMINO
   textos_perg: [
-    'Esto no es una grabación.<br>Es memoria viva de Cantabrana.<br>Canciones de otra época,<br>algunas pueden herir tu sensibilidad.',
-    'Esta voz perteneció a alguien de aquí.<br>Son Jotas y canciones populares de otro tiempo.<br>Algunas pueden herir tu sensibilidad.<br>Escúchalas con respeto.',
-    'Cierra los ojos.<br>Lo que vas a escuchar es de otra época.<br>Puede herir tu sensibilidad.<br>Escúchalo. Vale la pena.',
-    'Canta quien recuerda.<br>Estas Jotas y canciones populares de otro tiempo.<br>Algunas pueden herir tu sensibilidad.<br>Bienvenido a Cantabrana.',
-    'Esto no debió olvidarse.<br>Son canciones de otra época.<br>Algunas pueden herir tu sensibilidad.<br>Acércate con respeto.',
+    'Esto no es<br>una grabación.<br>Es memoria viva<br>de Cantabrana.',
+    'Esta voz<br>perteneció a alguien<br>de aquí.<br>Escúchala con respeto.',
+    'Lo que vas a escuchar<br>es de otra época.<br>Puede herir<br>tu sensibilidad.',
+    'Canta quien recuerda.<br>Jotas y canciones<br>de otro tiempo.<br>Bienvenido.',
+    'Esto no debió<br>olvidarse.<br>Acércate<br>con respeto.',
   ],
 
   // FRASES DESPEDIDA
@@ -264,10 +273,13 @@ const CFG = {
   // FRASES FINALES
   frases_final: [
     'La tradición vive en cada nota,<br>en las puertas y en los arcos de piedra.',
-    'La tradición vive en cada nota,<br>en las puertas centenarias y en los arcos de piedra.',
-    'La tradición vive en cada nota,<br>entre puertas y arcos de piedra.',
-    'La tradición vive en la música,<br>en las puertas y en los arcos de piedra.',
-    'La tradición late en cada nota,<br>en las puertas y en los arcos milenarios.',
+    'Estas voces no deben olvidarse.<br>Gracias por escucharlas.',
+    'Lo que acabas de escuchar<br>es Cantabrana. Es memoria viva.',
+    'La música une lo que el tiempo<br>intenta separar.',
+    'Cada jota es un pedazo de historia.<br>Gracias por cuidarla.',
+    'Cantabrana vive en quien la escucha.<br>Hoy has sido parte de eso.',
+    'Estas canciones esperaban ser oídas.<br>Tú las has escuchado.',
+    'La tradición no muere<br>mientras haya quien la recuerde.',
   ],
 
   jotas: [
@@ -376,26 +388,22 @@ async function mostrarVentanas(ventanas){
         return;
       }
       const data=ventanas[idx++];
-      var vvc=document.getElementById("v-vid");
-      if(vvc){if(vvc.pause)vvc.pause();vvc.removeAttribute("src");vvc.style.opacity="0";vvc.style.display="none";}
-      vimg.style.opacity="0";vimg.src="";vblur.style.opacity="0";vley.classList.remove("show");vley.textContent="";
+      vimg.style.opacity='0';vblur.style.opacity='0';vley.classList.remove('show');vley.textContent='';
+      const vvid=document.getElementById('v-vid');
+      vvid.style.opacity='0';vvid.style.display='none';vvid.pause&&vvid.pause();
       setTimeout(()=>{
-                var vvid=document.getElementById("v-vid");
-        if(data.tipo==="video"&&vvid){
-          vvid.oncanplay=null;vvid.ontimeupdate=null;
-          vvid.style.display="block";vvid.style.opacity="0";
-          vvid.src=data.src;vvid.load();vvid.play().catch(function(){});
-          var shown=false;
-          var showV=function(){if(shown)return;shown=true;vvid.style.opacity="1";
-            setTimeout(function(){vley.textContent=data.leyenda;vley.classList.add("show");setTimeout(sig,7000);},900);};
-          vvid.oncanplay=showV;vvid.ontimeupdate=showV;setTimeout(showV,1500);
-          vvid.onerror=function(){vvid.onerror=null;setTimeout(sig,500);};
+        if(data.tipo==='video'){
+          vvid.style.display='block';vvid.src=data.src;vvid.load();
+          vvid.oncanplay=()=>{vvid.style.opacity='1';vblur.src='';vblur.style.opacity='0';
+            setTimeout(()=>{vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,3200);},900);};
+          vvid.onerror=()=>setTimeout(sig,500);
         } else {
-          if(vvid){vvid.oncanplay=null;vvid.ontimeupdate=null;if(vvid.pause)vvid.pause();vvid.removeAttribute("src");vvid.style.display="none";}
           vimg.src=data.src;vblur.src=data.src;
-          vimg.onload=function(){vimg.style.opacity="1";vblur.style.opacity="1";
-            setTimeout(function(){vley.textContent=data.leyenda;vley.classList.add("show");setTimeout(sig,3200);},900);};
-          vimg.onerror=function(){setTimeout(sig,500);};
+          vimg.onload=()=>{
+            vimg.style.opacity='1';vblur.style.opacity='1';
+            setTimeout(()=>{vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,3200);},900);
+          };
+          vimg.onerror=()=>setTimeout(sig,500);
         }
       },600);
     }
@@ -432,14 +440,10 @@ async function init(){
   setTimeout(()=>{document.getElementById('ld-btn').style.opacity='1';},1500);
 
   // Esperar interacción
-  await new Promise(resolve=>{window._resolve=resolve;
+  await new Promise(resolve=>{
     const el=document.getElementById('loading');
-    const btn=document.getElementById('ld-btn');
-    const h=()=>{el.removeEventListener('click',h);el.removeEventListener('touchend',h);
-      if(btn){btn.removeEventListener('click',h);btn.removeEventListener('touchend',h);}
-      resolve();};
+    const h=()=>{el.removeEventListener('click',h);el.removeEventListener('touchend',h);resolve();};
     el.addEventListener('click',h);el.addEventListener('touchend',h);
-    if(btn){btn.addEventListener('click',h);btn.addEventListener('touchend',h);}
   });
 
   // Iniciar ambiente
@@ -457,17 +461,19 @@ async function init(){
     const fotos_intro=shuffle(noVistasI);
     const nvi=[...histI,...fotos_intro.slice(0,3)].slice(-Math.max(3,Math.floor(CFG.fotos_intro.length*0.6)));
     try{localStorage.setItem("cant_intro",JSON.stringify(nvi));}catch(e){}
-        let histV=[];try{histV=JSON.parse(localStorage.getItem("cant_vids")||"[]");}catch(e){}
-    let noVV=CFG.videos_intro.filter(f=>!histV.includes(f));
-    if(noVV.length<2){histV=[];noVV=CFG.videos_intro;}
-    const vids=shuffle([...noVV]);
-    const nviV=[...histV,...vids.slice(0,2)].slice(-Math.floor(CFG.videos_intro.length*0.6));
-    try{localStorage.setItem("cant_vids",JSON.stringify(nviV));}catch(e){}
-    const ventanas=[
-      {src:fotos_intro[0],leyenda:grupo[0],tipo:"foto"},
-      {src:vids[0],leyenda:grupo[1],tipo:"video"},
-      {src:fotos_intro[1],leyenda:grupo[2],tipo:"foto"},
+    // Mezclar fotos y videos aleatoriamente
+    let histV=[];try{histV=JSON.parse(localStorage.getItem('cant_vids')||'[]');}catch(e){}
+    let noVistasV=CFG.videos_intro.filter(f=>!histV.includes(f));
+    if(noVistasV.length<1){histV=[];noVistasV=CFG.videos_intro;}
+    const vids_shuffle=shuffle(noVistasV);
+    const nviV=[...histV,...vids_shuffle.slice(0,2)].slice(-Math.floor(CFG.videos_intro.length*0.6));
+    try{localStorage.setItem('cant_vids',JSON.stringify(nviV));}catch(e){}
+    const mediaPool=[
+      {src:fotos_intro[0], leyenda:grupo[0], tipo:'foto'},
+      {src:vids_shuffle[0], leyenda:grupo[1], tipo:'video'},
+      {src:fotos_intro[1], leyenda:grupo[2], tipo:'foto'},
     ];
+    const ventanas=shuffle(mediaPool);
     await mostrarVentanas(ventanas);
 
     // Pergamino
