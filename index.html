@@ -642,8 +642,13 @@ function mostrarVideoFinal(callback){
     setTimeout(function(){div.style.transition='opacity 1.5s ease';div.style.opacity='1';},50);};
   vvf.oncanplay=showVF;vvf.ontimeupdate=showVF;setTimeout(showVF,1500);
   setTimeout(function(){
-    div.style.opacity='0';
-    setTimeout(function(){if(vvf.pause)vvf.pause();div.removeChild(vvf);div.style.display='none';callback();},1500);
+    vvf.style.transition='opacity 1.5s ease';
+    vvf.style.opacity='0';
+    setTimeout(function(){
+      div.style.transition='opacity 1.5s ease';
+      div.style.opacity='0';
+      setTimeout(function(){if(vvf.pause)vvf.pause();div.removeChild(vvf);div.style.display='none';callback();},1500);
+    },1000);
   },7000);
 }
 
