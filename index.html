@@ -30,7 +30,7 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 #ventanas{position:fixed;inset:0;z-index:8;background:#000;display:none;align-items:center;justify-content:center;overflow:hidden;}
 #ventanas.show{display:flex}
 #v-blur{position:absolute;inset:-20px;width:calc(100% + 40px);height:calc(100% + 40px);object-fit:cover;filter:blur(20px) brightness(.4);opacity:0;transition:opacity 1.5s ease;}
-#v-img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:85%;max-width:380px;max-height:62vh;object-fit:contain;background:transparent;opacity:0;transition:opacity 1.5s ease;z-index:1;}
+#v-img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:85%;max-width:360px;max-height:60vh;object-fit:contain;background:transparent;opacity:0;transition:opacity 1.5s ease;z-index:1;}
 #v-ley{position:absolute;bottom:12%;left:50%;transform:translateX(-50%);width:88%;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:700;font-size:clamp(20px,6vw,32px);color:rgba(245,230,190,.97);text-shadow:0 2px 20px rgba(0,0,0,.95),0 0 40px rgba(200,146,42,.4);opacity:0;transition:opacity 1s ease;z-index:2;}
 #v-ley.show{opacity:1}
 
@@ -47,7 +47,7 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 @keyframes pfloat{0%{opacity:0;transform:translateY(0)}30%{opacity:.8}100%{opacity:0;transform:translateY(-60px)}}
 #p-img{width:100%;min-height:350px;display:block;border-radius:4px;background:#2a1a08;object-fit:cover;}
 .p-texto{position:absolute;top:50%;left:50%;transform:translate(-50%,-52%);width:78%;text-align:center;}
-.p-aviso{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(22px,7vw,34px);font-weight:800;color:rgba(10,5,5,.92);line-height:1.5;}
+.p-aviso{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(14px,4.5vw,20px);font-weight:800;color:rgba(10,5,5,.92);line-height:1.5;}
 
 /* REPRODUCTOR */
 #pant-repro{position:fixed;inset:0;z-index:20;display:none;flex-direction:column;}
@@ -55,7 +55,7 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 #f-wrap{position:fixed;inset:0;z-index:0;background:#000}
 #f-blur{position:absolute;inset:-30px;background-size:cover;background-position:center;filter:blur(22px) brightness(.28);transform:scale(1.1);transition:background-image 1.2s ease;}
 #f-main{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
-#f-img{max-width:90%;max-height:80vh;object-fit:contain;opacity:0;transition:opacity 1s ease;display:block;margin:auto;}
+#f-img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);max-width:88%;max-height:72vh;object-fit:contain;opacity:0;transition:opacity 1s ease;}
 #f-img.show{opacity:1}
 #f-trans{position:fixed;inset:0;z-index:25;background:#000;opacity:0;pointer-events:none;transition:opacity .7s ease;}
 #f-trans.on{opacity:1}
@@ -82,7 +82,7 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 /* DESPEDIDA */
 #pant-desp{position:fixed;inset:0;z-index:42;background:#000;display:none;align-items:center;justify-content:center;overflow:hidden;}
 #pant-desp.show{display:flex}
-#d-img{width:88%;max-width:500px;max-height:75vh;object-fit:contain;opacity:0.9;display:block;margin:auto;}
+#d-img{width:88%;max-width:500px;max-height:75vh;object-fit:contain;opacity:0.9;position:relative;}
 #d-txt{position:absolute;bottom:15%;left:50%;transform:translateX(-50%);width:85%;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,5.5vw,28px);font-weight:600;color:rgba(245,230,190,.97);text-shadow:0 2px 20px rgba(0,0,0,.95),0 0 40px rgba(200,146,42,.3);line-height:1.7;z-index:1;}
 
 /* PANTALLA FINAL */
@@ -94,31 +94,29 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 #fin-frase{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,5.5vw,24px);color:rgba(255,255,255,.9);max-width:340px;line-height:1.9;margin-top:10px;text-shadow:0 0 20px rgba(200,146,42,.3);}
 .fin-btns{display:flex;gap:16px;margin-top:20px;flex-wrap:wrap;justify-content:center}
 @keyframes sello-glow{0%,100%{filter:drop-shadow(0 3px 8px rgba(140,20,20,.4))}50%{filter:drop-shadow(0 3px 24px rgba(180,30,30,.9))}}
-@keyframes kenburns1{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.25) translate(-4%,-3%)}}
-@keyframes kenburns2{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.22) translate(3%,-4%)}}
-@keyframes kenburns3{0%{transform:scale(1.2) translate(-3%,0)}100%{transform:scale(1) translate(3%,3%)}}
-@keyframes kenburns4{0%{transform:scale(1) translate(2%,2%)}100%{transform:scale(1.25) translate(-3%,-2%)}}
+@keyframes kenburns1{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.15) translate(-3%,-2%)}}
+@keyframes kenburns2{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.12) translate(2%,-3%)}}
+@keyframes kenburns3{0%{transform:scale(1.1) translate(-2%,0)}100%{transform:scale(1) translate(2%,2%)}}
+@keyframes kenburns4{0%{transform:scale(1) translate(2%,2%)}100%{transform:scale(1.15) translate(-2%,-1%)}}
 </style>
 </head>
 <body>
 <canvas id="bg"></canvas>
 
 <!-- LOADING -->
-<div id="loading"><div id="ld-fondo" style="position:absolute;inset:0;background-size:cover;background-position:center;z-index:0;opacity:0;transition:opacity 1s ease;"></div><div id="ld-ov" style="position:absolute;inset:0;background:rgba(0,0,0,0.35);z-index:1;"></div><div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;">
+<div id="loading">
   <div class="ld-titulo">Cantabrana</div>
   <div class="ld-linea"></div>
   <div class="ld-subtitulo">Retazos de Vida</div>
   <div class="ld-linea2"></div>
   <div class="ld-autor">Rafael Molina Toledo</div>
   <div id="ld-btn" onclick="arrancar()" ontouchstart="arrancar()">Pulsar para iniciar</div>
-  </div>
 </div>
 
 <!-- VENTANAS -->
 <div id="ventanas">
   <img id="v-blur" src="" alt="">
   <img id="v-img" src="" alt="">
-  <video id="v-vid" src="" autoplay muted playsinline loop style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:95%;max-width:480px;max-height:82vh;object-fit:cover;opacity:0;transition:opacity 1.5s ease;z-index:1;display:none;"></video>
   <div id="v-ley"></div>
 </div>
 
@@ -205,36 +203,19 @@ const CFG = {
   vistas: [
     'fotos/vistas/A01.jpg','fotos/vistas/A02.JPG','fotos/vistas/A03.jpg',
     'fotos/vistas/A04.jpg','fotos/vistas/A05.jpg','fotos/vistas/A06.jpg',
-    'fotos/vistas/A08.jpg','fotos/vistas/A10.jpg',
+    'fotos/vistas/A07.jpg','fotos/vistas/A08.jpg','fotos/vistas/A10.jpg',
   ],
   portada: 'fotos/portada/portada1.png',
-  dur_foto: 8,
+  dur_foto: 5,
   dur_trans: 0.5,
 
   // GRUPOS DE FRASES para ventanas (cada grupo = 3 frases en orden)
   grupos_frases: [
     ['Cantabrana llama al pasado','a través de sus ventanas','sus arcos y sus puertas centenarias'],
     ['Aquí vivieron tus ancestros','Aquí sonó esta música por primera vez','Ahora te toca a ti escucharla'],
-    ['Siglos de historia en tres minutos','Esto no es nostalgia.','Es identidad.','Bienvenido a Cantabrana'],
-    ['Algunas puertas nunca se cerraron del todo','Detrás hay voces que esperaban ser escuchadas','Esta es una de ellas'],
-    ['Cantabrana no es un lugar, es una raíz','su memoria y legado fue su alimento','ahora esa raíz eres tú'],
-    ['Lo que escuchas no es solo música','es la voz de quien ya no está','su herencia vive en cada nota','escúchala con respeto'],
-  ],
-    ['Aquí vivieron tus ancestros','Aquí sonó esta música por primera vez','Ahora te toca a ti escucharla'],
     ['Siglos de historia en tres minutos','Esto no es nostalgia. Es identidad.','Bienvenido a Cantabrana'],
     ['Algunas puertas nunca se cerraron del todo','Detrás hay voces que esperaban ser escuchadas','Esta es una de ellas'],
-    ['Cantabrana no es un lugar, es una raíz','su memoria y legado fue su alimento','ahora esa raíz eres tú'],
-  ],
-
-  // VIDEOS INTRO
-  videos_intro: [
-    'video/intro/video01.mp4','video/intro/video02.mp4','video/intro/video03.mp4',
-    'video/intro/video04.mp4','video/intro/video05.mp4','video/intro/video06.mp4',
-    'video/intro/video07.mp4','video/intro/video08.mp4','video/intro/video09.mp4',
-    'video/intro/video10.mp4','video/intro/video11.mp4','video/intro/video12.mp4',
-    'video/intro/video13.mp4','video/intro/video14.mp4','video/intro/video15.mp4',
-    'video/intro/video16.mp4','video/intro/video17.mp4','video/intro/video18.mp4',
-    'video/intro/video19.mp4',
+    ['Lo que somos viene de donde venimos','Cantabrana no es un lugar, es una raíz','Y esa raíz eres tú'],
   ],
 
   // FOTOS INTRO (extra + rusticos)
@@ -245,12 +226,11 @@ const CFG = {
 
   // TEXTOS PERGAMINO
   textos_perg: [
-    'Lo que escuchas<br>es patrimonio cultural que se<br>desvanece en el tiempo.<br>Es memoria viva<br>de Cantabrana.',
-    'Estas voces transmiten<br>nuestra herencia cultural.<br>Últimos vestigios de unas<br>tradiciones casi extinguidas.',
-    'Lo que vas a escuchar<br>es de otra época.<br>Puede herir<br>tu sensibilidad.',
-    'Canta quien recuerda.<br>Jotas y canciones<br>de otro tiempo.<br>Bienvenido.',
-    'Que estas jotas y canciones<br>se mantengan en<br>nuestra memoria cuando ya no<br>resuenen entre nuestras calles.',
-    'El sentimiento de pertenencia<br>es algo que no se negocia,<br>se interioriza y se graba<br>a fuego en nuestra identidad.',
+    'Esto no es una grabación.<br>Es memoria viva de Cantabrana.<br>Canciones de otra época,<br>algunas pueden herir tu sensibilidad.',
+    'Esta voz perteneció a alguien de aquí.<br>Son Jotas y canciones populares de otro tiempo.<br>Algunas pueden herir tu sensibilidad.<br>Escúchalas con respeto.',
+    'Cierra los ojos.<br>Lo que vas a escuchar es de otra época.<br>Puede herir tu sensibilidad.<br>Escúchalo. Vale la pena.',
+    'Canta quien recuerda.<br>Estas Jotas y canciones populares de otro tiempo.<br>Algunas pueden herir tu sensibilidad.<br>Bienvenido a Cantabrana.',
+    'Esto no debió olvidarse.<br>Son canciones de otra época.<br>Algunas pueden herir tu sensibilidad.<br>Acércate con respeto.',
   ],
 
   // FRASES DESPEDIDA
@@ -267,13 +247,10 @@ const CFG = {
   // FRASES FINALES
   frases_final: [
     'La tradición vive en cada nota,<br>en las puertas y en los arcos de piedra.',
-    'Estas voces no deben olvidarse.<br>Gracias por escucharlas.',
-    'Lo que acabas de escuchar<br>es Cantabrana. Es memoria viva.',
-    'La música une lo que el tiempo<br>intenta separar.',
-    'Cada jota es un pedazo de historia.<br>Gracias por cuidarla.',
-    'Cantabrana vive en quien la escucha.<br>Hoy has sido parte de eso.',
-    'Estas canciones esperaban ser oídas.<br>Tú las has escuchado.',
-    'La tradición no muere<br>mientras haya quien la recuerde.',
+    'La tradición vive en cada nota,<br>en las puertas centenarias y en los arcos de piedra.',
+    'La tradición vive en cada nota,<br>entre puertas y arcos de piedra.',
+    'La tradición vive en la música,<br>en las puertas y en los arcos de piedra.',
+    'La tradición late en cada nota,<br>en las puertas y en los arcos milenarios.',
   ],
 
   jotas: [
@@ -383,30 +360,13 @@ async function mostrarVentanas(ventanas){
       }
       const data=ventanas[idx++];
       vimg.style.opacity='0';vblur.style.opacity='0';vley.classList.remove('show');vley.textContent='';
-      const vvid=document.getElementById('v-vid');
-      if(vvid.pause)vvid.pause();
-      vvid.removeAttribute('src');
-      vvid.style.opacity='0';vvid.style.display='none';
-      vimg.style.opacity='0';vimg.src='';
-      vblur.src='';
       setTimeout(()=>{
-        if(data.tipo==='video'){
-          vvid.style.display='block';vvid.src=data.src;vvid.load();vvid.play().catch(()=>{});
-          var vshown=false;
-          function showVid(){if(vshown)return;vshown=true;vvid.style.opacity='1';vblur.src='';vblur.style.opacity='0';
-            setTimeout(()=>{vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,7000);},900);}
-          vvid.oncanplay=showVid;
-          vvid.ontimeupdate=showVid;
-          setTimeout(showVid,1500);
-          vvid.onerror=()=>setTimeout(sig,500);
-        } else {
-          vimg.src=data.src;vblur.src=data.src;
-          vimg.onload=()=>{
-            vimg.style.opacity='1';vblur.style.opacity='1';
-            setTimeout(()=>{vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,3200);},900);
-          };
-          vimg.onerror=()=>setTimeout(sig,500);
-        }
+        vimg.src=data.src;vblur.src=data.src;
+        vimg.onload=()=>{
+          vimg.style.opacity='1';vblur.style.opacity='1';
+          setTimeout(()=>{vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,3200);},900);
+        };
+        vimg.onerror=()=>setTimeout(sig,500);
       },600);
     }
     sig();
@@ -463,32 +423,11 @@ async function init(){
     const fotos_intro=shuffle(noVistasI);
     const nvi=[...histI,...fotos_intro.slice(0,3)].slice(-Math.max(3,Math.floor(CFG.fotos_intro.length*0.6)));
     try{localStorage.setItem("cant_intro",JSON.stringify(nvi));}catch(e){}
-    // Mezclar fotos y videos aleatoriamente
-    let histV=[];try{histV=JSON.parse(localStorage.getItem('cant_vids')||'[]');}catch(e){}
-    let noVistasV=CFG.videos_intro.filter(f=>!histV.includes(f));
-    if(noVistasV.length<1){histV=[];noVistasV=CFG.videos_intro;}
-    const vids_shuffle=shuffle(noVistasV);
-    const nviV=[...histV,...vids_shuffle.slice(0,2)].slice(-Math.floor(CFG.videos_intro.length*0.6));
-    try{localStorage.setItem('cant_vids',JSON.stringify(nviV));}catch(e){}
-    // Adaptar ventanas segun numero de frases del grupo
-    let mediaPool;
-    if(grupo.length>=4){
-      // 4 frases: 2 fotos + 2 videos
-      mediaPool=[
-        {src:fotos_intro[0], leyenda:grupo[0], tipo:'foto'},
-        {src:vids_shuffle[0], leyenda:grupo[1], tipo:'video'},
-        {src:fotos_intro[1], leyenda:grupo[2], tipo:'foto'},
-        {src:vids_shuffle[1]||vids_shuffle[0], leyenda:grupo[3], tipo:'video'},
-      ];
-    } else {
-      // 3 frases: 2 fotos + 1 video en orden
-      mediaPool=[
-        {src:fotos_intro[0], leyenda:grupo[0], tipo:'foto'},
-        {src:vids_shuffle[0], leyenda:grupo[1], tipo:'video'},
-        {src:fotos_intro[1], leyenda:grupo[2], tipo:'foto'},
-      ];
-    }
-    const ventanas=mediaPool;
+    const ventanas=[
+      {src:fotos_intro[0], leyenda:grupo[0]},
+      {src:fotos_intro[1], leyenda:grupo[1]},
+      {src:fotos_intro[2], leyenda:grupo[2]},
+    ];
     await mostrarVentanas(ventanas);
 
     // Pergamino
@@ -550,9 +489,7 @@ function mostrarFoto(idx){
   setTimeout(()=>{
     img.src=url;blur.style.backgroundImage="url('"+url+"')";
     img.onerror=()=>{trans.classList.remove('on');setTimeout(()=>mostrarFoto(idx+1),100);};
-    img.onload=()=>{
-      setTimeout(()=>{trans.classList.remove('on');img.classList.add('show');},150);
-    };
+    img.onload=()=>{setTimeout(()=>{trans.classList.remove('on');img.classList.add('show');},150);};
   },350);
   fotoIdx=idx;clearTimeout(fotoTimer);
   fotoTimer=setTimeout(()=>mostrarFoto(idx+1),(CFG.dur_foto+CFG.dur_trans)*1000);
@@ -610,56 +547,19 @@ function mostrarDespedida(callback){
   const idxV=rnd(CFG.vistas.length);
   const idxT=rnd(CFG.frases_desp.length);
   const idxKB=rnd(KB.length);
-  img.src='';
-  img.style.opacity='0';
-  img.style.animation='none';
-  txt.textContent='';
+  img.src=CFG.vistas[idxV];
+  img.style.animation=KB[idxKB]+' 12s ease-in-out forwards';
+  txt.textContent=CFG.frases_desp[idxT];
   div.classList.add('show');
   setTimeout(()=>{
-    img.src=CFG.vistas[idxV];
-    img.onload=()=>{
-      img.style.opacity='1';
-      img.style.animation=KB[idxKB]+' 12s ease-in-out forwards';
-    };
-    txt.textContent=CFG.frases_desp[idxT];
-  },200);
-  setTimeout(()=>{
     div.style.transition='opacity 1.5s ease';div.style.opacity='0';
-    setTimeout(()=>{div.style.display='none';mostrarSello(callback);},1500);
+    setTimeout(()=>{div.style.display='none';callback();},1500);
   },8000);
 }
 
 // ================================================================
 // CONTROLES
 // ================================================================
-function mostrarSello(callback){
-  const sellos=['fotos/sellos/sello7.png','fotos/sellos/sello8.png','fotos/sellos/sello9.png','fotos/sellos/sello10.png','fotos/sellos/sello11.png'];
-  const div=document.getElementById('pant-desp');
-  const img=document.getElementById('d-img');
-  const txt=document.getElementById('d-txt');
-  img.src='';
-  img.style.opacity='0';
-  img.style.animation='none';
-  setTimeout(()=>{
-    img.src=sellos[rnd(sellos.length)];
-  },100);
-  img.style.maxWidth='92%';
-  img.style.maxHeight='85vh';
-  img.style.width='auto';
-  img.style.height='auto';
-  img.style.display='block';
-  img.style.margin='auto';
-  img.style.objectFit='contain';
-  img.onload=()=>{img.style.animation='kenburns1 5s ease-in-out forwards';};
-  txt.textContent='';
-  div.style.opacity='0';div.style.display='flex';
-  div.style.alignItems='center';div.style.justifyContent='center';
-  setTimeout(()=>{div.style.transition='opacity 1.5s ease';div.style.opacity='1';},50);
-  setTimeout(()=>{
-    div.style.opacity='0';
-    setTimeout(()=>{div.style.display='none';callback();},1500);
-  },5000);
-}
 function reiniciar(){aJota.pause();aJota.src='';clearTimeout(fotoTimer);clearInterval(progresoInter);location.reload();}
 function salir(){
   aJota.pause();aAmb.pause();
@@ -668,16 +568,6 @@ function salir(){
 }
 
 document.addEventListener('DOMContentLoaded',init);
-
-(function(){
-var fs=['fotos/fondos/agua1.png','fotos/fondos/agua2.png','fotos/fondos/agua3.png','fotos/fondos/agua4.png','fotos/fondos/agua5.png','fotos/fondos/agua6.png','fotos/fondos/agua7.png','fotos/fondos/agua8.png','fotos/fondos/agua9.png','fotos/fondos/agua10.png','fotos/fondos/agua11.png','fotos/fondos/agua12.png','fotos/fondos/agua13.png','fotos/fondos/agua14.png','fotos/fondos/agua15.png','fotos/fondos/agua16.png','fotos/fondos/agua17.png','fotos/fondos/agua18.png','fotos/fondos/agua19.png','fotos/fondos/agua20.png','fotos/fondos/agua21.png'];
-var f=fs[Math.floor(Math.random()*fs.length)];
-var bg=document.getElementById('ld-fondo');
-if(!bg)return;
-var im=new Image();
-im.onload=function(){bg.style.backgroundImage="url('"+f+"')";bg.style.opacity='1';};
-im.src=f;
-})();
 </script>
 </body>
 </html>
