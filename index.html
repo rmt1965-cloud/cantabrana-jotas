@@ -393,12 +393,16 @@ async function mostrarVentanas(ventanas){
       vvid.style.opacity='0';vvid.style.display='none';vvid.pause&&vvid.pause();
       setTimeout(()=>{
         if(data.tipo==='video'){
-          vvid.style.display='block';vvid.src=data.src;vvid.load();
-          vvid.oncanplay=()=>{vvid.style.opacity='1';vblur.src='';vblur.style.opacity='0';
-            setTimeout(()=>{vley.textContent=data.leyenda;vley.classList.add('show');
-              setTimeout(()=>{vvid.style.transition='opacity 1.5s ease';vvid.style.opacity='0';},3500);
-              setTimeout(sig,5200);},900);};
-          vvid.onerror=()=>setTimeout(sig,500);
+          vvid.style.display='block';vvid.style.transition='opacity 1.5s ease';vvid.style.opacity='0';
+          vvid.src=data.src;vvid.load();vvid.play().catch(function(){});
+          var shown=false;
+          var showV=function(){if(shown)return;shown=true;
+            vvid.style.opacity='1';vblur.src='';vblur.style.opacity='0';
+            setTimeout(function(){vley.textContent=data.leyenda;vley.classList.add('show');},900);
+            setTimeout(function(){vvid.style.transition='opacity 2s ease';vvid.style.opacity='0';},3500);
+            setTimeout(sig,5500);};
+          vvid.oncanplay=showV;vvid.ontimeupdate=showV;setTimeout(showV,1500);
+          vvid.onerror=function(){setTimeout(sig,500);};
         } else {
           vimg.src=data.src;vblur.src=data.src;
           vimg.onload=()=>{
