@@ -590,22 +590,62 @@ function finJota(){
 // DESPEDIDA
 // ================================================================
 function mostrarDespedida(callback){
-  const div=document.getElementById('pant-desp');
-  const img=document.getElementById('d-img');
-  const txt=document.getElementById('d-txt');
-  const KB=['kenburns1','kenburns2','kenburns3','kenburns4'];
-  const idxV=rnd(CFG.vistas.length);
-  const idxT=rnd(CFG.frases_desp.length);
-  const idxKB=rnd(KB.length);
-  img.src=CFG.vistas[idxV];
-  img.style.animation=KB[idxKB]+' 12s ease-in-out forwards';
-  txt.textContent=CFG.frases_desp[idxT];
+  var div=document.getElementById('pant-desp');
+  var img=document.getElementById('d-img');
+  var txt=document.getElementById('d-txt');
+  var KB=['kenburns1','kenburns2','kenburns3','kenburns4'];
+  img.src='';img.style.opacity='0';img.style.animation='none';txt.textContent='';
   div.classList.add('show');
-  setTimeout(()=>{
+  setTimeout(function(){
+    img.src=CFG.vistas[rnd(CFG.vistas.length)];
+    img.onload=function(){img.style.opacity='1';img.style.animation=KB[rnd(4)]+' 8s ease-in-out forwards';};
+    txt.textContent=CFG.frases_desp[rnd(CFG.frases_desp.length)];
+  },200);
+  setTimeout(function(){
     div.style.transition='opacity 1.5s ease';div.style.opacity='0';
-    setTimeout(()=>{div.style.display='none';callback();},1500);
-  },8000);
+    setTimeout(function(){div.style.display='none';mostrarSelloFinal(function(){mostrarVideoFinal(callback);});},1500);
+  },5000);
 }
+function mostrarSelloFinal(callback){
+  var sellos=['fotos/sellos/sello7.png','fotos/sellos/sello8.png','fotos/sellos/sello9.png','fotos/sellos/sello10.png','fotos/sellos/sello11.png'];
+  var div=document.getElementById('pant-desp');
+  var img=document.getElementById('d-img');
+  var txt=document.getElementById('d-txt');
+  img.src='';img.style.opacity='0';img.style.animation='none';txt.textContent='';
+  div.style.opacity='0';div.style.display='flex';
+  div.style.alignItems='center';div.style.justifyContent='center';
+  setTimeout(function(){
+    img.src=sellos[rnd(sellos.length)];
+    img.style.maxWidth='94%';img.style.maxHeight='88vh';
+    img.style.width='auto';img.style.height='auto';
+    img.style.display='block';img.style.margin='auto';img.style.objectFit='contain';
+    img.onload=function(){img.style.opacity='1';img.style.animation='kenburns1 5s ease-in-out forwards';};
+  },100);
+  setTimeout(function(){div.style.transition='opacity 1.5s ease';div.style.opacity='1';},50);
+  setTimeout(function(){div.style.opacity='0';setTimeout(function(){div.style.display='none';callback();},1500);},5000);
+}
+function mostrarVideoFinal(callback){
+  var videos=['video/intro/video01.mp4','video/intro/video08.mp4','video/intro/video09.mp4','video/intro/video10.mp4','video/intro/video11.mp4','video/intro/video12.mp4'];
+  var div=document.getElementById('pant-desp');
+  var img=document.getElementById('d-img');
+  img.src='';img.style.opacity='0';
+  div.style.opacity='0';div.style.display='flex';
+  div.style.alignItems='center';div.style.justifyContent='center';
+  var vvf=document.createElement('video');
+  vvf.autoplay=true;vvf.muted=true;vvf.setAttribute('playsinline','');
+  vvf.style.cssText='width:95%;max-width:480px;max-height:82vh;object-fit:cover;opacity:0;transition:opacity 1s ease;';
+  div.appendChild(vvf);
+  vvf.src=videos[rnd(videos.length)];vvf.load();vvf.play().catch(function(){});
+  var shown=false;
+  var showVF=function(){if(shown)return;shown=true;vvf.style.opacity='1';
+    setTimeout(function(){div.style.transition='opacity 1.5s ease';div.style.opacity='1';},50);};
+  vvf.oncanplay=showVF;vvf.ontimeupdate=showVF;setTimeout(showVF,1500);
+  setTimeout(function(){
+    div.style.opacity='0';
+    setTimeout(function(){if(vvf.pause)vvf.pause();div.removeChild(vvf);div.style.display='none';callback();},1500);
+  },7000);
+}
+
 
 // ================================================================
 // CONTROLES
