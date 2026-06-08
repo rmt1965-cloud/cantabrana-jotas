@@ -622,7 +622,7 @@ function mostrarSello(callback){
     img.style.maxWidth="92%";img.style.maxHeight="85vh";
     img.style.width="auto";img.style.height="auto";
     img.style.display="block";img.style.margin="auto";img.style.objectFit="contain";
-    img.onload=function(){img.style.opacity="1";img.style.animation="kenburns1 5s ease-in-out forwards";};
+    img.onload=function(){var kbs=["kenburns1","kenburns2","kenburns3","kenburns4"];img.style.opacity="1";img.style.animation=kbs[Math.floor(Math.random()*4)]+" 5s ease-in-out forwards";};
   },100);
   setTimeout(function(){div.style.transition="opacity 1.5s ease";div.style.opacity="1";},50);
   setTimeout(function(){div.style.opacity="0";setTimeout(function(){div.style.display="none";callback();},1500);},5000);
