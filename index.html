@@ -388,7 +388,7 @@ async function mostrarVentanas(ventanas){
           vvid.style.display='block';vvid.src=data.src;vvid.load();vvid.play().catch(()=>{});
           var vshown=false;
           function showVid(){if(vshown)return;vshown=true;vvid.style.opacity='1';vblur.src='';vblur.style.opacity='0';
-            setTimeout(()=>{vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,5000);},900);}
+            setTimeout(()=>{vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,7000);},900);}
           vvid.oncanplay=showVid;
           vvid.ontimeupdate=showVid;
           setTimeout(showVid,1500);
