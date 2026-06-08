@@ -604,8 +604,12 @@ function mostrarSello(callback){
   const div=document.getElementById('pant-desp');
   const img=document.getElementById('d-img');
   const txt=document.getElementById('d-txt');
-  img.src=sellos[rnd(sellos.length)];
+  img.src='';
+  img.style.opacity='0';
   img.style.animation='none';
+  setTimeout(()=>{
+    img.src=sellos[rnd(sellos.length)];
+  },100);
   img.style.maxWidth='92%';
   img.style.maxHeight='85vh';
   img.style.width='auto';
