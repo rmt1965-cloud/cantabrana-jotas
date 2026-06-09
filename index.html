@@ -398,8 +398,8 @@ async function mostrarVentanas(ventanas){
           var shown=false;
           var showV=function(){if(shown)return;shown=true;vvid.style.opacity='1';vblur.src='';vblur.style.opacity='0';
             setTimeout(function(){vley.textContent=data.leyenda;vley.classList.add('show');},900);
-            setTimeout(function(){vvid.style.transition='opacity 2.5s ease';vvid.style.opacity='0';},3500);
-            setTimeout(sig,6000);};
+            setTimeout(function(){vvid.style.transition='opacity 2s ease';vvid.style.opacity='0';},2500);
+            setTimeout(sig,4500);};
           vvid.oncanplay=showV;vvid.ontimeupdate=showV;setTimeout(showV,1500);
           vvid.onerror=function(){setTimeout(sig,500);};
         } else {
