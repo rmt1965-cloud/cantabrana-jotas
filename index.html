@@ -492,7 +492,7 @@ async function init(){
     const tIdx=rnd(CFG.textos_perg.length);
     document.getElementById('p-aviso').innerHTML=CFG.textos_perg[tIdx];
     document.getElementById('pant-perg').classList.add('show');
-    setTimeout(iniciarJota,10000);
+    setTimeout(iniciarJota,7000);
   },600);
 }
 
@@ -501,7 +501,7 @@ async function init(){
 // ================================================================
 async function iniciarJota(){
   if(!jota)return;
-  document.getElementById('pant-perg').style.opacity='0';
+  var pp=document.getElementById('pant-perg');pp.style.transition='opacity 1.5s ease';pp.style.opacity='0';
 
   // Shuffle fotos arcos con historial
   let histF=[];try{histF=JSON.parse(localStorage.getItem('cant_fotos')||'[]');}catch(e){}
