@@ -633,7 +633,13 @@ function mostrarVideoFinal(callback){
   vvf.autoplay=true;vvf.muted=true;vvf.setAttribute('playsinline','');
   vvf.style.cssText='width:95%;max-width:480px;max-height:82vh;object-fit:cover;opacity:0;transition:opacity 1.5s ease;';
   div.appendChild(vvf);
-  vvf.src=videos[rnd(videos.length)];vvf.load();vvf.play().catch(function(){});
+  var histVF=[];try{histVF=JSON.parse(localStorage.getItem('cant_vfinal')||'[]');}catch(e){}
+  var videosFilt=videos.filter(function(v){return histVF.indexOf(v)<0;});
+  if(videosFilt.length===0){histVF=[];videosFilt=videos;}
+  var videoElegido=videosFilt[rnd(videosFilt.length)];
+  var nVF=[...histVF,videoElegido].slice(-videos.length);
+  try{localStorage.setItem('cant_vfinal',JSON.stringify(nVF));}catch(e){}
+  vvf.src=videoElegido;vvf.load();vvf.play().catch(function(){});
   var shown=false;
   var showVF=function(){if(shown)return;shown=true;vvf.style.opacity='1';
     setTimeout(function(){div.style.transition='opacity 1.5s ease';div.style.opacity='1';},100);};
