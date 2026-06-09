@@ -586,7 +586,10 @@ function finJota(){
 
   // Despedida tras 8s
   setTimeout(()=>{
-    document.getElementById('pant-repro').style.display='none';
+    var pr=document.getElementById('pant-repro');
+    pr.style.transition='opacity 1.5s ease';pr.style.opacity='0';
+    setTimeout(function(){
+    pr.style.display='none';
     mostrarDespedida(()=>{
       // Frase final aleatoria
       const idx=rnd(CFG.frases_final.length);
