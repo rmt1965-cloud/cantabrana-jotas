@@ -582,8 +582,9 @@ function finJota(){
 
   // Despedida tras 8s
   setTimeout(()=>{
-    document.getElementById('pant-repro').style.display='none';
-    mostrarDespedida(()=>{
+    var pr=document.getElementById('pant-repro');
+    pr.style.transition='opacity 1.5s ease';pr.style.opacity='0';
+    setTimeout(function(){pr.style.display='none';mostrarDespedida(function(){
       // Frase final aleatoria
       const idx=rnd(CFG.frases_final.length);
       document.getElementById('fin-frase').innerHTML=CFG.frases_final[idx]+'<br><br>Gracias por escuchar.';
@@ -644,7 +645,7 @@ function mostrarSelloFinal(callback){
   div.style.alignItems='center';div.style.justifyContent='center';
   setTimeout(function(){
     img.src=sellos[rnd(sellos.length)];
-    img.style.maxWidth='100%';img.style.maxHeight='100vh';
+    img.style.maxWidth='100%';img.style.maxHeight='120vh';
     img.style.width='auto';img.style.height='auto';
     img.style.display='block';img.style.margin='auto';img.style.objectFit='contain';
     var kbs=['kenburns1','kenburns2','kenburns3','kenburns4'];
@@ -656,6 +657,7 @@ function mostrarSelloFinal(callback){
     setTimeout(function(){div.style.opacity='0';setTimeout(function(){div.style.display='none';callback();},1500);},1500);
   },5000);
 }
+
 
 
 
