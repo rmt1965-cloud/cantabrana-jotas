@@ -632,11 +632,11 @@ function mostrarVideoFinal(callback){
   var showVF=function(){if(shown)return;shown=true;vvf.style.opacity='1';
     setTimeout(function(){div.style.transition='opacity 1.5s ease';div.style.opacity='1';},100);};
   vvf.oncanplay=showVF;vvf.ontimeupdate=showVF;setTimeout(showVF,1500);
-  setTimeout(function(){vvf.style.transition='opacity 2.5s ease';vvf.style.opacity='0';},5000);
+  setTimeout(function(){vvf.style.transition='opacity 1.5s ease';vvf.style.opacity='0';},4500);
   setTimeout(function(){
-    div.style.transition='opacity 2s ease';div.style.opacity='0';
-    setTimeout(function(){if(vvf.pause)vvf.pause();if(div.contains(vvf))div.removeChild(vvf);div.style.display='none';callback();},2000);
-  },5000);
+    div.style.transition='opacity 1s ease';div.style.opacity='0';
+    setTimeout(function(){if(vvf.pause)vvf.pause();if(div.contains(vvf))div.removeChild(vvf);div.style.display='none';callback();},1000);
+  },5500);
 }
 function mostrarSelloFinal(callback){
   var sellos=['fotos/sellos/sello7.png','fotos/sellos/sello8.png','fotos/sellos/sello9.png','fotos/sellos/sello10.png','fotos/sellos/sello11.png'];
@@ -652,14 +652,15 @@ function mostrarSelloFinal(callback){
     img.style.width='auto';img.style.height='auto';
     img.style.display='block';img.style.margin='auto';img.style.objectFit='contain';
     var kbs=['kenburns1','kenburns2','kenburns3','kenburns4'];
-    img.onload=function(){img.style.opacity='1';img.style.animation=kbs[rnd(4)]+' 6s ease-in-out forwards';};
+    img.onload=function(){img.style.opacity='1';img.style.animation=kbs[rnd(4)]+' 5s ease-in-out forwards';};
   },100);
-  setTimeout(function(){div.style.transition='opacity 2s ease';div.style.opacity='1';},200);
+  setTimeout(function(){div.style.transition='opacity 1.5s ease';div.style.opacity='1';},200);
   setTimeout(function(){
     img.style.transition='opacity 1.5s ease';img.style.opacity='0';
-    setTimeout(function(){div.style.opacity='0';setTimeout(function(){div.style.display='none';callback();},1500);},1500);
-  },5000);
+    setTimeout(function(){div.style.opacity='0';setTimeout(function(){div.style.display='none';callback();},1000);},1500);
+  },4000);
 }
+
 
 
 
