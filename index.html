@@ -465,9 +465,9 @@ async function init(){
     const grupo=CFG.grupos_frases[rnd(CFG.grupos_frases.length)];
     let histI=[];try{histI=JSON.parse(localStorage.getItem("cant_intro")||"[]");}catch(e){}
     let noVistasI=CFG.fotos_intro.filter(f=>!histI.includes(f));
-    if(noVistasI.length<3){histI=[];noVistasI=CFG.fotos_intro;}
+    if(noVistasI.length<10){histI=[];noVistasI=CFG.fotos_intro;}
     const fotos_intro=shuffle(noVistasI);
-    const nvi=[...histI,...fotos_intro.slice(0,3)].slice(-Math.max(3,Math.floor(CFG.fotos_intro.length*0.6)));
+    const nvi=[...histI,...fotos_intro.slice(0,3)].slice(-Math.max(3,Math.floor(CFG.fotos_intro.length*0.4)));
     try{localStorage.setItem("cant_intro",JSON.stringify(nvi));}catch(e){}
     // Mezclar fotos y videos aleatoriamente
     let histV=[];try{histV=JSON.parse(localStorage.getItem('cant_vids')||'[]');}catch(e){}
