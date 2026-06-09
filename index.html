@@ -607,7 +607,13 @@ function mostrarDespedida(callback){
   img.src='';img.style.opacity='0';img.style.animation='none';txt.textContent='';
   div.classList.add('show');
   setTimeout(function(){
-    img.src=CFG.vistas[rnd(CFG.vistas.length)];
+    var histVi=[];try{histVi=JSON.parse(localStorage.getItem('cant_vistas')||'[]');}catch(e){}
+    var noVistasVi=CFG.vistas.filter(function(f){return histVi.indexOf(f)<0;});
+    if(noVistasVi.length<1){histVi=[];noVistasVi=CFG.vistas;}
+    var vistaElegida=noVistasVi[rnd(noVistasVi.length)];
+    var nVi=[...histVi,vistaElegida].slice(-CFG.vistas.length);
+    try{localStorage.setItem('cant_vistas',JSON.stringify(nVi));}catch(e){}
+    img.src=vistaElegida;
     img.onload=function(){img.style.opacity='1';img.style.animation=KB[rnd(4)]+' 8s ease-in-out forwards';};
     txt.textContent=CFG.frases_desp[rnd(CFG.frases_desp.length)];
   },200);
