@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<!-- CANTABRANA v2 -->
+<!-- CANTABRANA v23 — Refactorizado -->
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#000000">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<title>Cantabrana v2 &mdash; Retazos de Vida</title>
+<title>Cantabrana &mdash; Retazos de Vida</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%238B1A1A' stroke='%23c8922a' stroke-width='3'/><text y='65' x='50' text-anchor='middle' font-size='50' font-family='serif' fill='%23f0c060'>C</text></svg>">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap');
@@ -32,6 +30,7 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 #ventanas.show{display:flex}
 #v-blur{position:absolute;inset:-20px;width:calc(100% + 40px);height:calc(100% + 40px);object-fit:cover;filter:blur(20px) brightness(.4);opacity:0;transition:opacity 1.5s ease;}
 #v-img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:85%;max-width:360px;max-height:60vh;object-fit:contain;background:transparent;opacity:0;transition:opacity 1.5s ease;z-index:1;}
+#v-vid{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:85%;max-width:360px;max-height:60vh;object-fit:contain;opacity:0;transition:opacity 1.5s ease;z-index:1;display:none;}
 #v-ley{position:absolute;bottom:12%;left:50%;transform:translateX(-50%);width:88%;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:700;font-size:clamp(20px,6vw,32px);color:rgba(245,230,190,.97);text-shadow:0 2px 20px rgba(0,0,0,.95),0 0 40px rgba(200,146,42,.4);opacity:0;transition:opacity 1s ease;z-index:2;}
 #v-ley.show{opacity:1}
 
@@ -46,7 +45,7 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 .p-part{position:absolute;width:2px;height:2px;background:var(--gold-l);border-radius:50%;opacity:0;animation:pfloat 4s ease-in-out infinite;}
 .p-part:nth-child(1){left:20%;top:80%;animation-delay:0s}.p-part:nth-child(2){left:50%;top:90%;animation-delay:1s}.p-part:nth-child(3){left:80%;top:75%;animation-delay:2s}
 @keyframes pfloat{0%{opacity:0;transform:translateY(0)}30%{opacity:.8}100%{opacity:0;transform:translateY(-60px)}}
-#p-img{width:100%;min-height:350px;display:block;border-radius:4px;background:#2a1a08;object-fit:cover;}
+#p-img{width:100%;height:92vh;max-height:92vh;display:block;border-radius:4px;background:#2a1a08;object-fit:cover;}
 .p-texto{position:absolute;top:50%;left:50%;transform:translate(-50%,-52%);width:78%;text-align:center;}
 .p-aviso{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(22px,7vw,34px);font-weight:800;color:rgba(10,5,5,.92);line-height:1.5;}
 
@@ -80,11 +79,11 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 #ui-bot.show{opacity:1;pointer-events:all}
 .btn{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;padding:11px 24px;border:1px solid rgba(200,146,42,.4);background:rgba(0,0,0,.55);color:var(--gold);cursor:pointer;border-radius:2px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}
 
-/* DESPEDIDA */
-#pant-desp{position:fixed;inset:0;z-index:42;background:#000;display:none;align-items:center;justify-content:center;overflow:hidden;}
+/* FASE FINAL */
+#pant-desp{position:fixed;inset:0;z-index:42;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;}
 #pant-desp.show{display:flex}
-#d-img{width:88%;max-width:500px;max-height:75vh;object-fit:contain;opacity:0.9;position:relative;}
-#d-txt{position:absolute;bottom:15%;left:50%;transform:translateX(-50%);width:85%;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,5.5vw,28px);font-weight:600;color:rgba(245,230,190,.97);text-shadow:0 2px 20px rgba(0,0,0,.95),0 0 40px rgba(200,146,42,.3);line-height:1.7;z-index:1;}
+#d-img{width:88%;max-width:500px;max-height:72vh;object-fit:contain;opacity:0;position:relative;}
+#d-txt{position:absolute;bottom:10%;left:50%;transform:translateX(-50%);width:85%;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,5.5vw,28px);font-weight:600;color:rgba(245,230,190,.97);text-shadow:0 2px 20px rgba(0,0,0,.95),0 0 40px rgba(200,146,42,.3);line-height:1.7;z-index:1;}
 
 /* PANTALLA FINAL */
 #pant-final{display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.93);align-items:center;justify-content:center;flex-direction:column;gap:14px;text-align:center;padding:40px;}
@@ -93,8 +92,8 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 .fin-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(20px,6vw,30px);color:rgba(240,192,96,.9);letter-spacing:3px;text-shadow:0 0 20px rgba(200,146,42,.5);}
 .fin-aut{font-family:'Cinzel',serif;font-size:clamp(11px,3vw,14px);letter-spacing:4px;color:rgba(80,140,220,.9);text-transform:uppercase;text-shadow:0 0 20px rgba(80,140,220,.8);}
 #fin-frase{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,5.5vw,24px);color:rgba(255,255,255,.9);max-width:340px;line-height:1.9;margin-top:10px;text-shadow:0 0 20px rgba(200,146,42,.3);}
+.fin-anyo{font-family:'Cinzel',serif;font-size:clamp(9px,2.5vw,11px);letter-spacing:3px;color:rgba(200,146,42,.5);text-transform:uppercase;margin-top:4px;}
 .fin-btns{display:flex;gap:16px;margin-top:20px;flex-wrap:wrap;justify-content:center}
-@keyframes sello-glow{0%,100%{filter:drop-shadow(0 3px 8px rgba(140,20,20,.4))}50%{filter:drop-shadow(0 3px 24px rgba(180,30,30,.9))}}
 @keyframes kenburns1{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.15) translate(-3%,-2%)}}
 @keyframes kenburns2{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.12) translate(2%,-3%)}}
 @keyframes kenburns3{0%{transform:scale(1.1) translate(-2%,0)}100%{transform:scale(1) translate(2%,2%)}}
@@ -114,12 +113,11 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
   <div id="ld-btn" onclick="arrancar()" ontouchstart="arrancar()">Pulsar para iniciar</div>
 </div>
 
-<!-- VENTANAS -->
+<!-- VENTANAS INICIO -->
 <div id="ventanas">
   <img id="v-blur" src="" alt="">
   <img id="v-img" src="" alt="">
-  <video id="v-vid" src="" autoplay muted playsinline loop style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:85%;max-width:360px;max-height:60vh;object-fit:contain;opacity:0;transition:opacity 1.5s ease;z-index:1;display:none;"></video>
-  <video id="v-vid" src="" autoplay muted playsinline loop style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:85%;max-width:360px;max-height:60vh;object-fit:contain;opacity:0;transition:opacity 1.5s ease;z-index:1;display:none;"></video>
+  <video id="v-vid" src="" autoplay muted playsinline style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:85%;max-width:360px;max-height:60vh;object-fit:contain;opacity:0;transition:opacity 1.5s ease;z-index:1;display:none;"></video>
   <div id="v-ley"></div>
 </div>
 
@@ -160,18 +158,19 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
   </div>
 </div>
 
-<!-- DESPEDIDA -->
+<!-- FASE FINAL: FOTO / VIDEO / SELLO -->
 <div id="pant-desp">
   <img id="d-img" src="" alt="">
   <div id="d-txt"></div>
 </div>
 
-<!-- FINAL -->
+<!-- PANTALLA FINAL CREDITOS -->
 <div id="pant-final">
   <div class="fin-tit">Cantabrana</div>
   <div class="fin-sub">Retazos de Vida</div>
   <div class="fin-aut">Rafael Molina Toledo</div>
-  <div id="fin-frase">La tradic&oacute;n vive en cada nota,<br>entre puertas y arcos de piedra.<br><br>Gracias por escuchar.</div>
+  <div id="fin-frase"></div>
+  <div class="fin-anyo">Patrimonio Cultural &middot; Cantabrana &middot; 2024</div>
   <div class="fin-btns">
     <button class="btn" onclick="reiniciar()">&#8635; Volver al inicio</button>
     <button class="btn" onclick="salir()">Hasta pronto &#10022;</button>
@@ -200,9 +199,6 @@ const CFG = {
     'fotos/pergaminos/pergamino03.jpg','fotos/pergaminos/pergamino04.jpg',
     'fotos/pergaminos/pergamino05.jpg',
   ],
-  sellos: [
-    'fotos/sellos/sello1.png','fotos/sellos/sello4.png','fotos/sellos/sello5.png',
-  ],
   vistas: [
     'fotos/vistas/A01.jpg','fotos/vistas/A02.JPG','fotos/vistas/A03.jpg',
     'fotos/vistas/A04.jpg','fotos/vistas/A05.jpg','fotos/vistas/A06.jpg',
@@ -210,19 +206,17 @@ const CFG = {
   ],
   portada: 'fotos/portada/portada1.png',
   dur_foto: 4,
-  dur_trans: 0.5,
+  dur_trans: 0.25,
 
-  // GRUPOS DE FRASES para ventanas (cada grupo = 3 frases en orden)
   grupos_frases: [
-    ['Cantabrana llama al pasado','A través de sus ventanas','sus arcos y sus puertas centenarias'],
-    ['Aquí vivieron tus ancestros','Aquí sonó esta música por primera vez','Ahora la escuchas. Valórala, es un tesoro'],
-    ['Esto no es nostalgia, es identidad.','Son siglos de historia en tres minutos','Bienvenido a Cantabrana.'],
-    ['Algunas puertas nunca se cerraron del todo','Detrás hay voces que esperaban ser escuchadas','Esta es una de ellas.'],
-    ['Cantabrana no es un lugar, es una raíz donde','su memoria y legado fueron su alimento','ahora esa raíz eres tú.'],
-    ['Lo que vas a escuchar es','Patrimonio Cultural de Cantabrana','Poco nos queda de aquellas tradiciones casi extinguidas'],
+    ['Cantabrana llama al pasado,','A trav\u00e9s de sus ventanas','sus arcos y sus puertas centenarias'],
+    ['Aqu\u00ed vivieron tus ancestros,','junto a estas canciones y jotas,','val\u00f3ralas, son un tesoro.'],
+    ['Esto no es nostalgia, es identidad.','Son siglos de historia en tres minutos.','Bienvenido a Cantabrana.'],
+    ['Algunas puertas, nunca se cerraron del todo.','Detr\u00e1s hay voces que esperaban ser escuchadas','Esta es una de ellas.'],
+    ['Cantabrana no es un lugar, es una ra\u00edz donde','su memoria y legado fueron su alimento','ahora esa ra\u00edz, eres t\u00fa.'],
+    ['Lo que vas a escuchar es','Patrimonio Cultural de Cantabrana.','Poco nos queda de aquellas tradiciones casi extinguidas'],
   ],
 
-  // VIDEOS INTRO
   videos_intro: [
     'video/intro/video02.mp4','video/intro/video03.mp4',
     'video/intro/video04.mp4','video/intro/video05.mp4','video/intro/video06.mp4',
@@ -232,85 +226,93 @@ const CFG = {
     'video/intro/video18.mp4','video/intro/video19.mp4',
   ],
 
+  videos_final: [
+    'video/intro/video01.mp4','video/intro/video08.mp4','video/intro/video09.mp4',
+    'video/intro/video10.mp4','video/intro/video11.mp4','video/intro/video12.mp4',
+  ],
 
+  sellos_final: [
+    'fotos/sellos/sello7.png','fotos/sellos/sello8.png','fotos/sellos/sello9.png',
+    'fotos/sellos/sello10.png','fotos/sellos/sello11.png',
+    'fotos/sellos/sello13.png','fotos/sellos/sello14.png',
+    'fotos/sellos/sello15.png','fotos/sellos/sello16.png',
+  ],
 
-  // FOTOS INTRO (extra + rusticos)
-  fotos_intro: ["fotos/extra/aldaba1.png", "fotos/extra/aldaba2.png", "fotos/extra/aldaba3.png", "fotos/extra/aldaba4.png", "fotos/extra/aldaba5.png", "fotos/extra/aldaba6.png", "fotos/extra/arandela01.jpg", "fotos/extra/arandela02.jpg", "fotos/extra/cerradura01.jpg", "fotos/extra/chaveta01.jpg", "fotos/extra/chaveta02.jpg", "fotos/extra/chaveta03.jpg", "fotos/extra/chaveta04.jpg", "fotos/extra/chaveta05.jpg", "fotos/extra/clavos01.png", "fotos/extra/dintel01.jpg", "fotos/extra/dintel02.jpg", "fotos/extra/dintel03.jpg", "fotos/extra/dintel04.jpg", "fotos/extra/dintel05.jpg", "fotos/extra/dintel06.jpg", "fotos/extra/dintel07.jpg", "fotos/extra/dintel08.jpg", "fotos/extra/dintel09.jpg", "fotos/extra/dintel10.jpg", "fotos/extra/dintel11.jpg", "fotos/extra/dintel12.jpg", "fotos/extra/dintel13.jpg", "fotos/extra/dintel14.jpg", "fotos/extra/escudo01.jpg", "fotos/extra/escudo02.jpg", "fotos/extra/estela1.jpg", "fotos/extra/zaguan1.png", "fotos/extra/zaguan2.png", "fotos/extra/ventana1.jpg","fotos/extra/ventana2.png","fotos/extra/ventana3.jpg","fotos/extra/ventana4.png","fotos/extra/ventana5.jpg","fotos/extra/ventana6.png","fotos/extra/ventana7.jpg","fotos/extra/ventana13.jpg", "video/intro/rustico1.jpg", "video/intro/rustico2.jpg", "video/intro/rustico3.jpg", "video/intro/rustico4.jpg"],
+  fotos_intro: ["fotos/extra/aldaba1.png","fotos/extra/aldaba2.png","fotos/extra/aldaba3.png","fotos/extra/aldaba4.png","fotos/extra/aldaba5.png","fotos/extra/aldaba6.png","fotos/extra/arandela01.jpg","fotos/extra/arandela02.jpg","fotos/extra/cerradura01.jpg","fotos/extra/chaveta01.jpg","fotos/extra/chaveta02.jpg","fotos/extra/chaveta03.jpg","fotos/extra/chaveta04.jpg","fotos/extra/chaveta05.jpg","fotos/extra/clavos01.png","fotos/extra/dintel01.jpg","fotos/extra/dintel02.jpg","fotos/extra/dintel03.jpg","fotos/extra/dintel04.jpg","fotos/extra/dintel05.jpg","fotos/extra/dintel06.jpg","fotos/extra/dintel07.jpg","fotos/extra/dintel08.jpg","fotos/extra/dintel09.jpg","fotos/extra/dintel10.jpg","fotos/extra/dintel11.jpg","fotos/extra/dintel12.jpg","fotos/extra/dintel13.jpg","fotos/extra/dintel14.jpg","fotos/extra/escudo01.jpg","fotos/extra/escudo02.jpg","fotos/extra/estela1.jpg","fotos/extra/zaguan1.png","fotos/extra/zaguan2.png","fotos/extra/ventana1.jpg","fotos/extra/ventana2.png","fotos/extra/ventana3.jpg","fotos/extra/ventana4.png","fotos/extra/ventana5.jpg","fotos/extra/ventana6.png","fotos/extra/ventana7.jpg","fotos/extra/ventana13.jpg","video/intro/rustico1.jpg","video/intro/rustico2.jpg","video/intro/rustico3.jpg","video/intro/rustico4.jpg"],
 
-  // FOTOS CARRUSEL (arcos)
-  fotos_arcos: ["fotos/arcos/foto001.jpg", "fotos/arcos/foto002.jpg", "fotos/arcos/foto003.png", "fotos/arcos/foto004.jpg", "fotos/arcos/foto005.jpg", "fotos/arcos/foto006.jpg", "fotos/arcos/foto007.jpg", "fotos/arcos/foto008.jpg", "fotos/arcos/foto009.jpg", "fotos/arcos/foto010.jpg", "fotos/arcos/foto011.jpg", "fotos/arcos/foto012.png", "fotos/arcos/foto013.jpg", "fotos/arcos/foto014.jpg", "fotos/arcos/foto015.jpg", "fotos/arcos/foto016.jpg", "fotos/arcos/foto017.jpg", "fotos/arcos/foto018.jpg", "fotos/arcos/foto019.jpg", "fotos/arcos/foto020.png", "fotos/arcos/foto021.jpg", "fotos/arcos/foto022.jpg", "fotos/arcos/foto023.jpg", "fotos/arcos/foto024.jpg", "fotos/arcos/foto025.jpg", "fotos/arcos/foto026.jpg", "fotos/arcos/foto027.png", "fotos/arcos/foto028.jpg", "fotos/arcos/foto029.jpg", "fotos/arcos/foto030.jpg", "fotos/arcos/foto031.jpg", "fotos/arcos/foto032.jpg", "fotos/arcos/foto033.jpg", "fotos/arcos/foto034.jpg", "fotos/arcos/foto035.jpg", "fotos/arcos/foto036.jpg", "fotos/arcos/foto037.jpg", "fotos/arcos/foto038.jpg", "fotos/arcos/foto039.jpg", "fotos/arcos/foto040.jpg", "fotos/arcos/foto041.jpg", "fotos/arcos/foto042.jpg", "fotos/arcos/foto043.jpg", "fotos/arcos/foto044.jpg", "fotos/arcos/foto045.jpg", "fotos/arcos/foto046.png", "fotos/arcos/foto047.jpg", "fotos/arcos/foto048.jpg", "fotos/arcos/foto049.jpg", "fotos/arcos/foto050.jpg", "fotos/arcos/foto051.png", "fotos/arcos/foto052.jpg", "fotos/arcos/foto053.jpg", "fotos/arcos/foto054.jpg", "fotos/arcos/foto055.jpg", "fotos/arcos/foto056.png", "fotos/arcos/foto057.png", "fotos/arcos/foto058.png", "fotos/arcos/foto059.png", "fotos/arcos/foto060.png", "fotos/arcos/foto061.png", "fotos/arcos/foto062.jpg", "fotos/arcos/foto063.jpg", "fotos/arcos/foto064.png", "fotos/arcos/foto065.jpg", "fotos/arcos/foto066.jpg", "fotos/arcos/foto067.jpg", "fotos/arcos/foto068.jpg", "fotos/arcos/foto069.jpg", "fotos/arcos/foto070.png", "fotos/arcos/foto071.jpg", "fotos/arcos/foto072.png", "fotos/arcos/foto073.png", "fotos/arcos/foto074.png", "fotos/arcos/foto075.png", "fotos/arcos/foto076.png", "fotos/arcos/foto077.png", "fotos/arcos/foto078.png", "fotos/arcos/foto079.png", "fotos/arcos/foto080.png", "fotos/arcos/foto081.png", "fotos/arcos/foto082.png", "fotos/arcos/foto083.jpg", "fotos/arcos/foto084.png", "fotos/arcos/foto085.jpg", "fotos/arcos/foto086.jpg", "fotos/arcos/foto087.png", "fotos/arcos/foto088.png", "fotos/arcos/foto089.jpg", "fotos/arcos/foto090.png", "fotos/arcos/foto091.png", "fotos/arcos/foto092.png", "fotos/arcos/foto093.png", "fotos/arcos/foto094.jpg", "fotos/arcos/foto095.jpg", "fotos/arcos/foto096.png", "fotos/arcos/foto097.png"],
+  fotos_arcos: ["fotos/arcos/foto001.jpg","fotos/arcos/foto002.jpg","fotos/arcos/foto003.png","fotos/arcos/foto004.jpg","fotos/arcos/foto005.jpg","fotos/arcos/foto006.jpg","fotos/arcos/foto007.jpg","fotos/arcos/foto008.jpg","fotos/arcos/foto009.jpg","fotos/arcos/foto010.jpg","fotos/arcos/foto011.jpg","fotos/arcos/foto012.png","fotos/arcos/foto013.jpg","fotos/arcos/foto014.jpg","fotos/arcos/foto015.jpg","fotos/arcos/foto016.jpg","fotos/arcos/foto017.jpg","fotos/arcos/foto018.jpg","fotos/arcos/foto019.jpg","fotos/arcos/foto020.png","fotos/arcos/foto021.jpg","fotos/arcos/foto022.jpg","fotos/arcos/foto023.jpg","fotos/arcos/foto024.jpg","fotos/arcos/foto025.jpg","fotos/arcos/foto026.jpg","fotos/arcos/foto027.png","fotos/arcos/foto028.jpg","fotos/arcos/foto029.jpg","fotos/arcos/foto030.jpg","fotos/arcos/foto031.jpg","fotos/arcos/foto032.jpg","fotos/arcos/foto033.jpg","fotos/arcos/foto034.jpg","fotos/arcos/foto035.jpg","fotos/arcos/foto036.jpg","fotos/arcos/foto037.jpg","fotos/arcos/foto038.jpg","fotos/arcos/foto039.jpg","fotos/arcos/foto040.jpg","fotos/arcos/foto041.jpg","fotos/arcos/foto042.jpg","fotos/arcos/foto043.jpg","fotos/arcos/foto044.jpg","fotos/arcos/foto045.jpg","fotos/arcos/foto046.png","fotos/arcos/foto047.jpg","fotos/arcos/foto048.jpg","fotos/arcos/foto049.jpg","fotos/arcos/foto050.jpg","fotos/arcos/foto051.png","fotos/arcos/foto052.jpg","fotos/arcos/foto053.jpg","fotos/arcos/foto054.jpg","fotos/arcos/foto055.jpg","fotos/arcos/foto056.png","fotos/arcos/foto057.png","fotos/arcos/foto058.png","fotos/arcos/foto059.png","fotos/arcos/foto060.png","fotos/arcos/foto061.png","fotos/arcos/foto062.jpg","fotos/arcos/foto063.jpg","fotos/arcos/foto064.png","fotos/arcos/foto065.jpg","fotos/arcos/foto066.jpg","fotos/arcos/foto067.jpg","fotos/arcos/foto068.jpg","fotos/arcos/foto069.jpg","fotos/arcos/foto070.png","fotos/arcos/foto071.jpg","fotos/arcos/foto072.png","fotos/arcos/foto073.png","fotos/arcos/foto074.png","fotos/arcos/foto075.png","fotos/arcos/foto076.png","fotos/arcos/foto077.png","fotos/arcos/foto078.png","fotos/arcos/foto079.png","fotos/arcos/foto080.png","fotos/arcos/foto081.png","fotos/arcos/foto082.png","fotos/arcos/foto083.jpg","fotos/arcos/foto084.png","fotos/arcos/foto085.jpg","fotos/arcos/foto086.jpg","fotos/arcos/foto087.png","fotos/arcos/foto088.png","fotos/arcos/foto089.jpg","fotos/arcos/foto090.png","fotos/arcos/foto091.png","fotos/arcos/foto092.png","fotos/arcos/foto093.png","fotos/arcos/foto094.jpg","fotos/arcos/foto095.jpg","fotos/arcos/foto096.png","fotos/arcos/foto097.png"],
 
-  // TEXTOS PERGAMINO
   textos_perg: [
     'Lo que escuchas es<br>patrimonio cultural,<br>que se desvanece<br>en el tiempo.<br>Memoria viva<br>de Cantabrana.',
-    'Estas voces transmiten,<br>nuestra herencia cultural.<br>Últimos vestigios,<br>de unas tradiciones<br>casi extinguidas.',
-    'Lo que escuchas,<br>es de otra época.<br>Una sociedad,<br>con una mentalidad<br>muy distinta a la actual.',
-    'Canta quien recuerda.<br>Jotas y canciones<br>de otro tiempo.<br>Bienvenido.',
-    'Que estas jotas y canciones<br>se mantengan en<br>nuestra memoria<br>para cuando no resuenen<br>entre nuestras calles.',
+    'Estas voces transmiten,<br>nuestra herencia cultural.<br>\u00daltimos vestigios,<br>de unas tradiciones<br>casi extinguidas.',
+    'Lo que escuchas,<br>es de otra \u00e9poca.<br>Una sociedad,<br>con una mentalidad<br>muy distinta a la actual.',
+    'Canta quien recuerda.<br>Jotas y canciones,<br>de otro tiempo.<br>Bienvenido a Cantabrana.',
+    'Que estas jotas y canciones,<br>se mantengan en nuestra memoria,<br>para cuando no resuenen<br>entre nuestras calles.',
     'El sentimiento de<br>pertenencia, es algo<br>que no se negocia,<br>ni se impone,<br>se interioriza y se graba<br>a fuego en<br>nuestra identidad.',
   ],
 
-  // FRASES DESPEDIDA
+  perg_sensible: 'Lo que va a escuchar<br>es de otra \u00e9poca.<br>Una mentalidad y una<br>sociedad distinta a<br>nuestros tiempos.',
+
   frases_desp: [
-    'Cantabrana siempre estará aquí. Vuelve cuando quieras.',
+    'Cantabrana siempre estar\u00e1 aqu\u00ed. Vuelve cuando quieras.',
     'Gracias por escuchar, por recordar.',
-    'Esta música seguirá sonando, como el viento entre las callejuelas.',
-    'Lo que acabas de escuchar, no se olvidará fácilmente.',
+    'Esta m\u00fasica seguir\u00e1 sonando, como el viento entre las callejuelas.',
+    'Lo que acabas de escuchar, no se olvidar\u00e1 f\u00e1cilmente.',
     'Cantabrana, donde el tiempo va a otro tempo, y respira despacio.',
     'Gracias por ser parte de esta memoria.',
-    'La tradición oral y musical, vive porque hay quien la escucha.',
+    'La tradici\u00f3n oral y musical, vive porque hay quien la escucha.',
   ],
 
-  // FRASES FINALES
   frases_final: [
-    ['La tradición vive en cada nota,','en los arcos de piedras','y sus puertas claveteadas.'],
-    ['Estas voces nostálgicas','no deben ser olvidadas,','gracias por no ser indiferente.'],
+    ['La tradici\u00f3n vive en cada nota,','en los arcos de piedras','y sus puertas claveteadas.'],
+    ['Estas voces nost\u00e1lgicas','no deben ser olvidadas,','gracias por no ser indiferente.'],
     ['Lo que acabas de escuchar,','es el sentimiento de Cantabrana,','su memoria viva.'],
-    ['La música une,','lo que el tiempo y el olvido,','desintegra en la oscuridad.'],
+    ['La m\u00fasica une,','lo que el tiempo y el olvido,','desintegra en la oscuridad.'],
     ['Cantabrana vive','en quien la escucha,','hoy has formado parte de ello.'],
-    ['La tradición no muere,','mientras haya alguien que la recuerde,','y lo comparta.'],
+    ['La tradici\u00f3n no muere,','mientras haya alguien que la recuerde,','y lo comparta.'],
     ['Las canciones populares y las jotas,','son pedazos de nuestra historia,','gracias por preservarlas.'],
-    ['Los ecos de las voces,','resuenan por las calles de Cantabrana,','cada vez más silenciosas.'],
+    ['Los ecos de las voces,','resuenan por las calles de Cantabrana,','cada vez m\u00e1s silenciosas.'],
   ],
 
   jotas: [
     {a:'Alboradas--01.mp3',c:'Alboradas',m:'Cantabrana',t:'ALBORADAS'},
-    {a:'Cecilio_Jose_Diaz_Linaje--09.mp3',c:'Cecilio José Díaz Linaje',m:'Cantabrana',t:'BILBAINADA'},
-    {a:'Cecilio_Jose_Diaz_Linaje--10.mp3',c:'Cecilio José Díaz Linaje',m:'Cantabrana',t:'QUE SON DE CANTABRANA (Jose)'},
-    {a:'Elena_Diaz_Linaje--39.mp3',c:'Elena Díaz Linaje',m:'Cantabrana',t:'DONDE VA LA NIÑA'},
-    {a:'Gregorio_Ojeda_Pena_y_Julian_Ojeda_Ojeda--02.mp3',c:'Gregorio Ojeda Peña y Julián Ojeda Ojeda',m:'Cantabrana',t:'CAMINITO DEL ARROYO'},
-    {a:'Grupal_himno_Cantabrana--27.mp3',c:'Grupal · Himno de Cantabrana',m:'Cantabrana',t:'HIMNO CANTABRANA (Mujeres)'},
-    {a:'julian-Ojeda-Ojeda--18.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'LA VERDAD EN VERSO'},
-    {a:'Julian-Ojeda-Ojeda--20.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'QUE TE TUMBO',s:true},
-    {a:'Julian-Ojeda-Ojeda--22.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'VENIA DE REGAR',s:true},
-    {a:'Julian-Ojeda-Ojeda--23.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'JUANITA YA SE HA CASADO'},
-    {a:'Julian-Ojeda-Ojeda-y-Gregorio-Ojeda-Pena--11.mp3',c:'Julián Ojeda Ojeda y Gregorio Ojeda Peña',m:'Cantabrana',t:'SEGUNDO'},
-    {a:'Julian_Ojeda_Ojeda--04.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'EL CONEJO',s:true},
-    {a:'Julian_Ojeda_Ojeda--05.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'LAS MUJERES EN EL HORNO'},
-    {a:'Julian_Ojeda_Ojeda--08.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'QUE TE LA HAN TENTADO',s:true},
-    {a:'Julian_Ojeda_Ojeda--14.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'A LA FERIA DE EXTREMADURA',s:true},
-    {a:'Julian_Ojeda_Ojeda--15.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'Y TANTO QUE SABES COSER'},
-    {a:'Julian_Ojeda_Ojeda--16.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'UN CANTARILLO EN LA FUENTE',s:true},
-    {a:'Julian_Ojeda_Ojeda--17.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'BRAGUETA',s:true},
-    {a:'Julian_Ojeda_Ojeda--19.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'PARA DINERO LA HABANA'},
-    {a:'Julian_Ojeda_Ojeda--21.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'UN SACO MELONES',s:true},
-    {a:'Julian_Ojeda_Ojeda--24.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'LA CADERECHANA'},
-    {a:'Julian_Ojeda_Ojeda--25.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'HAY QUE VER'},
-    {a:'Julian_Ojeda_Ojeda--26.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'EL QUE SE CASA DE VIEJO'},
-    {a:'Julian_Ojeda_Ojeda--28.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'LOS COLCHONES',s:true},
-    {a:'Julian_Ojeda_Ojeda--30.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'SI TIENES MUJER GUAPA'},
-    {a:'Julian_Ojeda_Ojeda--31.mp3',c:'Julián Ojeda Ojeda',m:'Cantabrana',t:'LA PUERTA DE SIETE LLAVES'},
-    {a:'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--03.mp3',c:'Julián Ojeda Ojeda y Gregorio Ojeda Peña',m:'Cantabrana',t:'ÉCHALA CON FUERZA AL AIRE'},
-    {a:'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--06.mp3',c:'Julián Ojeda Ojeda y Gregorio Ojeda Peña',m:'Cantabrana',t:'CARRUSEL DE CANCIONES'},
-    {a:'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--13.mp3',c:'Julián Ojeda Ojeda y Gregorio Ojeda Peña',m:'Cantabrana',t:'VINO DE GALLIPEPE'},
-    {a:'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--34.mp3',c:'Julián Ojeda Ojeda y Gregorio Ojeda Peña',m:'Cantabrana',t:'NO HAY QUIEN PUEDA'},
-    {a:'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--35.mp3',c:'Julián Ojeda Ojeda y Gregorio Ojeda Peña',m:'Cantabrana',t:'SI TE QUIERES CASAR'},
-    {a:'Lucia_Ojeda_Pena_y_Julian_Ojeda_Ojeda--29.mp3',c:'Lucía Ojeda Peña y Julián Ojeda Ojeda',m:'Cantabrana',t:'EL CARLOR DE MI PATRIA'},
-    {a:'Pedro-Felix-Garcia-Linaje--38.mp3',c:'Pedro Félix García Linaje',m:'Cantabrana',t:'CANTAN LOS DE CANTABRANA'},
-    {a:'Pedro-Felix-Garcia-Linaje-07.mp3',c:'Pedro Félix García Linaje',m:'Cantabrana',t:'QUE SON DE CANTABRANA (Pedrín)'},
-    {a:'Pedro_Felix_Garcia_Linaje--12.mp3',c:'Pedro Félix García Linaje',m:'Cantabrana',t:'SI PASAS POR TERMINÓN'},
-    {a:'Pedro_Felix_Garcia_Linaje--32.mp3',c:'Pedro Félix García Linaje',m:'Cantabrana',t:'GUINDALERA'},
-    {a:'Pedro_Felix_Garcia_Linaje--33.mp3',c:'Pedro Félix García Linaje',m:'Cantabrana',t:'HIMNO CANTABRANA (Pedrín)'},
+    {a:'Cecilio_Jose_Diaz_Linaje--09.mp3',c:'Cecilio Jos\u00e9 D\u00edaz Linaje',m:'Cantabrana',t:'BILBAINADA'},
+    {a:'Cecilio_Jose_Diaz_Linaje--10.mp3',c:'Cecilio Jos\u00e9 D\u00edaz Linaje',m:'Cantabrana',t:'QUE SON DE CANTABRANA (Jose)'},
+    {a:'Elena_Diaz_Linaje--39.mp3',c:'Elena D\u00edaz Linaje',m:'Cantabrana',t:'DONDE VA LA NI\u00d1A'},
+    {a:'Gregorio_Ojeda_Pena_y_Julian_Ojeda_Ojeda--02.mp3',c:'Gregorio Ojeda Pe\u00f1a y Juli\u00e1n Ojeda Ojeda',m:'Cantabrana',t:'CAMINITO DEL ARROYO'},
+    {a:'Grupal_himno_Cantabrana--27.mp3',c:'Grupal \u00b7 Himno de Cantabrana',m:'Cantabrana',t:'HIMNO CANTABRANA (Mujeres)'},
+    {a:'julian-Ojeda-Ojeda--18.mp3',c:'Juli\u00e1n Ojeda Ojeda',m:'Cantabrana',t:'LA VERDAD EN VERSO'},
+    {a:'Julian-Ojeda-Ojeda--20.mp3',c:'Juli\u00e1n Ojeda Ojeda',m:'Cantabrana',t:'QUE TE TUMBO',s:true},
+    {a:'Julian-Ojeda-Ojeda--22.mp3',c:'Juli\u00e1n Ojeda Ojeda',m:'Cantabrana',t:'VENIA DE REGAR',s:true},
+    {a:'Julian-Ojeda-Ojeda--23.mp3',c:'Juli\u00e1n Ojeda Ojeda',m:'Cantabrana',t:'JUANITA YA SE HA CASADO'},
+    {a:'Julian-Ojeda-Ojeda-y-Gregorio-Ojeda-Pena--11.mp3',c:'Juli\u00e1n Ojeda Ojeda y Gregorio Ojeda Pe\u00f1a',m:'Cantabrana',t:'SEGUNDO'},
+    {a:'Julian_Ojeda_Ojeda--04.mp3',c:'Juli\u00e1n Ojeda Ojeda',m:'Cantabrana',t:'EL CONEJO',s:true},
+    {a:'Julian_Ojeda_Ojeda--05.mp3',c:'Juli\u00e1n Ojeda Ojeda',m:'Cantabrana',t:'LAS MUJERES EN EL HORNO'},
+    {a:'Julian_Ojeda_Ojeda--08.mp3',c:'Juli\u00e1n Ojeda Ojeda',m:'Cantabrana',t:'QUE TE LA HAN TENTADO',s:true},
+    {a:'Julian_Ojeda_Ojeda--14.mp3',c:'Juli\u00e1n Ojeda Ojeda',m:'Cantabrana',t:'A LA FERIA DE EXTREMADURA',s:true},
+    {a:'Julian_Ojeda_Ojeda--15.mp3',c:'Juli\u00e1n Ojeda Ojeda',m:'Cantabrana',t:'Y TANTO QUE SABES COSER'},
+    {a:'Julian_Ojeda_Ojeda--16.mp3',c:'Juli\u00e1n Ojeda Ojeda',m:'Cantabrana',t:'UN CANTARILLO EN LA FUENTE',s:true},
+    {a:'Julian_Ojeda_Ojeda--17.mp3',c:'Juli\u00e1n Ojeda Ojeda',m:'Cantabrana',t:'BRAGUETA',s:true},
+    {a:'Julian_Ojeda_Ojeda--19.mp3',c:'Juli\u00e1n Ojeda Ojeda',m:'Cantabrana',t:'PARA DINERO LA HABANA'},
+    {a:'Julian_Ojeda_Ojeda--21.mp3',c:'Juli\u00e1n Ojeda Ojeda',m:'Cantabrana',t:'UN SACO MELONES',s:true},
+    {a:'Julian_Ojeda_Ojeda--24.mp3',c:'Juli\u00e1n Ojeda Ojeda',m:'Cantabrana',t:'LA CADERECHANA'},
+    {a:'Julian_Ojeda_Ojeda--25.mp3',c:'Juli\u00e1n Ojeda Ojeda',m:'Cantabrana',t:'HAY QUE VER'},
+    {a:'Julian_Ojeda_Ojeda--26.mp3',c:'Juli\u00e1n Ojeda Ojeda',m:'Cantabrana',t:'EL QUE SE CASA DE VIEJO'},
+    {a:'Julian_Ojeda_Ojeda--28.mp3',c:'Juli\u00e1n Ojeda Ojeda',m:'Cantabrana',t:'LOS COLCHONES',s:true},
+    {a:'Julian_Ojeda_Ojeda--30.mp3',c:'Juli\u00e1n Ojeda Ojeda',m:'Cantabrana',t:'SI TIENES MUJER GUAPA'},
+    {a:'Julian_Ojeda_Ojeda--31.mp3',c:'Juli\u00e1n Ojeda Ojeda',m:'Cantabrana',t:'LA PUERTA DE SIETE LLAVES'},
+    {a:'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--03.mp3',c:'Juli\u00e1n Ojeda Ojeda y Gregorio Ojeda Pe\u00f1a',m:'Cantabrana',t:'\u00c9CHALA CON FUERZA AL AIRE'},
+    {a:'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--06.mp3',c:'Juli\u00e1n Ojeda Ojeda y Gregorio Ojeda Pe\u00f1a',m:'Cantabrana',t:'CARRUSEL DE CANCIONES'},
+    {a:'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--13.mp3',c:'Juli\u00e1n Ojeda Ojeda y Gregorio Ojeda Pe\u00f1a',m:'Cantabrana',t:'VINO DE GALLIPEPE'},
+    {a:'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--34.mp3',c:'Juli\u00e1n Ojeda Ojeda y Gregorio Ojeda Pe\u00f1a',m:'Cantabrana',t:'NO HAY QUIEN PUEDA'},
+    {a:'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--35.mp3',c:'Juli\u00e1n Ojeda Ojeda y Gregorio Ojeda Pe\u00f1a',m:'Cantabrana',t:'SI TE QUIERES CASAR'},
+    {a:'Lucia_Ojeda_Pena_y_Julian_Ojeda_Ojeda--29.mp3',c:'Luc\u00eda Ojeda Pe\u00f1a y Juli\u00e1n Ojeda Ojeda',m:'Cantabrana',t:'EL CARLOR DE MI PATRIA'},
+    {a:'Pedro-Felix-Garcia-Linaje--38.mp3',c:'Pedro F\u00e9lix Garc\u00eda Linaje',m:'Cantabrana',t:'CANTAN LOS DE CANTABRANA'},
+    {a:'Pedro-Felix-Garcia-Linaje-07.mp3',c:'Pedro F\u00e9lix Garc\u00eda Linaje',m:'Cantabrana',t:'QUE SON DE CANTABRANA (Pedr\u00edn)'},
+    {a:'Pedro_Felix_Garcia_Linaje--12.mp3',c:'Pedro F\u00e9lix Garc\u00eda Linaje',m:'Cantabrana',t:'SI PASAS POR TERMIN\u00d3N'},
+    {a:'Pedro_Felix_Garcia_Linaje--32.mp3',c:'Pedro F\u00e9lix Garc\u00eda Linaje',m:'Cantabrana',t:'GUINDALERA'},
+    {a:'Pedro_Felix_Garcia_Linaje--33.mp3',c:'Pedro F\u00e9lix Garc\u00eda Linaje',m:'Cantabrana',t:'HIMNO CANTABRANA (Pedr\u00edn)'},
+    {a:'Salve--37.mp3',c:'Salve',m:'Cantabrana',t:'SALVE'},
   ],
 };
 
@@ -345,13 +347,30 @@ const aAmb=document.getElementById('aAmb');
 // UTILIDADES
 // ================================================================
 async function keepScreen(){try{if('wakeLock'in navigator)await navigator.wakeLock.request('screen');}catch(e){}}
-
 function rnd(max){return crypto.getRandomValues(new Uint32Array(1))[0]%max;}
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;}
 
-function shuffle(arr){
-  const a=[...arr];
-  for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]];}
-  return a;
+// Historial helpers — evitan repeticiones
+function histGet(key){try{return JSON.parse(localStorage.getItem(key)||'[]');}catch(e){return[];}}
+function histSet(key,arr){try{localStorage.setItem(key,JSON.stringify(arr));}catch(e){}}
+
+function histPick(pool,key){
+  var hist=histGet(key);
+  var noVistos=pool.filter(function(f){return hist.indexOf(f)<0;});
+  if(noVistos.length<1){hist=[];noVistos=pool;}
+  var elegido=noVistos[rnd(noVistos.length)];
+  histSet(key,[...hist,elegido].slice(-pool.length));
+  return elegido;
+}
+
+function histPickArr(pool,key,n,minLeft){
+  var hist=histGet(key);
+  var noVistos=pool.filter(function(f){return hist.indexOf(f)<0;});
+  if(noVistos.length<(minLeft||n)){hist=[];noVistos=pool;}
+  var shuffled=shuffle(noVistos);
+  var elegidos=shuffled.slice(0,n);
+  histSet(key,[...hist,...elegidos].slice(-Math.max(n,Math.floor(pool.length*0.4))));
+  return elegidos;
 }
 
 function iniciarAmbiente(){
@@ -362,43 +381,53 @@ function iniciarAmbiente(){
 }
 
 // ================================================================
-// VENTANAS
+// VENTANAS INICIO
 // ================================================================
 async function mostrarVentanas(ventanas){
-  return new Promise(resolve=>{
-    const div=document.getElementById('ventanas');
-    const vimg=document.getElementById('v-img');
-    const vblur=document.getElementById('v-blur');
-    const vley=document.getElementById('v-ley');
+  return new Promise(function(resolve){
+    var div=document.getElementById('ventanas');
+    var vimg=document.getElementById('v-img');
+    var vblur=document.getElementById('v-blur');
+    var vley=document.getElementById('v-ley');
+    var vvid=document.getElementById('v-vid');
     div.classList.add('show');
-    let idx=0;
+    var idx=0;
     function sig(){
       if(idx>=ventanas.length){
         div.style.transition='opacity 1.2s ease';div.style.opacity='0';
-        setTimeout(()=>{div.style.display='none';div.style.opacity='1';resolve();},1500);
+        setTimeout(function(){div.style.display='none';div.style.opacity='1';resolve();},1500);
         return;
       }
-      const data=ventanas[idx++];
-      vimg.style.opacity='0';vblur.style.opacity='0';vley.classList.remove('show');vley.textContent='';
-      const vvid=document.getElementById('v-vid');
-      vvid.style.opacity='0';vvid.style.display='none';vvid.pause&&vvid.pause();
-      setTimeout(()=>{
+      var data=ventanas[idx++];
+      vimg.style.opacity='0';vblur.style.opacity='0';
+      vley.classList.remove('show');vley.textContent='';
+      vvid.style.opacity='0';vvid.style.display='none';
+      if(vvid.pause)vvid.pause();
+      setTimeout(function(){
         if(data.tipo==='video'){
-          vvid.style.display='block';vvid.style.transition='opacity 1.5s ease';vvid.src=data.src;vvid.load();vvid.play().catch(function(){});
+          vvid.style.display='block';
+          vvid.style.transition='opacity 1.5s ease';
+          vvid.src=data.src;vvid.load();vvid.play().catch(function(){});
           var shown=false;
-          var showV=function(){if(shown)return;shown=true;vvid.style.opacity='1';vblur.src='';vblur.style.opacity='0';
-            setTimeout(function(){vley.textContent=data.leyenda;vley.classList.add('show');},900);
+          var showV=function(){
+            if(shown)return;shown=true;
+            vvid.style.opacity='1';vblur.style.opacity='0';
             setTimeout(function(){vvid.style.transition='opacity 1.5s ease';vvid.style.opacity='0';},4500);
-            setTimeout(sig,6000);};
-          vvid.oncanplay=showV;vvid.ontimeupdate=showV;setTimeout(showV,1500);
+            setTimeout(sig,6000);
+          };
+          vvid.oncanplay=showV;vvid.ontimeupdate=showV;
+          setTimeout(showV,1500);
           vvid.onerror=function(){setTimeout(sig,500);};
         } else {
           vimg.src=data.src;vblur.src=data.src;
-          vimg.onload=()=>{
+          vimg.onload=function(){
             vimg.style.opacity='1';vblur.style.opacity='1';
-            setTimeout(()=>{vley.textContent=data.leyenda;vley.classList.add('show');setTimeout(sig,3200);},900);
+            setTimeout(function(){
+              if(data.leyenda){vley.textContent=data.leyenda;vley.classList.add('show');}
+              setTimeout(sig,3200);
+            },900);
           };
-          vimg.onerror=()=>setTimeout(sig,500);
+          vimg.onerror=function(){setTimeout(sig,500);};
         }
       },600);
     }
@@ -407,86 +436,76 @@ async function mostrarVentanas(ventanas){
 }
 
 // ================================================================
-// INIT
+// ARRANCAR / INIT
 // ================================================================
 function arrancar(){
-  if(window._arrancado) return;
-  window._arrancado = true;
-  if(window._resolve) window._resolve();
+  if(window._arrancado)return;
+  window._arrancado=true;
+  if(window._resolve)window._resolve();
 }
 
 async function init(){
   keepScreen();
 
-  // Detectar jota del QR
+  // Detectar jota por QR
   const p=new URLSearchParams(location.search);
   const param=p.get('jota')||p.get('j');
   if(param) jota=CFG.jotas.find(j=>j.a.toLowerCase().includes(param.toLowerCase()));
   if(!jota){
-    let hist=[];try{hist=JSON.parse(localStorage.getItem('cant_hist')||'[]');}catch(e){}
+    var hist=histGet('cant_hist');
     const disp=CFG.jotas.filter(j=>!hist.includes(j.a));
     const pool=disp.length>0?disp:CFG.jotas;
     jota=pool[rnd(pool.length)];
     hist.push(jota.a);if(hist.length>20)hist=hist.slice(-20);
-    try{localStorage.setItem('cant_hist',JSON.stringify(hist));}catch(e){}
+    histSet('cant_hist',hist);
   }
 
-  // Mostrar botón tras 1.5s
+  // Mostrar botón
   setTimeout(()=>{document.getElementById('ld-btn').style.opacity='1';},1500);
 
-  // Esperar interacción
-  await new Promise(resolve=>{
+  // Esperar clic — con window._resolve para compatibilidad con arrancar()
+  await new Promise(function(resolve){
+    window._resolve=resolve;
     const el=document.getElementById('loading');
     const btn=document.getElementById('ld-btn');
-    const h=()=>{el.removeEventListener('click',h);el.removeEventListener('touchend',h);
+    const h=function(){
+      el.removeEventListener('click',h);el.removeEventListener('touchend',h);
       if(btn){btn.removeEventListener('click',h);btn.removeEventListener('touchend',h);}
-      resolve();};
+      resolve();
+    };
     el.addEventListener('click',h);el.addEventListener('touchend',h);
     if(btn){btn.addEventListener('click',h);btn.addEventListener('touchend',h);}
   });
 
-  // Iniciar ambiente
   iniciarAmbiente();
-
-  // Ocultar loading
   document.getElementById('loading').classList.add('fade');
 
-  setTimeout(async()=>{
-    // Preparar ventanas
+  setTimeout(async function(){
+    // Grupo de frases para las 3 ventanas de foto
     const grupo=CFG.grupos_frases[rnd(CFG.grupos_frases.length)];
-    let histI=[];try{histI=JSON.parse(localStorage.getItem("cant_intro")||"[]");}catch(e){}
-    let noVistasI=CFG.fotos_intro.filter(f=>!histI.includes(f));
-    if(noVistasI.length<10){histI=[];noVistasI=CFG.fotos_intro;}
-    const fotos_intro=shuffle(noVistasI);
-    const nvi=[...histI,...fotos_intro.slice(0,4)].slice(-Math.max(4,Math.floor(CFG.fotos_intro.length*0.4)));
-    try{localStorage.setItem("cant_intro",JSON.stringify(nvi));}catch(e){}
-    // Mezclar fotos y videos aleatoriamente
-    let histV=[];try{histV=JSON.parse(localStorage.getItem('cant_vids')||'[]');}catch(e){}
-    let noVistasV=CFG.videos_intro.filter(f=>!histV.includes(f));
+
+    // Fotos inicio con historial
+    const fotos_intro=histPickArr(CFG.fotos_intro,'cant_intro',3,10);
+
+    // Video inicio con historial
+    var histV=histGet('cant_vids');
+    var noVistasV=CFG.videos_intro.filter(function(f){return histV.indexOf(f)<0;});
     if(noVistasV.length<1){histV=[];noVistasV=CFG.videos_intro;}
-    const vids_shuffle=shuffle(noVistasV);
-    const nviV=[...histV,...vids_shuffle.slice(0,2)].slice(-Math.floor(CFG.videos_intro.length*0.6));
-    try{localStorage.setItem('cant_vids',JSON.stringify(nviV));}catch(e){}
+    var vid=noVistasV[rnd(noVistasV.length)];
+    histSet('cant_vids',[...histV,vid].slice(-Math.floor(CFG.videos_intro.length*0.6)));
+
     const mediaPool=[
-      {src:fotos_intro[0], leyenda:grupo[0], tipo:'foto'},
-      {src:fotos_intro[1], leyenda:grupo[1], tipo:'foto'},
-      {src:fotos_intro[2], leyenda:grupo[2], tipo:'foto'},
-      {src:vids_shuffle[0], leyenda:'', tipo:'video'},
+      {src:fotos_intro[0],leyenda:grupo[0],tipo:'foto'},
+      {src:fotos_intro[1],leyenda:grupo[1],tipo:'foto'},
+      {src:fotos_intro[2],leyenda:grupo[2],tipo:'foto'},
+      {src:vid,leyenda:'',tipo:'video'},
     ];
-    const ventanas=mediaPool;
-    await mostrarVentanas(ventanas);
+    await mostrarVentanas(mediaPool);
 
     // Pergamino
     const pIdx=rnd(CFG.pergaminos.length);
     document.getElementById('p-img').src=CFG.pergaminos[pIdx];
-    // Texto aleatorio pergamino
-    let pergTxt;
-    if(jota&&jota.s){
-      pergTxt='Lo que va a escuchar<br>es de otra época.<br>Una mentalidad y una<br>sociedad distinta a<br>nuestros tiempos.';
-    } else {
-      pergTxt=CFG.textos_perg[rnd(CFG.textos_perg.length)];
-    }
-    document.getElementById('p-aviso').innerHTML=pergTxt;
+    document.getElementById('p-aviso').innerHTML=(jota&&jota.s)?CFG.perg_sensible:CFG.textos_perg[rnd(CFG.textos_perg.length)];
     document.getElementById('pant-perg').classList.add('show');
     setTimeout(iniciarJota,7000);
   },600);
@@ -497,30 +516,36 @@ async function init(){
 // ================================================================
 async function iniciarJota(){
   if(!jota)return;
-  var pp=document.getElementById('pant-perg');pp.style.transition='opacity 1.5s ease';pp.style.opacity='0';setTimeout(function(){pp.classList.remove('show');},1500);
 
-  // Shuffle fotos arcos con historial
-  let histF=[];try{histF=JSON.parse(localStorage.getItem('cant_fotos')||'[]');}catch(e){}
-  let noVistas=CFG.fotos_arcos.filter(f=>!histF.includes(f));
+  // Cerrar pergamino con fade
+  var pp=document.getElementById('pant-perg');
+  pp.style.transition='opacity 1.5s ease';
+  pp.style.opacity='0';
+  setTimeout(function(){pp.classList.remove('show');},1500);
+
+  // Fotos arcos con historial
+  var histF=histGet('cant_fotos');
+  var noVistas=CFG.fotos_arcos.filter(function(f){return histF.indexOf(f)<0;});
   if(noVistas.length<15){histF=[];noVistas=CFG.fotos_arcos;}
   fotos=shuffle(noVistas);
-  const nuevasVistas=[...histF,...fotos.slice(0,20)].slice(-97);
-  try{localStorage.setItem('cant_fotos',JSON.stringify(nuevasVistas));}catch(e){}
+  histSet('cant_fotos',[...histF,...fotos.slice(0,20)].slice(-97));
 
   document.getElementById('pant-repro').classList.add('show');
   document.getElementById('cantante').textContent=jota.c;
   document.getElementById('municipio').textContent=jota.m;
-  document.getElementById('ticker-in').textContent='♪  '+(jota.t||jota.c)+' · '+jota.c+' · Cantabrana  ♪';
+  document.getElementById('ticker-in').textContent='\u266a  '+(jota.t||jota.c)+' \u00b7 '+jota.c+' \u00b7 Cantabrana  \u266a';
 
   // Bajar ambiente
-  let av=aAmb.volume;const fa=setInterval(()=>{av=Math.max(av-0.02,0.06);aAmb.volume=av;if(av<=0.06)clearInterval(fa);},80);
+  var av=aAmb.volume;
+  const fa=setInterval(()=>{av=Math.max(av-0.02,0.06);aAmb.volume=av;if(av<=0.06)clearInterval(fa);},80);
   document.getElementById('amb-ind').classList.add('show');
 
   aJota.src=CFG.jotas_url+encodeURIComponent(jota.a);
   aJota.load();aJota.volume=0.4;
   mostrarFoto(0);
   aJota.play().catch(e=>console.warn(e));
-  var vj=0.4;var fj=setInterval(function(){vj=Math.min(vj+0.04,1);aJota.volume=vj;if(vj>=1)clearInterval(fj);},150);
+  var vj=0.4;
+  var fj=setInterval(function(){vj=Math.min(vj+0.04,1);aJota.volume=vj;if(vj>=1)clearInterval(fj);},150);
   iniciarProgreso();
   aJota.onended=finJota;
   aJota.addEventListener('loadedmetadata',()=>{
@@ -529,7 +554,7 @@ async function iniciarJota(){
 }
 
 // ================================================================
-// FOTOS
+// FOTOS CARRUSEL
 // ================================================================
 function mostrarFoto(idx){
   if(!fotos.length)return;
@@ -558,108 +583,150 @@ function iniciarProgreso(){
 }
 
 // ================================================================
-// FIN JOTA
+// FIN JOTA → PORTADA con FADE → FASE FINAL
 // ================================================================
 function finJota(){
   if(jotaFin)return;jotaFin=true;
   clearTimeout(fotoTimer);fotoIdx=0;
-  clearTimeout(fotoTimer);clearInterval(progresoInter);
+  clearInterval(progresoInter);
   document.getElementById('prog-fill').style.width='100%';
 
   // Subir ambiente
-  let v=aAmb.volume;const fu=setInterval(()=>{v=Math.min(v+0.02,0.45);aAmb.volume=v;if(v>=0.45)clearInterval(fu);},100);
+  var v=aAmb.volume;
+  const fu=setInterval(()=>{v=Math.min(v+0.02,0.45);aAmb.volume=v;if(v>=0.45)clearInterval(fu);},100);
 
   // Portada
   const fi=document.getElementById('f-img');
   const bl=document.getElementById('f-blur');
   const tr=document.getElementById('f-trans');
   tr.classList.add('on');
-  setTimeout(()=>{fi.src=CFG.portada;bl.style.backgroundImage="url('"+CFG.portada+"')";fi.onload=()=>{tr.classList.remove('on');fi.classList.add('show');};},500);
-
-  // Despedida tras 8s
   setTimeout(()=>{
-    document.getElementById('pant-repro').style.display='none';
-    mostrarDespedida(()=>{
-      // Frase final aleatoria
-      const idx=rnd(CFG.frases_final.length);
-      document.getElementById('fin-frase').innerHTML=CFG.frases_final[idx]+'<br><br>Muchas gracias.';
-      document.getElementById('pant-final').classList.add('show');
-    });
+    fi.src=CFG.portada;
+    bl.style.backgroundImage="url('"+CFG.portada+"')";
+    fi.onload=()=>{tr.classList.remove('on');fi.classList.add('show');};
+  },500);
+
+  // Fade out portada y arrancar fase final
+  setTimeout(function(){
+    var pr=document.getElementById('pant-repro');
+    pr.style.transition='opacity 1.5s ease';
+    pr.style.opacity='0';
+    setTimeout(function(){
+      pr.style.display='none';
+      pr.style.opacity='1';
+      // Elegir grupo de frase final (3 partes)
+      var grupoFinal=CFG.frases_final[rnd(CFG.frases_final.length)];
+      mostrarFotoFinal(grupoFinal[0],function(){
+        mostrarVideoFinal(grupoFinal[1],function(){
+          mostrarSelloFinal(grupoFinal[2],function(){
+            // Ventana final con frase completa
+            document.getElementById('fin-frase').innerHTML=grupoFinal.join('<br>')+'<br><br>Muchas gracias.';
+            document.getElementById('pant-final').classList.add('show');
+          });
+        });
+      });
+    },1500);
   },5000);
 }
 
 // ================================================================
-// DESPEDIDA
+// FASE FINAL: FOTO → VIDEO → SELLO
 // ================================================================
-function mostrarDespedida(callback){
+function mostrarFotoFinal(frase,callback){
   var div=document.getElementById('pant-desp');
   var img=document.getElementById('d-img');
   var txt=document.getElementById('d-txt');
   var KB=['kenburns1','kenburns2','kenburns3','kenburns4'];
-  img.src='';img.style.opacity='0';img.style.animation='none';txt.textContent='';
-  div.classList.add('show');
+  // Reset
+  img.style.maxWidth='';img.style.maxHeight='';img.style.animation='none';
+  img.src='';img.style.opacity='0';txt.textContent='';
+  div.style.opacity='0';div.style.display='flex';
+  div.style.flexDirection='column';
+  div.style.alignItems='center';div.style.justifyContent='center';
   setTimeout(function(){
-    img.src=CFG.vistas[rnd(CFG.vistas.length)];
-    img.onload=function(){img.style.opacity='1';img.style.animation=KB[rnd(4)]+' 8s ease-in-out forwards';};
-    txt.textContent=CFG.frases_desp[rnd(CFG.frases_desp.length)];
+    var vista=histPick(CFG.vistas,'cant_vistas');
+    img.style.width='88%';img.style.maxWidth='500px';img.style.maxHeight='72vh';img.style.objectFit='contain';
+    img.src=vista;
+    img.onload=function(){
+      img.style.opacity='0.9';
+      img.style.animation=KB[rnd(4)]+' 8s ease-in-out forwards';
+      txt.textContent=frase;
+    };
   },200);
   setTimeout(function(){
+    div.style.transition='opacity 1.5s ease';div.style.opacity='1';
+  },300);
+  setTimeout(function(){
     div.style.transition='opacity 1.5s ease';div.style.opacity='0';
-    setTimeout(function(){div.style.display='none';mostrarVideoFinal(function(){mostrarSelloFinal(callback);});},1500);
+    setTimeout(function(){div.style.display='none';callback();},1500);
   },5000);
 }
-function mostrarVideoFinal(callback){
-  var videos=['video/intro/video01.mp4','video/intro/video08.mp4','video/intro/video09.mp4','video/intro/video10.mp4','video/intro/video11.mp4','video/intro/video12.mp4'];
+
+function mostrarVideoFinal(frase,callback){
   var div=document.getElementById('pant-desp');
   var img=document.getElementById('d-img');
-  img.src='';img.style.opacity='0';
+  var txt=document.getElementById('d-txt');
+  img.src='';img.style.opacity='0';txt.textContent='';
   div.style.opacity='0';div.style.display='flex';
+  div.style.flexDirection='column';
   div.style.alignItems='center';div.style.justifyContent='center';
   var vvf=document.createElement('video');
   vvf.autoplay=true;vvf.muted=true;vvf.setAttribute('playsinline','');
-  vvf.style.cssText='width:95%;max-width:480px;max-height:82vh;object-fit:cover;opacity:0;transition:opacity 1.5s ease;';
+  vvf.style.cssText='width:95%;max-width:480px;max-height:72vh;object-fit:cover;opacity:0;transition:opacity 1.5s ease;';
   div.appendChild(vvf);
-  vvf.src=videos[rnd(videos.length)];vvf.load();vvf.play().catch(function(){});
+  var video=histPick(CFG.videos_final,'cant_vfinal');
+  vvf.src=video;vvf.load();vvf.play().catch(function(){});
   var shown=false;
-  var showVF=function(){if(shown)return;shown=true;vvf.style.opacity='1';
-    setTimeout(function(){div.style.transition='opacity 1.5s ease';div.style.opacity='1';},100);};
+  var showVF=function(){
+    if(shown)return;shown=true;
+    vvf.style.opacity='1';
+    setTimeout(function(){
+      div.style.transition='opacity 1.5s ease';div.style.opacity='1';
+      txt.textContent=frase;
+    },100);
+  };
   vvf.oncanplay=showVF;vvf.ontimeupdate=showVF;setTimeout(showVF,1500);
   setTimeout(function(){vvf.style.transition='opacity 1.5s ease';vvf.style.opacity='0';},4500);
   setTimeout(function(){
     div.style.transition='opacity 1s ease';div.style.opacity='0';
-    setTimeout(function(){if(vvf.pause)vvf.pause();if(div.contains(vvf))div.removeChild(vvf);div.style.display='none';callback();},1000);
+    setTimeout(function(){
+      if(vvf.pause)vvf.pause();
+      if(div.contains(vvf))div.removeChild(vvf);
+      div.style.display='none';
+      callback();
+    },1000);
   },5500);
 }
-function mostrarSelloFinal(callback){
-  var sellos=['fotos/sellos/sello7.png','fotos/sellos/sello8.png','fotos/sellos/sello9.png','fotos/sellos/sello10.png','fotos/sellos/sello11.png'];
+
+function mostrarSelloFinal(frase,callback){
   var div=document.getElementById('pant-desp');
   var img=document.getElementById('d-img');
   var txt=document.getElementById('d-txt');
-  img.src='';img.style.opacity='0';img.style.animation='none';txt.textContent='';
+  img.style.animation='none';img.src='';img.style.opacity='0';txt.textContent='';
   div.style.opacity='0';div.style.display='flex';
+  div.style.flexDirection='column';
   div.style.alignItems='center';div.style.justifyContent='center';
+  var sello=histPick(CFG.sellos_final,'cant_sellos');
   setTimeout(function(){
-    img.src=sellos[rnd(sellos.length)];
-    img.style.maxWidth='100%';img.style.maxHeight='120vh';
+    img.src=sello;
     img.style.width='auto';img.style.height='auto';
+    img.style.maxWidth='100%';img.style.maxHeight='144vh';
     img.style.display='block';img.style.margin='auto';img.style.objectFit='contain';
     var kbs=['kenburns1','kenburns2','kenburns3','kenburns4'];
     img.onload=function(){img.style.opacity='1';img.style.animation=kbs[rnd(4)]+' 5s ease-in-out forwards';};
   },100);
-  setTimeout(function(){div.style.transition='opacity 1.5s ease';div.style.opacity='1';},200);
+  setTimeout(function(){
+    div.style.transition='opacity 1.5s ease';div.style.opacity='1';
+    txt.textContent=frase;
+  },200);
   setTimeout(function(){
     img.style.transition='opacity 1.5s ease';img.style.opacity='0';
-    setTimeout(function(){div.style.opacity='0';setTimeout(function(){div.style.display='none';callback();},1000);},1500);
+    setTimeout(function(){
+      div.style.opacity='0';
+      setTimeout(function(){div.style.display='none';callback();},1000);
+    },1500);
   },4000);
 }
-
-
-
-
-
-
-
-
 
 // ================================================================
 // CONTROLES
