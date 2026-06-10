@@ -616,12 +616,15 @@ function finJota(){
       pr.style.display='none';
       pr.style.opacity='1';
       // Elegir grupo de frase final (3 partes)
-      var grupoFinal=CFG.frases_final[rnd(CFG.frases_final.length)];
+      var idxFinal=rnd(CFG.frases_final.length);
+      var grupoFinal=CFG.frases_final[idxFinal];
       mostrarFotoFinal(grupoFinal[0],function(){
         mostrarVideoFinal(grupoFinal[1],function(){
           mostrarSelloFinal(grupoFinal[2],function(){
-            // Ventana final con frase completa
-            document.getElementById('fin-frase').innerHTML=grupoFinal.join('<br>')+'<br><br>Muchas gracias.';
+            // Ventana final con frase DISTINTA
+            var otrosGrupos=CFG.frases_final.filter(function(_,i){return i!==idxFinal;});
+            var grupoCreditos=otrosGrupos[rnd(otrosGrupos.length)];
+            document.getElementById('fin-frase').innerHTML=grupoCreditos.join('<br>')+'<br><br>Muchas gracias.';
             document.getElementById('pant-final').classList.add('show');
           });
         });
