@@ -1,10 +1,17 @@
 {
-  "name": "Cantabrana — Retazos de Vida",
+  "name": "Cantabrana - Patrimonio Musical",
   "short_name": "Cantabrana",
-  "description": "Patrimonio musical de Cantabrana.",
-  "start_url": "./",
+  "description": "Patrimonio Cultural Musical de Cantabrana",
+  "start_url": "/cantabrana-jotas/",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000",
-  "orientation": "portrait"
+  "background_color": "#1a0e05",
+  "theme_color": "#1a0e05",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "fotos/portada/portada1.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
