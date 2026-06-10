@@ -467,7 +467,7 @@ async function init(){
     let noVistasI=CFG.fotos_intro.filter(f=>!histI.includes(f));
     if(noVistasI.length<10){histI=[];noVistasI=CFG.fotos_intro;}
     const fotos_intro=shuffle(noVistasI);
-    const nvi=[...histI,...fotos_intro.slice(0,3)].slice(-Math.max(3,Math.floor(CFG.fotos_intro.length*0.4)));
+    const nvi=[...histI,...fotos_intro.slice(0,4)].slice(-Math.max(4,Math.floor(CFG.fotos_intro.length*0.4)));
     try{localStorage.setItem("cant_intro",JSON.stringify(nvi));}catch(e){}
     // Mezclar fotos y videos aleatoriamente
     let histV=[];try{histV=JSON.parse(localStorage.getItem('cant_vids')||'[]');}catch(e){}
@@ -478,8 +478,9 @@ async function init(){
     try{localStorage.setItem('cant_vids',JSON.stringify(nviV));}catch(e){}
     const mediaPool=[
       {src:fotos_intro[0], leyenda:grupo[0], tipo:'foto'},
-      {src:vids_shuffle[0], leyenda:grupo[1], tipo:'video'},
-      {src:fotos_intro[1], leyenda:grupo[2], tipo:'foto'},
+      {src:fotos_intro[1], leyenda:grupo[1], tipo:'foto'},
+      {src:fotos_intro[2], leyenda:grupo[2], tipo:'foto'},
+      {src:vids_shuffle[0], leyenda:'', tipo:'video'},
     ];
     const ventanas=mediaPool;
     await mostrarVentanas(ventanas);
