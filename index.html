@@ -46,7 +46,7 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 .p-part:nth-child(1){left:20%;top:80%;animation-delay:0s}.p-part:nth-child(2){left:50%;top:90%;animation-delay:1s}.p-part:nth-child(3){left:80%;top:75%;animation-delay:2s}
 @keyframes pfloat{0%{opacity:0;transform:translateY(0)}30%{opacity:.8}100%{opacity:0;transform:translateY(-60px)}}
 #p-img{width:auto;max-width:96%;height:auto;max-height:80vh;display:block;border-radius:4px;background:#2a1a08;object-fit:contain;margin:auto;}
-.p-texto{position:absolute;top:50%;left:50%;transform:translate(-50%,-52%);width:78%;text-align:center;}
+.p-texto{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:78%;text-align:center;max-height:90%;overflow:hidden;}
 .p-aviso{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(22px,7vw,34px);font-weight:800;color:rgba(10,5,5,.92);line-height:1.5;}
 
 /* REPRODUCTOR */
@@ -83,7 +83,7 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 #pant-desp{position:fixed;inset:0;z-index:42;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;}
 #pant-desp.show{display:flex}
 #d-img{width:88%;max-width:500px;max-height:72vh;object-fit:contain;opacity:0;position:relative;}
-#d-txt{position:absolute;bottom:10%;left:50%;transform:translateX(-50%);width:85%;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,5.5vw,28px);font-weight:600;color:rgba(245,230,190,.97);text-shadow:0 2px 20px rgba(0,0,0,.95),0 0 40px rgba(200,146,42,.3);line-height:1.7;z-index:1;}
+#d-txt{position:relative;width:85%;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,5.5vw,28px);font-weight:600;color:rgba(245,230,190,.97);text-shadow:0 2px 20px rgba(0,0,0,.95),0 0 40px rgba(200,146,42,.3);line-height:1.7;margin-top:12px;z-index:1;}
 
 /* PANTALLA FINAL */
 #pant-final{display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.93);align-items:center;justify-content:center;flex-direction:column;gap:14px;text-align:center;padding:40px;}
@@ -329,7 +329,7 @@ const aAmb=document.getElementById('aAmb');
 (function(){
   const cv=document.getElementById('bg');
   const gl=cv.getContext('webgl');
-  if(!gl)return;
+  if(!gl){document.body.style.background='radial-gradient(ellipse at center,#1a0e05 0%,#000 100%)';return;}
   function r(){cv.width=window.innerWidth;cv.height=window.innerHeight;gl.viewport(0,0,cv.width,cv.height);}
   window.addEventListener('resize',r);r();
   const vs='attribute vec2 p;void main(){gl_Position=vec4(p,0,1);}';
@@ -452,6 +452,14 @@ async function init(){
   const p=new URLSearchParams(location.search);
   const param=p.get('jota')||p.get('j');
   if(param) jota=CFG.jotas.find(j=>j.a.toLowerCase().includes(param.toLowerCase()));
+  // Soporte ?video= para QR de videos
+  const paramV=p.get('video');
+  if(paramV&&!jota){
+    var vUrl='video/intro/'+paramV+(paramV.includes('.mp4')?'':'.mp4');
+    if(CFG.videos_final.includes(vUrl)||CFG.videos_intro.includes(vUrl)){
+      window._forzarVideo=vUrl;
+    }
+  }
   if(!jota){
     var hist=histGet('cant_hist');
     const disp=CFG.jotas.filter(j=>!hist.includes(j.a));
@@ -548,6 +556,10 @@ async function iniciarJota(){
   var vj=0.4;
   var fj=setInterval(function(){vj=Math.min(vj+0.04,1);aJota.volume=vj;if(vj>=1)clearInterval(fj);},150);
   iniciarProgreso();
+  aJota.onerror=function(){
+    document.getElementById('ticker-in').textContent='⚠ Error al cargar el audio. Comprueba tu conexión.';
+    setTimeout(reiniciar,4000);
+  };
   aJota.onended=finJota;
   aJota.addEventListener('loadedmetadata',()=>{
     if(aJota.duration&&isFinite(aJota.duration))setTimeout(finJota,(aJota.duration+1)*1000);
@@ -625,7 +637,10 @@ function finJota(){
             var otrosGrupos=CFG.frases_final.filter(function(_,i){return i!==idxFinal;});
             var grupoCreditos=otrosGrupos[rnd(otrosGrupos.length)];
             document.getElementById('fin-frase').innerHTML=grupoCreditos.join('<br>')+'<br><br>Muchas gracias.';
-            document.getElementById('pant-final').classList.add('show');
+            var pf=document.getElementById('pant-final');
+            pf.style.opacity='0';pf.classList.add('show');
+            pf.style.transition='opacity 1.5s ease';
+            setTimeout(function(){pf.style.opacity='1';},100);
           });
         });
       });
