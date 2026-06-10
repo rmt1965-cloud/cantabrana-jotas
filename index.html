@@ -376,7 +376,8 @@ function histPickArr(pool,key,n,minLeft){
 function iniciarAmbiente(){
   const idx=rnd(CFG.ambiente.length);
   aAmb.src=CFG.ambiente[idx];aAmb.volume=0;aAmb.loop=true;
-  aAmb.play().catch(()=>{});
+  var ambPlay=function(){aAmb.play().catch(function(){setTimeout(ambPlay,1000);});};
+  ambPlay();
   let v=0;const f=setInterval(()=>{v=Math.min(v+0.015,0.45);aAmb.volume=v;if(v>=0.45)clearInterval(f);},150);
 }
 
