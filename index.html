@@ -676,7 +676,7 @@ function mostrarVideoFinal(frase,callback){
   div.style.alignItems='center';div.style.justifyContent='center';
   var vvf=document.createElement('video');
   vvf.autoplay=true;vvf.muted=true;vvf.setAttribute('playsinline','');
-  vvf.style.cssText='width:95%;max-width:480px;max-height:72vh;object-fit:cover;opacity:0;transition:opacity 1.5s ease;';
+  vvf.style.cssText='width:95%;max-width:100%;max-height:82vh;object-fit:contain;opacity:0;transition:opacity 1.5s ease;';
   div.appendChild(vvf);
   var video=histPick(CFG.videos_final,'cant_vfinal');
   vvf.src=video;vvf.load();vvf.play().catch(function(){});
