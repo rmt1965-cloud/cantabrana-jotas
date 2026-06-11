@@ -766,10 +766,10 @@ function mostrarSelloFinal(frase,callback){
   setTimeout(function(){
     img.src=sello;
     img.style.width='auto';img.style.height='auto';
-    img.style.maxWidth='92%';img.style.maxHeight='75vh';
+    img.style.maxWidth='96%';img.style.maxHeight='68vh';
     img.style.display='block';img.style.margin='auto';img.style.objectFit='contain';
     var kbs=['kenburns1','kenburns2','kenburns3','kenburns4'];
-    img.onload=function(){img.style.opacity='1';img.style.animation=kbs[rnd(4)]+' 5s ease-in-out forwards';};
+    img.onload=function(){img.style.opacity='1';img.style.animation=kbs[rnd(4)]+' 7s ease-in-out forwards';};
   },100);
   setTimeout(function(){
     div.style.transition='opacity 1.5s ease';div.style.opacity='1';
