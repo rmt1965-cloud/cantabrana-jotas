@@ -24,6 +24,14 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 .ld-autor{font-family:'Cinzel',serif;font-size:clamp(10px,2.8vw,13px);letter-spacing:4px;color:rgba(80,140,220,.9);text-transform:uppercase;text-shadow:0 0 20px rgba(80,140,220,.8);}
 #ld-btn{font-family:'Cinzel',serif;font-size:clamp(13px,4vw,17px);letter-spacing:4px;color:var(--gold);text-transform:uppercase;padding:16px 44px;border:2px solid rgba(200,146,42,.7);border-radius:4px;cursor:pointer;background:rgba(200,146,42,.12);min-width:200px;text-align:center;opacity:0;transition:opacity 1s ease;animation:pulse 1.8s ease-in-out infinite;margin-top:8px;}
 @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+#acc-btn{position:fixed;bottom:18px;left:18px;z-index:101;cursor:pointer;background:rgba(200,146,42,.12);border:1px solid rgba(200,146,42,.4);border-radius:6px;padding:8px 10px;display:flex;flex-direction:column;align-items:center;gap:2px;}
+#acc-btn svg{width:28px;height:28px;}
+#acc-btn.active{background:rgba(200,146,42,.3);border-color:var(--gold);}
+#acc-msg{position:fixed;bottom:70px;left:18px;z-index:101;font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;background:rgba(0,0,0,.85);padding:6px 12px;border-radius:4px;border:1px solid rgba(200,146,42,.4);opacity:0;transition:opacity 0.5s ease;pointer-events:none;}
+body.acc-mode .p-aviso{font-size:clamp(26px,8vw,40px)!important;}
+body.acc-mode #v-ley{font-size:clamp(24px,7vw,36px)!important;}
+body.acc-mode #d-txt{font-size:clamp(22px,6.5vw,32px)!important;}
+body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 
 /* VENTANAS */
 #ventanas{position:fixed;inset:0;z-index:8;background:#000;display:none;align-items:center;justify-content:center;overflow:hidden;}
@@ -103,6 +111,14 @@ html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Co
 <body>
 <canvas id="bg"></canvas>
 
+<!-- ACCESIBILIDAD -->
+<div id="acc-btn" title="Accesibilidad" onclick="toggleAcc()">
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <text x="2" y="14" font-family="serif" font-size="10" fill="#c8922a" font-weight="bold">A</text>
+    <text x="10" y="26" font-family="serif" font-size="18" fill="#c8922a" font-weight="bold">A</text>
+  </svg>
+</div>
+<div id="acc-msg">Modo accesibilidad activado</div>
 <!-- LOADING -->
 <div id="loading">
   <div class="ld-titulo">Cantabrana</div>
@@ -516,7 +532,7 @@ async function init(){
     document.getElementById('p-img').src=CFG.pergaminos[pIdx];
     document.getElementById('p-aviso').innerHTML=(jota&&jota.s)?CFG.perg_sensible:CFG.textos_perg[rnd(CFG.textos_perg.length)];
     document.getElementById('pant-perg').classList.add('show');
-    setTimeout(iniciarJota,7000);
+    setTimeout(iniciarJota,window._pergDur||7000);
   },600);
 }
 
@@ -757,6 +773,39 @@ function salir(){
   document.body.style.transition='opacity .8s ease';document.body.style.opacity='0';
   setTimeout(()=>{try{window.close();}catch(e){}document.body.innerHTML='<style>body{background:#000;margin:0}</style>';},900);
 }
+
+// ================================================================
+// ACCESIBILIDAD
+// ================================================================
+function toggleAcc(){
+  var btn=document.getElementById('acc-btn');
+  var msg=document.getElementById('acc-msg');
+  var active=document.body.classList.toggle('acc-mode');
+  btn.classList.toggle('active',active);
+  try{localStorage.setItem('cant_acc',active?'1':'0');}catch(e){}
+  msg.style.opacity='1';
+  if(active){
+    CFG.dur_foto=7;
+    window._pergDur=14000;
+  } else {
+    CFG.dur_foto=4;
+    window._pergDur=7000;
+  }
+  setTimeout(function(){msg.style.opacity='0';},2500);
+}
+// Restaurar modo accesibilidad al cargar
+(function(){
+  try{
+    if(localStorage.getItem('cant_acc')==='1'){
+      document.body.classList.add('acc-mode');
+      document.getElementById('acc-btn').classList.add('active');
+      CFG.dur_foto=7;
+      window._pergDur=14000;
+    } else {
+      window._pergDur=7000;
+    }
+  }catch(e){window._pergDur=7000;}
+})();
 
 document.addEventListener('DOMContentLoaded',init);
 </script>
