@@ -204,6 +204,12 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
   <div id="d-txt"></div>
 </div>
 
+<!-- VENTANA SELLO CREDITO -->
+<div id="pant-sello-cred" style="display:none;position:fixed;inset:0;z-index:49;background:rgba(0,0,0,.95);flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:30px;opacity:0;transition:opacity 1.5s ease;">
+  <img src="fotos/sellos/sello15.png" id="sello-cred-img" style="width:160px;height:160px;object-fit:contain;opacity:0.9;">
+  <div style="font-family:'Cinzel',serif;font-size:clamp(11px,3vw,14px);letter-spacing:3px;color:rgba(200,146,42,.9);text-transform:uppercase;margin-top:8px;">Esta grabación ha sido realizada en la villa de Cantabrana</div>
+  <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(13px,3.5vw,17px);color:rgba(240,192,96,.8);letter-spacing:2px;">Archivo personal Rafael Molina Toledo</div>
+</div>
 <!-- PANTALLA FINAL CREDITOS -->
 <div id="pant-final">
   <img src="fotos/sellos/sello15.png" style="width:80px;height:80px;object-fit:contain;opacity:0.85;margin-bottom:4px;" alt="Sello Cantabrana">
@@ -713,10 +719,21 @@ function finJota(){
             var otrosGrupos=CFG.frases_final.filter(function(_,i){return i!==idxFinal;});
             var grupoCreditos=otrosGrupos[rnd(otrosGrupos.length)];
             document.getElementById('fin-frase').innerHTML=grupoCreditos.join('<br>')+'<br><br>Muchas gracias.';
-            var pf=document.getElementById('pant-final');
-            pf.style.opacity='0';pf.classList.add('show');
-            pf.style.transition='opacity 1.5s ease';
-            setTimeout(function(){pf.style.opacity='1';},100);
+            // Mostrar ventana sello-credito primero
+            var psc=document.getElementById('pant-sello-cred');
+            psc.style.display='flex';
+            setTimeout(function(){psc.style.opacity='1';},100);
+            // Tras 4s pasar a ventana final
+            setTimeout(function(){
+              psc.style.opacity='0';
+              setTimeout(function(){
+                psc.style.display='none';
+                var pf=document.getElementById('pant-final');
+                pf.style.opacity='0';pf.classList.add('show');
+                pf.style.transition='opacity 1.5s ease';
+                setTimeout(function(){pf.style.opacity='1';},100);
+              },1500);
+            },4000);
           });
         });
       });
