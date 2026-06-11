@@ -938,29 +938,39 @@ function compartirJota(){
 // Ocultar sello tras 6s en ventana final
 function ocultarSelloFinal(){
   var img=document.querySelector('#pant-final img');
-  if(img){img.style.transition='opacity 1.5s ease';img.style.opacity='0';}
+  if(img){
+    img.style.transition='opacity 1.5s ease';
+    img.style.opacity='0';
+    setTimeout(function(){img.style.display='none';},1600);
+  }
 }
+var _scrollRAF=null;
 function abrirInfo(){
   var modal=document.getElementById('modal-info');
   var box=document.getElementById('modal-box');
   modal.classList.add('show');
   box.scrollTop=0;
-  // Scroll automatico lento
+  if(_scrollRAF){cancelAnimationFrame(_scrollRAF);_scrollRAF=null;}
   setTimeout(function(){
     var total=box.scrollHeight-box.clientHeight;
     if(total<=0)return;
-    var dur=total*80;// ~80ms por pixel = velocidad lectura
+    var dur=total*80;
     var start=null;
     function step(ts){
       if(!start)start=ts;
       var prog=(ts-start)/dur;
       box.scrollTop=prog*total;
-      if(prog<1&&modal.classList.contains('show'))requestAnimationFrame(step);
+      if(prog<1&&modal.classList.contains('show')){
+        _scrollRAF=requestAnimationFrame(step);
+      } else {_scrollRAF=null;}
     }
-    requestAnimationFrame(step);
+    _scrollRAF=requestAnimationFrame(step);
   },1000);
 }
-function cerrarInfo(){document.getElementById('modal-info').classList.remove('show');}
+function cerrarInfo(){
+  document.getElementById('modal-info').classList.remove('show');
+  if(_scrollRAF){cancelAnimationFrame(_scrollRAF);_scrollRAF=null;}
+}
 
 document.addEventListener('DOMContentLoaded',init);
 </script>
