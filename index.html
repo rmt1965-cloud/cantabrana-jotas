@@ -555,7 +555,11 @@ async function iniciarJota(){
   fotos=shuffle(noVistas);
   histSet('cant_fotos',[...histF,...fotos.slice(0,20)].slice(-97));
 
-  document.getElementById('pant-repro').classList.add('show');
+  // Fade in suave del reproductor
+  var pr=document.getElementById('pant-repro');
+  pr.style.opacity='0';pr.classList.add('show');
+  pr.style.transition='opacity 1s ease';
+  setTimeout(function(){pr.style.opacity='1';},100);
   document.getElementById('cantante').textContent=jota.c;
   document.getElementById('municipio').textContent=jota.m;
   document.getElementById('ticker-in').textContent='\u266a  '+(jota.t||jota.c)+' \u00b7 '+jota.c+' \u00b7 Cantabrana  \u266a';
