@@ -785,7 +785,7 @@ function toggleAcc(){
   try{localStorage.setItem('cant_acc',active?'1':'0');}catch(e){}
   msg.style.opacity='1';
   if(active){
-    CFG.dur_foto=7;
+    CFG.dur_foto=6;
     window._pergDur=14000;
   } else {
     CFG.dur_foto=4;
@@ -799,7 +799,7 @@ function toggleAcc(){
     if(localStorage.getItem('cant_acc')==='1'){
       document.body.classList.add('acc-mode');
       document.getElementById('acc-btn').classList.add('active');
-      CFG.dur_foto=7;
+      CFG.dur_foto=6;
       window._pergDur=14000;
     } else {
       window._pergDur=7000;
