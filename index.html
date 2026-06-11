@@ -88,6 +88,15 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 #ui-bot.show{opacity:1;pointer-events:all}
 .btn{font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;padding:14px 28px;border:2px solid rgba(200,146,42,.8);background:rgba(200,146,42,.15);color:var(--gold-l);cursor:pointer;border-radius:4px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);text-shadow:0 0 15px rgba(200,146,42,.6);animation:pulse 2s ease-in-out infinite;}
 
+/* MODAL INFORMACION */
+#modal-info{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.92);align-items:center;justify-content:center;padding:20px;}
+#modal-info.show{display:flex;}
+#modal-box{background:rgba(20,12,4,.97);border:1px solid rgba(200,146,42,.4);border-radius:8px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto;padding:28px 24px;position:relative;}
+#modal-box h2{font-family:'Cinzel',serif;font-size:clamp(16px,4vw,22px);color:var(--gold);letter-spacing:4px;text-transform:uppercase;margin-bottom:16px;text-align:center;}
+#modal-box h3{font-family:'Cinzel',serif;font-size:clamp(11px,3vw,13px);color:rgba(200,146,42,.8);letter-spacing:2px;text-transform:uppercase;margin:16px 0 6px;}
+#modal-box p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(14px,4vw,17px);color:rgba(240,220,180,.9);line-height:1.8;}
+#modal-box .modal-libro{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(13px,3.5vw,15px);color:rgba(200,146,42,.7);text-align:center;margin-top:20px;padding-top:16px;border-top:1px solid rgba(200,146,42,.2);line-height:1.7;}
+#modal-close{position:absolute;top:12px;right:16px;font-family:'Cinzel',serif;font-size:18px;color:rgba(200,146,42,.6);cursor:pointer;background:none;border:none;}
 /* FASE FINAL */
 #pant-desp{position:fixed;inset:0;z-index:42;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:16px;gap:12px;}
 #pant-desp.show{display:flex}
@@ -196,6 +205,7 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
     <button class="btn" onclick="reiniciar()">&#8635; Volver al inicio</button>
     <button class="btn" onclick="salir()">Hasta pronto &#10022;</button>
   </div>
+  <div style="margin-top:8px;"><button class="btn" style="font-size:9px;opacity:0.6;border-color:rgba(200,146,42,.3);" onclick="abrirInfo()">Sobre este proyecto</button></div>
 </div>
 
 <!-- FASE FINAL: FOTO / VIDEO / SELLO -->
@@ -223,8 +233,23 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
     <button class="btn" onclick="reiniciar()">&#8635; Volver al inicio</button>
     <button class="btn" onclick="salir()">Hasta pronto &#10022;</button>
   </div>
+  <div style="margin-top:8px;"><button class="btn" style="font-size:9px;opacity:0.6;border-color:rgba(200,146,42,.3);" onclick="abrirInfo()">Sobre este proyecto</button></div>
 </div>
 
+<!-- MODAL INFORMACION -->
+<div id="modal-info">
+  <div id="modal-box">
+    <button id="modal-close" onclick="cerrarInfo()">&#10005;</button>
+    <h2>Sobre este proyecto</h2>
+    <h3>El pueblo</h3>
+    <p>Cantabrana es un pequeño municipio de la provincia de Burgos, en Castilla y León. Como tantos pueblos del interior, guarda en su memoria una tradición oral y musical que durante décadas estuvo a punto de desaparecer.</p>
+    <h3>Los protagonistas</h3>
+    <p>Las voces que escuchas pertenecen a Julián Ojeda Ojeda, Gregorio Ojeda Peña, Pedro Félix García Linaje, Lucía Ojeda Peña, Cecilio José Díaz Linaje y Elena Díaz Linaje, entre otros. Vecinos de Cantabrana que preservaron estas jotas y canciones como parte viva de su identidad.</p>
+    <h3>El proyecto</h3>
+    <p>Este archivo sonoro fue recopilado y digitalizado por Rafael Molina Toledo como parte de un esfuerzo personal por preservar el patrimonio cultural inmaterial de Cantabrana. Las grabaciones corresponden a registros del archivo familiar Molina_Prado.</p>
+    <div class="modal-libro">Toda esta información está recogida en el libro<br><em>“Cantabrana, Retazos de Vida”</em><br>del autor Rafael Molina Toledo.<br><br>Patrimonio Cultural &middot; Cantabrana &middot; 2026</div>
+  </div>
+</div>
 <audio id="aJota" preload="none"></audio>
 <audio id="aAmb" preload="none" loop></audio>
 
@@ -888,6 +913,9 @@ function toggleAcc(){
     }
   }catch(e){window._pergDur=7000;}
 })();
+
+function abrirInfo(){document.getElementById('modal-info').classList.add('show');}
+function cerrarInfo(){document.getElementById('modal-info').classList.remove('show');}
 
 document.addEventListener('DOMContentLoaded',init);
 </script>
