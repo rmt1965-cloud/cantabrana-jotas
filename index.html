@@ -771,7 +771,12 @@ function mostrarSelloFinal(frase,callback){
   var div=document.getElementById('pant-desp');
   var img=document.getElementById('d-img');
   var txt=document.getElementById('d-txt');
-  img.style.animation='none';img.src='';img.style.opacity='0';txt.textContent='';
+  // Reset completo img
+  img.style.animation='none';img.style.transition='none';
+  img.style.maxWidth='';img.style.maxHeight='';
+  img.style.width='';img.style.height='';
+  img.src='';img.style.opacity='0';
+  txt.textContent='';
   div.style.opacity='0';div.style.display='flex';
   div.style.flexDirection='column';
   div.style.alignItems='center';div.style.justifyContent='center';
