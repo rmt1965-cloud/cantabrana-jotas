@@ -558,6 +558,9 @@ async function iniciarJota(){
   if(noVistas.length<15){histF=[];noVistas=CFG.fotos_arcos;}
   fotos=shuffle(noVistas);
   histSet('cant_fotos',[...histF,...fotos.slice(0,20)].slice(-97));
+  // Precargar primera foto en f-img2 para crossfade suave
+  var preImg=document.getElementById('f-img2');
+  if(preImg&&fotos.length>0){preImg.src=fotos[0];}
 
   // Fade in suave del reproductor
   var pr=document.getElementById('pant-repro');
@@ -575,6 +578,13 @@ async function iniciarJota(){
 
   aJota.src=CFG.jotas_url+encodeURIComponent(jota.a);
   aJota.load();aJota.volume=0.4;
+  // Indicador carga audio
+  var tickerEl=document.getElementById('ticker-in');
+  var tickerOrig=tickerEl.textContent;
+  var tickerLoad=setInterval(function(){tickerEl.style.opacity=tickerEl.style.opacity==='0.4'?'1':'0.4';},400);
+  aJota.addEventListener('canplay',function(){clearInterval(tickerLoad);tickerEl.style.opacity='1';},{once:true});
+  // Precargar primeras 8 fotos
+  fotos.slice(0,8).forEach(function(url){var i=new Image();i.src=url;});
   mostrarFoto(0);
   aJota.play().catch(e=>console.warn(e));
   var vj=0.4;
@@ -663,6 +673,9 @@ function finJota(){
     setTimeout(function(){
       pr.style.display='none';
       pr.style.opacity='1';
+      // Pequeno delay para transicion suave
+      var despDiv=document.getElementById('pant-desp');
+      despDiv.style.opacity='0';
       // Elegir grupo de frase final (3 partes)
       var idxFinal=rnd(CFG.frases_final.length);
       var grupoFinal=CFG.frases_final[idxFinal];
@@ -781,7 +794,7 @@ function mostrarSelloFinal(frase,callback){
       div.style.opacity='0';
       setTimeout(function(){div.style.display='none';callback();},1000);
     },1500);
-  },4000);
+  },6000);
 }
 
 // ================================================================
