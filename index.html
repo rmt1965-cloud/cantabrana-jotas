@@ -225,7 +225,7 @@ const CFG = {
     'fotos/vistas/A08.jpg','fotos/vistas/A10.jpg',
   ],
   portada: 'fotos/portada/portada1.png',
-  dur_foto: 4,
+  dur_foto: 2.5,
   dur_trans: 0.25,
 
   grupos_frases: [
@@ -826,10 +826,10 @@ function toggleAcc(){
   try{localStorage.setItem('cant_acc',active?'1':'0');}catch(e){}
   msg.style.opacity='1';
   if(active){
-    CFG.dur_foto=6;
+    CFG.dur_foto=5;
     window._pergDur=14000;
   } else {
-    CFG.dur_foto=4;
+    CFG.dur_foto=2.5;
     window._pergDur=7000;
   }
   setTimeout(function(){msg.style.opacity='0';},2500);
@@ -840,7 +840,7 @@ function toggleAcc(){
     if(localStorage.getItem('cant_acc')==='1'){
       document.body.classList.add('acc-mode');
       document.getElementById('acc-btn').classList.add('active');
-      CFG.dur_foto=6;
+      CFG.dur_foto=5;
       window._pergDur=14000;
     } else {
       window._pergDur=7000;
