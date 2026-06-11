@@ -764,6 +764,7 @@ function finJota(){
                 pf.style.opacity='0';pf.classList.add('show');
                 pf.style.transition='opacity 1.5s ease';
                 setTimeout(function(){pf.style.opacity='1';},100);
+                setTimeout(ocultarSelloFinal,6000);
               },1500);
             },7000);
           });
@@ -937,6 +938,11 @@ function compartirJota(){
   }).catch(function(){
     var a=document.createElement('a');a.href=qrUrl;a.download='cantabrana-'+nombre+'.png';a.click();
   });
+}
+// Ocultar sello tras 6s en ventana final
+function ocultarSelloFinal(){
+  var img=document.querySelector('#pant-final img');
+  if(img){img.style.transition='opacity 1.5s ease';img.style.opacity='0';}
 }
 function abrirInfo(){document.getElementById('modal-info').classList.add('show');}
 function cerrarInfo(){document.getElementById('modal-info').classList.remove('show');}
