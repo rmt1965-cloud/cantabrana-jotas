@@ -154,7 +154,10 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 <div id="pant-repro">
   <div id="f-wrap">
     <div id="f-blur"></div>
-    <div id="f-main"><img id="f-img" src="" alt=""></div>
+    <div id="f-main">
+      <img id="f-img2" src="" alt="" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);max-width:88%;max-height:72vh;object-fit:contain;opacity:0;transition:opacity 0.8s ease;">
+      <img id="f-img" src="" alt="">
+    </div>
   </div>
   <div id="f-trans"></div>
   <div id="ui-top">
@@ -593,15 +596,27 @@ async function iniciarJota(){
 function mostrarFoto(idx){
   if(!fotos.length)return;
   const url=fotos[idx%fotos.length];
-  const trans=document.getElementById('f-trans');
   const img=document.getElementById('f-img');
+  const img2=document.getElementById('f-img2');
   const blur=document.getElementById('f-blur');
-  trans.classList.add('on');img.classList.remove('show');
-  setTimeout(()=>{
-    img.src=url;blur.style.backgroundImage="url('"+url+"')";
-    img.onerror=()=>{trans.classList.remove('on');setTimeout(()=>mostrarFoto(idx+1),100);};
-    img.onload=()=>{trans.classList.remove('on');img.classList.add('show');};
-  },80);
+  // Precargar nueva foto en img2
+  img2.src=url;
+  img2.onload=function(){
+    // Crossfade: nueva foto aparece, vieja desaparece
+    blur.style.backgroundImage="url('"+url+"')";
+    img2.style.opacity='1';
+    img.style.transition='opacity 0.6s ease';
+    img.style.opacity='0';
+    setTimeout(function(){
+      // Intercambiar: img2 pasa a ser la foto visible
+      img.src=url;
+      img.style.transition='none';
+      img.style.opacity='1';
+      img.classList.add('show');
+      img2.style.opacity='0';
+    },700);
+  };
+  img2.onerror=function(){setTimeout(function(){mostrarFoto(idx+1);},100);};
   fotoIdx=idx;clearTimeout(fotoTimer);
   fotoTimer=setTimeout(()=>mostrarFoto(idx+1),(CFG.dur_foto+CFG.dur_trans)*1000);
 }
