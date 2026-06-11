@@ -508,6 +508,9 @@ async function init(){
 
   iniciarAmbiente();
   document.getElementById('loading').classList.add('fade');
+  // Desactivar boton accesibilidad tras arrancar
+  var accBtn=document.getElementById('acc-btn');
+  if(accBtn){accBtn.style.pointerEvents='none';accBtn.style.opacity='0.3';}
 
   setTimeout(async function(){
     // Grupo de frases para las 3 ventanas de foto
