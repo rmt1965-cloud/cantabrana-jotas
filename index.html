@@ -205,7 +205,10 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
     <button class="btn" onclick="reiniciar()">&#8635; Volver al inicio</button>
     <button class="btn" onclick="salir()">Hasta pronto &#10022;</button>
   </div>
-  <div style="margin-top:8px;"><button class="btn" style="font-size:9px;opacity:0.6;border-color:rgba(200,146,42,.3);" onclick="abrirInfo()">Sobre este proyecto</button></div>
+  <div style="margin-top:8px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+    <button class="btn" style="font-size:9px;opacity:0.6;border-color:rgba(200,146,42,.3);" onclick="abrirInfo()">Sobre este proyecto</button>
+    <button class="btn" style="font-size:9px;opacity:0.6;border-color:rgba(200,146,42,.3);" onclick="compartirJota()">&#9834; Compartir QR</button>
+  </div>
 </div>
 
 <!-- FASE FINAL: FOTO / VIDEO / SELLO -->
@@ -233,7 +236,10 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
     <button class="btn" onclick="reiniciar()">&#8635; Volver al inicio</button>
     <button class="btn" onclick="salir()">Hasta pronto &#10022;</button>
   </div>
-  <div style="margin-top:8px;"><button class="btn" style="font-size:9px;opacity:0.6;border-color:rgba(200,146,42,.3);" onclick="abrirInfo()">Sobre este proyecto</button></div>
+  <div style="margin-top:8px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+    <button class="btn" style="font-size:9px;opacity:0.6;border-color:rgba(200,146,42,.3);" onclick="abrirInfo()">Sobre este proyecto</button>
+    <button class="btn" style="font-size:9px;opacity:0.6;border-color:rgba(200,146,42,.3);" onclick="compartirJota()">&#9834; Compartir QR</button>
+  </div>
 </div>
 
 <!-- MODAL INFORMACION -->
@@ -914,6 +920,23 @@ function toggleAcc(){
   }catch(e){window._pergDur=7000;}
 })();
 
+function compartirJota(){
+  if(!jota)return;
+  var nombre=jota.a.replace('.mp3','');
+  var titulo=jota.t||jota.c;
+  var base=location.origin+location.pathname.replace('index.html','');
+  var qrUrl=base+'fotos/qr/'+nombre+'.png';
+  fetch(qrUrl).then(function(r){return r.blob();}).then(function(blob){
+    var file=new File([blob],'cantabrana-'+nombre+'.png',{type:'image/png'});
+    if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+      navigator.share({title:'Cantabrana — '+titulo,text:titulo+' · Patrimonio Cultural de Cantabrana',files:[file]}).catch(function(){});
+    } else {
+      var a=document.createElement('a');a.href=qrUrl;a.download='cantabrana-'+nombre+'.png';a.click();
+    }
+  }).catch(function(){
+    var a=document.createElement('a');a.href=qrUrl;a.download='cantabrana-'+nombre+'.png';a.click();
+  });
+}
 function abrirInfo(){document.getElementById('modal-info').classList.add('show');}
 function cerrarInfo(){document.getElementById('modal-info').classList.remove('show');}
 
