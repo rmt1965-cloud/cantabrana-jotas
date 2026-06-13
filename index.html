@@ -964,8 +964,30 @@ function toggleAcc(){
   }catch(e){window._pergDur=7000;}
 })();
 
-function abrirObras(){cerrarInfo();document.getElementById('modal-obras').classList.add('show');}
-function cerrarObras(){document.getElementById('modal-obras').classList.remove('show');}
+function abrirObras(){cerrarInfo();document.getElementById('modal-obras').classList.add('show');abrirObras2();}
+var _scrollRAFObras=null;
+function abrirObras2(){
+  var box=document.getElementById('modal-obras-box');
+  box.scrollTop=0;
+  if(_scrollRAFObras){cancelAnimationFrame(_scrollRAFObras);_scrollRAFObras=null;}
+  setTimeout(function(){
+    var total=box.scrollHeight-box.clientHeight;
+    if(total<=0)return;
+    var dur=total*90;
+    var start=null;
+    function step(ts){
+      if(!start)start=ts;
+      var prog=(ts-start)/dur;
+      box.scrollTop=prog*total;
+      var modal=document.getElementById('modal-obras');
+      if(prog<1&&modal.classList.contains('show')){
+        _scrollRAFObras=requestAnimationFrame(step);
+      } else {_scrollRAFObras=null;}
+    }
+    _scrollRAFObras=requestAnimationFrame(step);
+  },1000);
+}
+function cerrarObras(){document.getElementById('modal-obras').classList.remove('show');if(_scrollRAFObras){cancelAnimationFrame(_scrollRAFObras);_scrollRAFObras=null;}}
 function compartirJota(){
   if(!jota)return;
   var nombre=jota.a.replace('.mp3','');
