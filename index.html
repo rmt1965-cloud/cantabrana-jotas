@@ -12,7 +12,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--gold:#c8922a;--gold-l:#f0c060;}
-html,body{width:100%;height:100%;background:#000;overflow:hidden;font-family:'Cormorant Garamond',serif;color:#fff;touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;}
+html,body{width:100%;height:100%;background:rgba(0,0,0,.95);overflow:hidden;font-family:'Cormorant Garamond',serif;color:#fff;touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;}
 #bg{position:fixed;inset:0;width:100%;height:100%;z-index:0}
 
 /* LOADING */
@@ -37,7 +37,7 @@ body.acc-mode #d-txt{font-size:clamp(22px,6.5vw,32px)!important;}
 body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 
 /* VENTANAS */
-#ventanas{position:fixed;inset:0;z-index:8;background:#000;display:none;align-items:center;justify-content:center;overflow:hidden;}
+#ventanas{position:fixed;inset:0;z-index:8;background:rgba(0,0,0,.95);display:none;align-items:center;justify-content:center;overflow:hidden;}
 #ventanas.show{display:flex}
 #v-blur{position:absolute;inset:-20px;width:calc(100% + 40px);height:calc(100% + 40px);object-fit:cover;filter:blur(20px) brightness(.4);opacity:0;transition:opacity 1.5s ease;}
 #v-img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:85%;max-width:360px;max-height:60vh;object-fit:contain;background:transparent;opacity:0;transition:opacity 1.5s ease;z-index:1;}
@@ -68,7 +68,7 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 #f-main{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
 #f-img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);max-width:88%;max-height:72vh;object-fit:contain;opacity:0;transition:opacity 1s ease;}
 #f-img.show{opacity:1}
-#f-trans{position:fixed;inset:0;z-index:25;background:#000;opacity:0;pointer-events:none;transition:opacity .3s ease;}
+#f-trans{position:fixed;inset:0;z-index:25;background:rgba(0,0,0,.95);opacity:0;pointer-events:none;transition:opacity .3s ease;}
 #f-trans.on{opacity:1}
 #ui-top{position:fixed;top:0;left:0;right:0;z-index:30;padding:24px 20px 50px;background:linear-gradient(to bottom,rgba(0,0,0,.75),transparent);display:flex;justify-content:space-between;align-items:flex-start;}
 .cantante{font-family:'Cinzel',serif;font-size:clamp(10px,2.8vw,14px);letter-spacing:2px;color:rgba(255,255,255,.85);text-transform:uppercase;}
@@ -107,7 +107,7 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 #modal-obras-box img{width:100%;max-width:220px;border-radius:4px;margin:10px auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,.6);}
 #modal-obras-box p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(14px,4vw,18px);color:rgba(240,220,180,.9);line-height:1.8;margin-top:8px;}
 /* FASE FINAL */
-#pant-desp{position:fixed;inset:0;z-index:42;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:16px;gap:12px;}
+#pant-desp{position:fixed;inset:0;z-index:42;background:rgba(0,0,0,.95);display:none;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:16px;gap:12px;}
 #pant-desp.show{display:flex}
 #d-img{width:88%;max-width:500px;max-height:62vh;object-fit:contain;opacity:0;position:relative;}
 #d-txt{position:relative;width:85%;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,5.5vw,28px);font-weight:600;color:rgba(245,230,190,.97);text-shadow:0 2px 20px rgba(0,0,0,.95),0 0 40px rgba(200,146,42,.3);line-height:1.7;margin-top:8px;z-index:1;}
@@ -225,8 +225,8 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 </div>
 
 <!-- VENTANA SELLO CREDITO -->
-<div id="pant-sello-cred" style="display:none;position:fixed;inset:0;z-index:49;background:#000;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:30px;opacity:0;transition:opacity 1.5s ease;">
-  <img id="psc-perg" src="" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.35;filter:blur(1px) brightness(.6);">
+<div id="pant-sello-cred" style="display:none;position:fixed;inset:0;z-index:49;background:rgba(0,0,0,.95);flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:30px;opacity:0;transition:opacity 1.5s ease;">
+
   <img src="fotos/sellos/sello15.png" id="sello-cred-img" style="width:min(88vw,560px);height:min(88vw,560px);object-fit:contain;opacity:0.95;animation:selloZoom 6s ease-in-out infinite;">
   <div style="font-family:'Cinzel',serif;font-size:clamp(11px,3vw,14px);letter-spacing:3px;color:rgba(200,146,42,.95);text-transform:uppercase;margin-top:12px;text-shadow:0 0 20px rgba(200,146,42,.5);">Esta grabación ha sido realizada en la villa de Cantabrana</div>
   <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(15px,4vw,20px);color:rgba(240,192,96,.95);letter-spacing:2px;text-shadow:0 0 15px rgba(200,146,42,.4);">Archivo personal Rafael Molina Toledo</div>
@@ -928,7 +928,7 @@ function reiniciar(){aJota.pause();aJota.src='';clearTimeout(fotoTimer);clearInt
 function salir(){
   aJota.pause();aAmb.pause();
   document.body.style.transition='opacity .8s ease';document.body.style.opacity='0';
-  setTimeout(()=>{try{window.close();}catch(e){}document.body.innerHTML='<style>body{background:#000;margin:0}</style>';},900);
+  setTimeout(()=>{try{window.close();}catch(e){}document.body.innerHTML='<style>body{background:rgba(0,0,0,.95);margin:0}</style>';},900);
 }
 
 // ================================================================
