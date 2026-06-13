@@ -758,7 +758,7 @@ function finJota(){
             // Ventana final con frase DISTINTA
             var otrosGrupos=CFG.frases_final.filter(function(_,i){return i!==idxFinal;});
             var grupoCreditos=otrosGrupos[rnd(otrosGrupos.length)];
-            document.getElementById('fin-frase').innerHTML=grupoCreditos.join('<br>')+'<br><br>Muchas gracias.';
+            document.getElementById('fin-frase').innerHTML=grupoCreditos.join('<br>')+'<br>Muchas gracias.';
             // Mostrar ventana sello-credito primero
             var psc=document.getElementById('pant-sello-cred');
             psc.style.display='flex';
