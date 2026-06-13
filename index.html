@@ -782,7 +782,7 @@ function finJota(){
       var grupoFinal=CFG.frases_final[idxFinal];
       mostrarFotoFinal(grupoFinal[0],function(){
         mostrarVideoFinal(grupoFinal[1],function(){
-          mostrarSelloFinal(grupoFinal[2],function(){
+          mostrarFotoFinal2(grupoFinal[2],function(){
             // Ventana final con frase DISTINTA
             var otrosGrupos=CFG.frases_final.filter(function(_,i){return i!==idxFinal;});
             var grupoCreditos=otrosGrupos[rnd(otrosGrupos.length)];
@@ -849,6 +849,34 @@ function mostrarFotoFinal(frase,callback){
   },5000);
 }
 
+function mostrarFotoFinal2(frase,callback){
+  var div=document.getElementById('pant-desp');
+  var img=document.getElementById('d-img');
+  var txt=document.getElementById('d-txt');
+  var KB=['kenburns1','kenburns2','kenburns3','kenburns4'];
+  img.style.maxWidth='';img.style.maxHeight='';img.style.animation='none';
+  img.src='';img.style.opacity='0';txt.textContent='';
+  div.style.opacity='0';div.style.display='flex';
+  div.style.flexDirection='column';
+  div.style.alignItems='center';div.style.justifyContent='center';
+  setTimeout(function(){
+    var vista=histPick(CFG.vistas,'cant_vistas2');
+    img.style.width='88%';img.style.maxWidth='500px';img.style.maxHeight='72vh';img.style.objectFit='contain';
+    img.src=vista;
+    img.onload=function(){
+      img.style.opacity='0.9';
+      img.style.animation=KB[rnd(4)]+' 8s ease-in-out forwards';
+      txt.textContent=frase;
+    };
+  },200);
+  setTimeout(function(){
+    div.style.transition='opacity 1.5s ease';div.style.opacity='1';
+  },300);
+  setTimeout(function(){
+    div.style.transition='opacity 1.5s ease';div.style.opacity='0';
+    setTimeout(function(){div.style.display='none';callback();},1500);
+  },5000);
+}
 function mostrarVideoFinal(frase,callback){
   var div=document.getElementById('pant-desp');
   var img=document.getElementById('d-img');
