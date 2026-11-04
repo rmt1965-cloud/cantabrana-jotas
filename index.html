@@ -25,6 +25,7 @@ html,body{width:100%;height:100%;background:rgba(0,0,0,.95);overflow:hidden;font
 .ld-autor{font-family:'Cinzel',serif;font-size:clamp(10px,2.8vw,13px);letter-spacing:4px;color:rgba(80,140,220,.9);text-transform:uppercase;text-shadow:0 0 20px rgba(80,140,220,.8);}
 #ld-btn{font-family:'Cinzel',serif;font-size:clamp(13px,4vw,17px);letter-spacing:4px;color:var(--gold);text-transform:uppercase;padding:16px 44px;border:2px solid rgba(200,146,42,.7);border-radius:4px;cursor:pointer;background:rgba(200,146,42,.12);min-width:200px;text-align:center;opacity:0;transition:opacity 1s ease;animation:pulse 1.8s ease-in-out infinite;margin-top:8px;}
 @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+@keyframes escudoFlota{0%{transform:translateY(16px) scale(.84)}45%{transform:translateY(-12px) scale(.98)}100%{transform:translateY(2px) scale(1.13)}}
 @keyframes selloZoom{0%,100%{transform:scale(1)}50%{transform:scale(1.16)}}
 #acc-btn{position:fixed;top:18px;left:18px;z-index:101;cursor:pointer;background:rgba(0,0,0,.6);border:2px solid rgba(200,146,42,.4);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;align-items:center;gap:2px;transition:all 0.3s ease;}
 #acc-btn svg{width:32px;height:32px;transition:all 0.3s ease;}
@@ -674,6 +675,7 @@ function ocultarFranjaAmb(){window._franjaOff=true;var el=document.getElementByI
 function mostrarFranjaAmb(){window._franjaOff=false;ambFranjaTexto();var el=document.getElementById('amb-franja');if(el&&CFG.ambiente_info[ambActual])el.classList.add('show');}
 
 // ---- Postales: una al inicio y otra al final, nunca la misma en la misma visita ----
+CFG.escudo='fotos/escudo/escudo_cantabrana.webp';
 CFG.postales=['postal_001.webp','postal_002.webp','postal_003.webp','postal_005.webp','postal_006.webp','postal_007.webp','postal_008.webp','postal_009.webp','postal_010.webp','postal_011.webp','postal_012.webp','postal_014.webp','postal_015.webp','postal_017.webp','postal_018.webp','postal_019.webp','postal_021.webp','postal_022.webp','postal_023.webp','postal_025.webp','postal_026.webp','postal_027.webp','postal_028.webp','postal_029.webp','postal_031.webp','postal_033.webp','postal_034.webp','postal_035.webp','postal_036.webp','postal_037.webp','postal_038.webp','postal_039.webp','postal_041.webp','postal_042.webp','postal_043.webp','postal_044.webp','postal_045.webp','postal_047.webp','postal_048.webp','postal_049.webp','postal_050.webp','postal_054.webp','postal_055.webp','postal_056.webp','postal_058.webp','postal_059.webp','postal_060.webp','postal_061.webp','postal_063.webp','postal_064.webp','postal_065.webp','postal_066.webp','postal_067.webp'].map(function(n){return 'fotos/postales_web/'+n;});
 var POSTAL_INI=null,POSTAL_FIN=null;
 (function(){
@@ -1018,6 +1020,11 @@ function finJota(){
         function(cb){mostrarVideoFinal(grupoFinal[1],cb);},
         function(cb){mostrarFotoFinal2(grupoFinal[2],cb);}
       ];
+      // Escudo de Cantabrana: aparece al azar (1 de cada 2) y sustituye UNA de las dos fotos; nunca el video, la postal ni el sello
+      if(rnd(2)===0){
+        var iFoto=rnd(2)===0?0:2, fotoOrig=pasosFin[iFoto], fraseEsc=grupoFinal[iFoto];
+        pasosFin[iFoto]=function(cb){mostrarEscudoFinal(fraseEsc,cb,fotoOrig);};
+      }
       // La postal se inserta en un hueco al azar (antes, entre o despues de las ventanas), sin sustituir ninguna
       pasosFin.splice(rnd(pasosFin.length+1),0,function(cb){mostrarPostal(POSTAL_FIN,4000,cb,false);});
       var finCreditos=function(){
@@ -1149,6 +1156,48 @@ function mostrarVideoFinal(frase,callback){
       callback();
     },1000);
   },5500);
+}
+
+function mostrarEscudoFinal(frase,callback,alternativa){
+  var div=document.getElementById('pant-desp');
+  var img=document.getElementById('d-img');
+  var txt=document.getElementById('d-txt');
+  var terminado=false;
+  img.style.maxWidth='';img.style.maxHeight='';img.style.animation='none';img.style.filter='';
+  img.src='';img.style.opacity='0';txt.textContent='';
+  div.style.opacity='0';div.style.display='flex';
+  div.style.flexDirection='column';
+  div.style.alignItems='center';div.style.justifyContent='center';
+  img.onerror=null;
+  setTimeout(function(){
+    if(terminado)return;
+    img.onerror=function(){
+      img.onerror=null;if(terminado)return;terminado=true;
+      div.style.display='none';
+      if(alternativa){alternativa(callback);}else{callback();}
+    };
+    img.style.width='auto';img.style.height='auto';img.style.maxWidth='80%';img.style.maxHeight='64vh';img.style.objectFit='contain';
+    img.style.filter='drop-shadow(0 0 26px rgba(200,146,42,.55)) drop-shadow(0 8px 18px rgba(0,0,0,.8))';
+    img.src=CFG.escudo;
+    img.onload=function(){
+      img.style.opacity='1';
+      img.style.animation='escudoFlota 7.5s ease-in-out forwards';
+      txt.textContent=frase;
+    };
+  },200);
+  setTimeout(function(){
+    if(terminado)return;
+    div.style.transition='opacity 1.5s ease';div.style.opacity='1';
+  },300);
+  setTimeout(function(){
+    if(terminado)return;
+    div.style.transition='opacity 1.5s ease';div.style.opacity='0';
+    setTimeout(function(){
+      if(terminado)return;terminado=true;
+      img.style.filter='';img.style.animation='none';
+      div.style.display='none';callback();
+    },1500);
+  },6500);
 }
 
 function mostrarSelloFinal(frase,callback){
