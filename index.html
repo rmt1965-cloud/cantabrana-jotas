@@ -46,6 +46,9 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 #v-ley.show{opacity:1}
 
 /* PERGAMINO */
+#amb-franja{position:fixed;left:0;right:0;bottom:0;z-index:9000;padding:11px 16px calc(11px + env(safe-area-inset-bottom));background:rgba(255,170,0,.80);color:#2a1300;text-align:center;font:600 14px/1.35 Georgia,serif;letter-spacing:.2px;opacity:0;transform:translateY(100%);transition:opacity 1s ease,transform 1s ease;pointer-events:none;box-shadow:0 -2px 12px rgba(0,0,0,.35)}
+#amb-franja.show{opacity:1;transform:none}
+#amb-franja small{display:block;font:700 10px/1.2 sans-serif;letter-spacing:1.5px;text-transform:uppercase;opacity:.75;margin-bottom:2px}
 #pant-perg{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 1.5s ease;pointer-events:none;}
 #pant-perg.show{opacity:1;pointer-events:auto;cursor:pointer}
 .p-outer{position:relative;width:min(88vw,400px);animation:float 5s ease-in-out infinite;filter:drop-shadow(0 0 30px rgba(200,146,42,.35));}
@@ -191,6 +194,7 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 </div>
 
 <!-- PERGAMINO -->
+<div id="amb-franja"></div>
 <div id="pant-perg">
   <div class="p-outer">
     <div class="p-aura"></div>
@@ -641,6 +645,24 @@ function mostrarPergamino(pe){
   img.src=pe.src;
 }
 
+// ---- Franja inferior con título y autor de la música ambiente (solo hasta que empieza la jota) ----
+CFG.ambiente_info={"audio/ambiente/ambiente1.mp3":["Surrender","Omark Akram"],"audio/ambiente/ambiente2.mp3":["Sonata Claro de Luna 1. er Movimiento","Beethoven"],"audio/ambiente/ambiente3.mp3":["Adagio. Concierto de Aranjuez.","Joaquín Rodrigo"],"audio/ambiente/ambiente4.mp3":["Concierto para piano N.Aº 21,2,Aº Movimiento \"Elvira Madigan\"","Mozart"],"audio/ambiente/ambiente5.mp3":["\"El Nabuco\": Obertura","Verdi"],"audio/ambiente/ambiente6.mp3":["Gladiator Rhapsody","Hans Zimmer"],"audio/ambiente/ambiente7.mp3":["La Mañana, De \"Peer Gynt\"","Grieg"],"audio/ambiente/ambiente8.mp3":["Kiss The Rain","Yiruma"],"audio/ambiente/ambiente9.mp3":["\"La Traviata\". Preludio AI Acto 1º.","Verdi"],"audio/ambiente/ambiente_completo/AMBIENTE13.mp3":["La Conquista del paraiso","Vangelis"],"audio/ambiente/ambiente_completo/AMBIENTE14.mp3":["Chevaliers_de_sangreal","Hans Zimmer"],"audio/ambiente/ambiente_completo/AMBIENTE15.mp3":["Nocturne_20_in_C_sharp minor","Chopin"],"audio/ambiente/ambiente_completo/AMBIENTE16.mp3":["Nº6 Opus_30","Boccherini"],"audio/ambiente/ambiente_completo/AMBIENTE17.mp3":["Moolight sonata 1º movement op. 27 nr.2","Beethoven"],"audio/ambiente/ambiente_completo/AMBIENTE18.mp3":["Prelude Nº4 Opus 28","Chopin"],"audio/ambiente/ambiente_completo/AMBIENTE19.mp3":["Ave María (violino)","Shubert"],"audio/ambiente/ambiente_completo/AMBIENTE20.mp3":["Love Story","Francis Lai"],"audio/ambiente/ambiente_completo/AMBIENTE21.mp3":["Cello Suite Nº1 in G.M.","Bach"],"audio/ambiente/ambiente_completo/AMBIENTE22.mp3":["Calm solopiano Slow Emotional background","Ludovico Einaudi"],"audio/ambiente/ambiente_completo/AMBIENTE23.mp3":["El último mohicano","Trevor Jones y Randy Edelman"],"audio/ambiente/ambiente_completo/AMBIENTE24.mp3":["The Battle","Hans Zimmer y Lisa Gerrard"],"audio/ambiente/ambiente_completo/AMBIENTE25.mp3":["Preludio en C mayor BWV 846","Bach"],"audio/ambiente/ambiente_completo/AMBIENTE26.mp3":["Quiet Time","David Fesliyan"],"audio/ambiente/ambiente_completo/AMBIENTE27.mp3":["Cathedral_Ambience","David Renda"],"audio/ambiente/ambiente_completo/AMBIENTE29.mp3":["Granada","Albéniz"],"audio/ambiente/ambiente_completo/AMBIENTE30.mp3":["Canción de cuna","Chopin"],"audio/ambiente/ambiente_completo/AMBIENTE31.mp3":["Nocturno en E Flat Mayor Op 9 Nº2","Chopin"],"audio/ambiente/ambiente_completo/AMBIENTE32.mp3":["Prelude Nº1 in C Major","Bach"],"audio/ambiente/ambiente_completo/AMBIENTE33.mp3":["God Particle Joshua Bell","Hans Zimmer"],"audio/ambiente/ambiente_completo/AMBIENTE34.mp3":["Piano concierto Nº5","Bach"],"audio/ambiente/ambiente_completo/AMBIENTE35.mp3":["Fur Elise","Beethoven"],"audio/ambiente/ambiente_completo/AMBIENTE36.MP3":["03 symphony nº6 5º movement","Beethoven"],"audio/ambiente/ambiente_completo/AMBIENTE37.mp3":["01 Allegro con Spirito","Joaquin Rodrigo"],"audio/ambiente/ambiente_completo/AMBIENTE38.mp3":["Musopen (chopin)","Edward Neeman"]};
+function ambFranjaTexto(){
+  var el=document.getElementById('amb-franja');if(!el)return;
+  var i=CFG.ambiente_info[ambActual];
+  el.textContent='';
+  if(!i){el.classList.remove('show');return;}
+  var sm=document.createElement('small');sm.textContent='\u266a M\u00fasica ambiente';
+  el.appendChild(sm);el.appendChild(document.createTextNode(i[0]+' \u00b7 '+i[1]));
+}
+aAmb.addEventListener('playing',function(){
+  if(window._jotaIniciada)return;
+  ambFranjaTexto();
+  var el=document.getElementById('amb-franja');
+  if(el&&CFG.ambiente_info[ambActual])el.classList.add('show');
+});
+function ocultarFranjaAmb(){var el=document.getElementById('amb-franja');if(el)el.classList.remove('show');}
+
 function iniciarAmbiente(){
   aAmb.volume=0;ambCambios=0;
   ambCargar(ambElegir());
@@ -830,9 +852,10 @@ async function iniciarJota(){
   if(tipoEl&&jota.t){tipoEl.textContent=jota.t;}
   document.getElementById('ticker-in').textContent='\u266a  '+(jota.t||jota.c)+' \u00b7 '+jota.c+' \u00b7 Cantabrana  \u266a';
 
-  // Bajar ambiente
+  // Bajar ambiente (reduccion del 80 %: 0.45 -> 0.09) y quitar la franja de la musica ambiente
+  ocultarFranjaAmb();
   var av=aAmb.volume;
-  const fa=setInterval(()=>{av=Math.max(av-0.02,0.06);aAmb.volume=av;if(av<=0.06)clearInterval(fa);},80);
+  const fa=setInterval(()=>{av=Math.max(av-0.02,0.09);aAmb.volume=av;if(av<=0.09)clearInterval(fa);},80);
   document.getElementById('amb-ind').classList.add('show');
 
   aJota.src=CFG.jotas_url+encodeURIComponent(jota.a);
