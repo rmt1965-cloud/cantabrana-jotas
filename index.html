@@ -852,10 +852,10 @@ async function iniciarJota(){
   if(tipoEl&&jota.t){tipoEl.textContent=jota.t;}
   document.getElementById('ticker-in').textContent='\u266a  '+(jota.t||jota.c)+' \u00b7 '+jota.c+' \u00b7 Cantabrana  \u266a';
 
-  // Bajar ambiente (reduccion del 80 %: 0.45 -> 0.09) y quitar la franja de la musica ambiente
+  // Bajar ambiente (volumen ambiente 0.05) y quitar la franja de la musica ambiente
   ocultarFranjaAmb();
   var av=aAmb.volume;
-  const fa=setInterval(()=>{av=Math.max(av-0.02,0.09);aAmb.volume=av;if(av<=0.09)clearInterval(fa);},80);
+  const fa=setInterval(()=>{av=Math.max(av-0.02,0.05);aAmb.volume=av;if(av<=0.05)clearInterval(fa);},80);
   document.getElementById('amb-ind').classList.add('show');
 
   aJota.src=CFG.jotas_url+encodeURIComponent(jota.a);
