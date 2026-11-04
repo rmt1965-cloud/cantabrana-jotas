@@ -51,6 +51,8 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 #amb-franja .mq{display:inline-block;padding-left:100%;will-change:transform;animation:ambmq 20s linear infinite}
 #amb-franja b{font:700 10px/1 sans-serif;letter-spacing:1.5px;text-transform:uppercase;margin-right:8px;opacity:.9}
 @keyframes ambmq{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+#pant-postal{position:fixed;inset:0;z-index:60;background:#000;display:none;align-items:center;justify-content:center;opacity:0;transition:opacity 1.3s ease;cursor:pointer}
+#pant-postal img{width:100%;height:100%;object-fit:contain}
 #pant-perg{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 1.5s ease;pointer-events:none;}
 #pant-perg.show{opacity:1;pointer-events:auto;cursor:pointer}
 .p-outer{position:relative;width:min(88vw,400px);animation:float 5s ease-in-out infinite;filter:drop-shadow(0 0 30px rgba(200,146,42,.35));}
@@ -197,6 +199,7 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 
 <!-- PERGAMINO -->
 <div id="amb-franja"></div>
+<div id="pant-postal"><img id="postal-img" src="" alt="Postal de Cantabrana"></div>
 <div id="pant-perg">
   <div class="p-outer">
     <div class="p-aura"></div>
@@ -670,6 +673,37 @@ aAmb.addEventListener('playing',function(){
 function ocultarFranjaAmb(){window._franjaOff=true;var el=document.getElementById('amb-franja');if(el)el.classList.remove('show');}
 function mostrarFranjaAmb(){window._franjaOff=false;ambFranjaTexto();var el=document.getElementById('amb-franja');if(el&&CFG.ambiente_info[ambActual])el.classList.add('show');}
 
+// ---- Postales: una al inicio y otra al final, nunca la misma en la misma visita ----
+CFG.postales=['postal_001.webp','postal_002.webp','postal_003.webp','postal_005.webp','postal_006.webp','postal_007.webp','postal_008.webp','postal_009.webp','postal_010.webp','postal_011.webp','postal_012.webp','postal_014.webp','postal_015.webp','postal_017.webp','postal_018.webp','postal_019.webp','postal_021.webp','postal_022.webp','postal_023.webp','postal_025.webp','postal_026.webp','postal_027.webp','postal_028.webp','postal_029.webp','postal_031.webp','postal_033.webp','postal_034.webp','postal_035.webp','postal_036.webp','postal_037.webp','postal_038.webp','postal_039.webp','postal_041.webp','postal_042.webp','postal_043.webp','postal_044.webp','postal_045.webp','postal_047.webp','postal_048.webp','postal_049.webp','postal_050.webp','postal_054.webp','postal_055.webp','postal_056.webp','postal_058.webp','postal_059.webp','postal_060.webp','postal_061.webp','postal_063.webp','postal_064.webp','postal_065.webp','postal_066.webp','postal_067.webp'].map(function(n){return 'fotos/postales_web/'+n;});
+var POSTAL_INI=null,POSTAL_FIN=null;
+(function(){
+  var n=CFG.postales.length;if(n<1)return;
+  var a=rnd(n),b=a;
+  if(n>1){while(b===a)b=rnd(n);}
+  POSTAL_INI=CFG.postales[a];POSTAL_FIN=n>1?CFG.postales[b]:null;
+  [POSTAL_INI,POSTAL_FIN].forEach(function(u){if(u){var i=new Image();i.src=u;}});
+})();
+function mostrarPostal(src,dur,alSalir,saltable){
+  var el=document.getElementById('pant-postal'),im=document.getElementById('postal-img'),hecho=false,t=null;
+  if(!src||!el||!im){alSalir();return;}
+  function salir(){
+    if(hecho)return;hecho=true;clearTimeout(t);el.onclick=null;
+    alSalir();
+    el.style.opacity='0';
+    setTimeout(function(){el.style.display='none';},1500);
+  }
+  im.onerror=function(){im.onerror=null;salir();};
+  im.onload=function(){
+    im.onload=null;
+    el.style.display='flex';
+    void el.offsetWidth;
+    el.style.opacity='1';
+    t=setTimeout(salir,dur);
+    if(saltable)el.onclick=salir;
+  };
+  im.src=src;
+}
+
 function iniciarAmbiente(){
   aAmb.volume=0;ambCambios=0;
   ambCargar(ambElegir());
@@ -814,6 +848,9 @@ async function init(){
       {src:vid,leyenda:'',tipo:'video'},
     ];
     await mostrarVentanas(mediaPool);
+
+    // Postal de inicio (4 s), justo antes del pergamino
+    await new Promise(function(r){mostrarPostal(POSTAL_INI,4000,r,false);});
 
     // Pergamino: 50 % imagen con texto ya hecha / 50 % pergamino en blanco + texto del sistema (azar total)
     mostrarPergamino(elegirPergamino(!!(jota&&jota.s)));
@@ -976,9 +1013,14 @@ function finJota(){
       // Elegir grupo de frase final (3 partes)
       var idxFinal=rnd(CFG.frases_final.length);
       var grupoFinal=CFG.frases_final[idxFinal];
-      mostrarFotoFinal(grupoFinal[0],function(){
-        mostrarVideoFinal(grupoFinal[1],function(){
-          mostrarFotoFinal2(grupoFinal[2],function(){
+      var pasosFin=[
+        function(cb){mostrarFotoFinal(grupoFinal[0],cb);},
+        function(cb){mostrarVideoFinal(grupoFinal[1],cb);},
+        function(cb){mostrarFotoFinal2(grupoFinal[2],cb);}
+      ];
+      // La postal se inserta en un hueco al azar (antes, entre o despues de las ventanas), sin sustituir ninguna
+      pasosFin.splice(rnd(pasosFin.length+1),0,function(cb){mostrarPostal(POSTAL_FIN,4000,cb,false);});
+      var finCreditos=function(){
             // Ventana final con frase DISTINTA
             var otrosGrupos=CFG.frases_final.filter(function(_,i){return i!==idxFinal;});
             var grupoCreditos=otrosGrupos[rnd(otrosGrupos.length)];
@@ -1005,9 +1047,8 @@ function finJota(){
                 setTimeout(ocultarSelloFinal,6000);
               },1500);
             },7000);
-          });
-        });
-      });
+      };
+      (function sig(i){if(i>=pasosFin.length){finCreditos();return;}pasosFin[i](function(){sig(i+1);});})(0);
     },1500);
   },5000);
 }
