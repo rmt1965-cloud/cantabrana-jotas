@@ -587,8 +587,9 @@ aAmb.addEventListener('playing',function(){clearTimeout(ambTimer);});
     var o=ambFallosGet(),k=Object.keys(o);
     var d=document.createElement('div');
     d.style.cssText='position:fixed;left:8px;right:8px;top:8px;z-index:99999;background:#fbf6ea;color:#2b1a12;border:2px solid #8a6a3a;padding:12px;font:13px/1.4 sans-serif;max-height:80vh;overflow:auto;border-radius:8px';
-    d.innerHTML='<b>Música ambiente: canciones con fallos en este dispositivo</b><br>'+(k.length?k.map(function(f){return f.replace('audio/ambiente/','')+' &mdash; '+o[f].n+' vez/veces ('+o[f].motivo+')'+(o[f].n>=2?' <b>[ANULADA]</b>':'');}).join('<br>'):'Ninguna.')+'<br><br><button onclick="localStorage.removeItem(\''+AMB_KEY+'\');location.reload()">Borrar marcas</button> <button onclick="this.parentNode.remove()">Cerrar</button>';
+    d.innerHTML='<b>Música ambiente: canciones con fallos en este dispositivo</b><br>'+(k.length?k.map(function(f){return f.replace('audio/ambiente/','')+' &mdash; '+o[f].n+' vez/veces ('+o[f].motivo+')'+(o[f].n>=2?' <b>[ANULADA]</b>':'');}).join('<br>'):'Ninguna.')+'<br><br><b>Franja:</b> <span id="dg-fr"></span>'+'<br><br><button onclick="localStorage.removeItem(\''+AMB_KEY+'\');location.reload()">Borrar marcas</button> <button onclick="this.parentNode.remove()">Cerrar</button>';
     document.body.appendChild(d);
+    setInterval(function(){var e=document.getElementById('dg-fr'),f=document.getElementById('amb-franja');if(!e)return;e.textContent=(f?'existe':'NO existe')+' | clase: '+(f?f.className:'-')+' | pista: '+(ambActual||'-')+' | datos: '+(CFG.ambiente_info&&CFG.ambiente_info[ambActual]?'si':'no')+' | sonando: '+(aAmb.paused?'no':'si');},500);
   }catch(e){}
 })();
 
