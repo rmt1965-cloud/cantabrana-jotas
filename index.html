@@ -533,6 +533,27 @@ function histPick(pool,key){
   return elegido;
 }
 
+// ---- Sin repeticion en las ultimas k elecciones (k se reduce solo si el grupo de imagenes es mas pequeno) ----
+function histNoRep(pool,key,k){
+  if(!pool||!pool.length)return null;
+  var kk=Math.max(0,Math.min(k,pool.length-1));
+  var h=histGet(key).filter(function(f){return pool.indexOf(f)>=0;});
+  var rec=h.slice(-kk);
+  var cand=pool.filter(function(f){return rec.indexOf(f)<0;});
+  if(!cand.length)cand=pool.slice();
+  var el=cand[rnd(cand.length)];
+  histSet(key,h.concat([el]).slice(-Math.max(kk,1)));
+  return el;
+}
+function histNoRepArr(pool,key,n,k){
+  var h=histGet(key).filter(function(f){return pool.indexOf(f)>=0;}).slice(-k);
+  var cand=pool.filter(function(f){return h.indexOf(f)<0;});
+  while(cand.length<n&&h.length){h.shift();cand=pool.filter(function(f){return h.indexOf(f)<0;});}
+  var ch=shuffle(cand).slice(0,n);
+  histSet(key,h.concat(ch).slice(-k));
+  return ch;
+}
+
 function histPickArr(pool,key,n,minLeft){
   var hist=histGet(key);
   var noVistos=pool.filter(function(f){return hist.indexOf(f)<0;});
@@ -627,19 +648,26 @@ aAmb.addEventListener('playing',function(){clearTimeout(ambTimer);});
 // ---- Pergamino de inicio: elección aleatoria entre las dos opciones ----
 function elegirPergamino(esSensible){
   if(rnd(2)===0){
-    var lista;
-    if(esSensible){lista=CFG.perg_texto.sensible;}
-    else{
-      var g=CFG.perg_texto.grupos.filter(function(x){return x&&x.length;});
-      lista=g.length?g[rnd(g.length)]:[];
-    }
-    if(lista&&lista.length)return {tipo:'texto',src:lista[rnd(lista.length)],sensible:esSensible};
+    var src=esSensible?histNoRep(CFG.perg_texto.sensible,'cant_pergs',10):pergTexto();
+    if(src)return {tipo:'texto',src:src,sensible:esSensible};
   }
   return pergSistema(esSensible);
 }
+// Pergamino con texto ya integrado: carpeta de mensaje al azar (solo entre las que tienen imagen no usada en las ultimas 10) y una imagen no repetida
+function pergTexto(){
+  var gs=CFG.perg_texto.grupos.filter(function(x){return x&&x.length;});
+  var todas=[].concat.apply([],gs);
+  if(!todas.length)return null;
+  var rec=histGet('cant_pergt').filter(function(f){return todas.indexOf(f)>=0;}).slice(-10);
+  var gc=gs.map(function(g){return g.filter(function(f){return rec.indexOf(f)<0;});}).filter(function(g){return g.length;});
+  if(!gc.length)gc=gs;
+  var g=gc[rnd(gc.length)],el=g[rnd(g.length)];
+  histSet('cant_pergt',rec.concat([el]).slice(-10));
+  return el;
+}
 function pergSistema(esSensible){
-  return {tipo:'sistema',src:CFG.pergaminos[rnd(CFG.pergaminos.length)],
-    texto:esSensible?CFG.perg_sensible:CFG.textos_perg[rnd(CFG.textos_perg.length)],sensible:esSensible};
+  return {tipo:'sistema',src:histNoRep(CFG.pergaminos,'cant_pergb',10),
+    texto:esSensible?CFG.perg_sensible:histNoRep(CFG.textos_perg,'cant_pergtx',10),sensible:esSensible};
 }
 function mostrarPergamino(pe){
   var img=document.getElementById('p-img'),pant=document.getElementById('pant-perg');
@@ -681,9 +709,8 @@ CFG.postales=['postal_001.webp','postal_002.webp','postal_003.webp','postal_005.
 var POSTAL_INI=null,POSTAL_FIN=null;
 (function(){
   var n=CFG.postales.length;if(n<1)return;
-  var a=rnd(n),b=a;
-  if(n>1){while(b===a)b=rnd(n);}
-  POSTAL_INI=CFG.postales[a];POSTAL_FIN=n>1?CFG.postales[b]:null;
+  POSTAL_INI=histNoRep(CFG.postales,'cant_postal',22);
+  POSTAL_FIN=n>1?histNoRep(CFG.postales,'cant_postal',22):null;
   [POSTAL_INI,POSTAL_FIN].forEach(function(u){if(u){var i=new Image();i.src=u;}});
 })();
 function mostrarPostal(src,dur,alSalir,saltable){
@@ -836,7 +863,7 @@ async function init(){
     const grupo=CFG.grupos_frases[rnd(CFG.grupos_frases.length)];
 
     // Fotos inicio con historial
-    const fotos_intro=histPickArr(CFG.fotos_intro,'cant_intro',3,10);
+    const fotos_intro=histNoRepArr(CFG.fotos_intro,'cant_intro2',3,30);
 
     // Video inicio con historial
     var histV=histGet('cant_vids');
@@ -855,7 +882,7 @@ async function init(){
     var posCol=rnd(4);
     var ventAntes=mediaPool.slice(0,posCol),ventDespues=mediaPool.slice(posCol);
     if(ventAntes.length)await mostrarVentanas(ventAntes);
-    await new Promise(function(r){mostrarPostal(CFG.collage[rnd(CFG.collage.length)],5000,r,false);});
+    await new Promise(function(r){mostrarPostal(histNoRep(CFG.collage,'cant_collage',10),5000,r,false);});
     if(ventDespues.length)await mostrarVentanas(ventDespues);
 
     // Postal de inicio (4 s), justo antes del pergamino
@@ -1044,8 +1071,7 @@ function finJota(){
             // Pergamino distinto al del inicio
             var pscPerg=document.getElementById('psc-perg');
             if(pscPerg){
-              var pscIdx=rnd(CFG.pergaminos.length);
-              pscPerg.src=CFG.pergaminos[pscIdx];
+              pscPerg.src=histNoRep(CFG.pergaminos,'cant_pergb',10);
             }
             psc.style.display='flex';
             setTimeout(function(){psc.style.opacity='1';},100);
@@ -1082,7 +1108,7 @@ function mostrarFotoFinal(frase,callback){
   div.style.flexDirection='column';
   div.style.alignItems='center';div.style.justifyContent='center';
   setTimeout(function(){
-    var vista=histPick(CFG.vistas,'cant_vistas');
+    var vista=histNoRep(CFG.vistas,'cant_vistas_n',10);
     img.style.width='88%';img.style.maxWidth='500px';img.style.maxHeight='72vh';img.style.objectFit='contain';
     img.src=vista;
     img.onload=function(){
@@ -1111,7 +1137,7 @@ function mostrarFotoFinal2(frase,callback){
   div.style.flexDirection='column';
   div.style.alignItems='center';div.style.justifyContent='center';
   setTimeout(function(){
-    var vista=histPick(CFG.vistas,'cant_vistas2');
+    var vista=histNoRep(CFG.vistas,'cant_vistas_n',10);
     img.style.width='88%';img.style.maxWidth='500px';img.style.maxHeight='72vh';img.style.objectFit='contain';
     img.src=vista;
     img.onload=function(){
