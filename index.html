@@ -516,11 +516,64 @@ function histPickArr(pool,key,n,minLeft){
   return elegidos;
 }
 
+// ---- Música ambiente: control de fallos (solo afecta a la ambiente) ----
+var AMB_KEY='ambFallos',ambActual=null,ambCambios=0,ambTimer=null,ambManejado=false,ambSesion={};
+function ambFallosGet(){try{return JSON.parse(localStorage.getItem(AMB_KEY)||'{}');}catch(e){return {};}}
+function ambFallosSet(o){try{localStorage.setItem(AMB_KEY,JSON.stringify(o));}catch(e){}}
+function ambMarcar(f,motivo){
+  var o=ambFallosGet(),r=o[f]||{n:0};
+  r.n++;r.motivo=motivo;r.fecha=new Date().toISOString();o[f]=r;ambFallosSet(o);
+  console.warn('[ambiente] FALLO en '+f+' ('+motivo+'), veces: '+r.n);
+}
+function ambValidas(){
+  var o=ambFallosGet();
+  var v=CFG.ambiente.filter(function(f){return !(o[f]&&o[f].n>=2);});
+  return v.length?v:CFG.ambiente;
+}
+function ambElegir(){
+  var v=ambValidas().filter(function(f){return f!==ambActual&&!ambSesion[f];});
+  if(!v.length)v=ambValidas();
+  return v[rnd(v.length)];
+}
+function ambEsActual(f){try{return !!f&&f===ambActual&&aAmb.src===new URL(f,location.href).href;}catch(e){return false;}}
+function ambPlay(){
+  var f=ambActual;
+  aAmb.play().catch(function(e){
+    if(!ambEsActual(f))return;
+    if(e&&e.name==='NotSupportedError'){ambFallo('formato no reproducible');}
+    else if(!(e&&e.name==='AbortError')){setTimeout(function(){if(ambEsActual(f))ambPlay();},1000);}
+  });
+}
+function ambCargar(f){ambActual=f;ambManejado=false;aAmb.src=f;aAmb.loop=true;ambPlay();}
+function ambFallo(motivo){
+  clearTimeout(ambTimer);
+  if(!ambActual||ambManejado)return;
+  ambManejado=true;ambSesion[ambActual]=true;
+  ambMarcar(ambActual,motivo);
+  if(++ambCambios>CFG.ambiente.length)return;
+  ambCargar(ambElegir());
+}
+aAmb.addEventListener('error',function(){if(ambEsActual(ambActual))ambFallo('error de carga');});
+aAmb.addEventListener('waiting',function(){
+  clearTimeout(ambTimer);
+  var f=ambActual;ambTimer=setTimeout(function(){if(ambEsActual(f)&&!aAmb.paused&&aAmb.readyState<3)ambFallo('bloqueada más de 15 s');},15000);
+});
+aAmb.addEventListener('playing',function(){clearTimeout(ambTimer);});
+// Panel de diagnóstico: abrir la web con ?diag=ambiente
+(function(){
+  try{
+    if(new URLSearchParams(location.search).get('diag')!=='ambiente')return;
+    var o=ambFallosGet(),k=Object.keys(o);
+    var d=document.createElement('div');
+    d.style.cssText='position:fixed;left:8px;right:8px;top:8px;z-index:99999;background:#fbf6ea;color:#2b1a12;border:2px solid #8a6a3a;padding:12px;font:13px/1.4 sans-serif;max-height:80vh;overflow:auto;border-radius:8px';
+    d.innerHTML='<b>Música ambiente: canciones con fallos en este dispositivo</b><br>'+(k.length?k.map(function(f){return f.replace('audio/ambiente/','')+' &mdash; '+o[f].n+' vez/veces ('+o[f].motivo+')'+(o[f].n>=2?' <b>[ANULADA]</b>':'');}).join('<br>'):'Ninguna.')+'<br><br><button onclick="localStorage.removeItem(\''+AMB_KEY+'\');location.reload()">Borrar marcas</button> <button onclick="this.parentNode.remove()">Cerrar</button>';
+    document.body.appendChild(d);
+  }catch(e){}
+})();
+
 function iniciarAmbiente(){
-  const idx=rnd(CFG.ambiente.length);
-  aAmb.src=CFG.ambiente[idx];aAmb.volume=0;aAmb.loop=true;
-  var ambPlay=function(){aAmb.play().catch(function(){setTimeout(ambPlay,1000);});};
-  ambPlay();
+  aAmb.volume=0;ambCambios=0;
+  ambCargar(ambElegir());
   let v=0;const f=setInterval(()=>{v=Math.min(v+0.015,0.45);aAmb.volume=v;if(v>=0.45)clearInterval(f);},150);
 }
 
