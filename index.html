@@ -793,10 +793,24 @@ function mostrarPostal(src,dur,alSalir,saltable){
   im.src=src;
 }
 
+// ---- Compatibilidad iPhone/iPad (iOS): volumen de audio de solo lectura y audio bloqueado fuera de un toque ----
+var _volOK=(function(){try{var t=document.createElement('audio');t.volume=0.5;return t.volume===0.5;}catch(e){return true;}})();
+function ambVolSet(v){if(_volOK){aAmb.volume=v;}else{aAmb.muted=(v<0.06);}}
+function ambVolGet(){return _volOK?aAmb.volume:(aAmb.muted?0.02:0.45);}
+var _SIL='data:audio/wav;base64,UklGRmQGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YUAGAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';
+function desbloquearAudio(){
+  // En iOS un <audio> solo puede sonar mas tarde si se arranco dentro de un toque del usuario: se "desbloquea" aJota aqui
+  try{
+    aJota.muted=true;aJota.src=_SIL;
+    var p=aJota.play();
+    var fin=function(){try{aJota.pause();}catch(e){}aJota.muted=false;};
+    if(p&&p.then){p.then(fin).catch(fin);}else{fin();}
+  }catch(e){try{aJota.muted=false;}catch(e2){}}
+}
 function iniciarAmbiente(){
-  aAmb.volume=0;ambCambios=0;
+  ambVolSet(0.07);ambCambios=0;
   ambCargar(ambElegir());
-  let v=0;const f=setInterval(()=>{v=Math.min(v+0.015,0.45);aAmb.volume=v;if(v>=0.45)clearInterval(f);},150);
+  let v=0;const f=setInterval(()=>{v=Math.min(v+0.015,0.45);ambVolSet(v);if(v>=0.45)clearInterval(f);},150);
 }
 
 // ================================================================
@@ -905,6 +919,7 @@ async function init(){
     const h=function(){
       el.removeEventListener('click',h);el.removeEventListener('touchend',h);
       if(btn){btn.removeEventListener('click',h);btn.removeEventListener('touchend',h);}
+      desbloquearAudio();
       resolve();
     };
     el.addEventListener('click',h);el.addEventListener('touchend',h);
@@ -993,8 +1008,8 @@ async function iniciarJota(){
 
   // Bajar ambiente (volumen ambiente 0.02) y quitar la franja de la musica ambiente
   ocultarFranjaAmb();
-  var av=aAmb.volume;
-  const fa=setInterval(()=>{av=Math.max(av-0.02,0.02);aAmb.volume=av;if(av<=0.02)clearInterval(fa);},80);
+  var av=ambVolGet();
+  const fa=setInterval(()=>{av=Math.max(av-0.02,0.02);ambVolSet(av);if(av<=0.02)clearInterval(fa);},80);
   document.getElementById('amb-ind').classList.add('show');
 
   aJota.src=CFG.jotas_url+encodeURIComponent(jota.a);
@@ -1007,7 +1022,8 @@ async function iniciarJota(){
   // Precargar primeras 8 fotos
   fotos.slice(0,8).forEach(function(url){var i=new Image();i.src=url;});
   mostrarFoto(0);
-  aJota.play().catch(e=>console.warn(e));
+  aJota.muted=false;
+  aJota.play().catch(function(e){console.warn(e);var rt=function(){aJota.play().catch(function(){});document.removeEventListener('touchend',rt);document.removeEventListener('click',rt);};document.addEventListener('touchend',rt);document.addEventListener('click',rt);});
   var vj=0.4;
   var fj=setInterval(function(){vj=Math.min(vj+0.04,1);aJota.volume=vj;if(vj>=1)clearInterval(fj);},150);
   iniciarProgreso();
@@ -1078,8 +1094,8 @@ function finJota(){
 
   // Subir ambiente y volver a mostrar la franja de la musica ambiente
   mostrarFranjaAmb();
-  var v=aAmb.volume;
-  const fu=setInterval(()=>{v=Math.min(v+0.02,0.45);aAmb.volume=v;if(v>=0.45)clearInterval(fu);},100);
+  var v=ambVolGet();
+  const fu=setInterval(()=>{v=Math.min(v+0.02,0.45);ambVolSet(v);if(v>=0.45)clearInterval(fu);},100);
 
   // Portada
   const fi=document.getElementById('f-img');
