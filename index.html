@@ -38,13 +38,22 @@ body.acc-mode #d-txt{font-size:clamp(22px,6.5vw,32px)!important;}
 body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 
 /* VENTANAS */
-#ventanas{position:fixed;inset:0;z-index:8;background:rgba(0,0,0,.95);display:none;align-items:center;justify-content:center;overflow:hidden;}
+#ventanas{position:fixed;inset:0;z-index:8;background:#0b0907;display:none;align-items:center;justify-content:center;overflow:hidden;}
 #ventanas.show{display:flex}
 #v-blur{position:absolute;inset:-20px;width:calc(100% + 40px);height:calc(100% + 40px);object-fit:cover;filter:blur(20px) brightness(.4);opacity:0;transition:opacity 1.5s ease;}
 #v-img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:85%;max-width:360px;max-height:60vh;object-fit:contain;background:transparent;opacity:0;transition:opacity 1.5s ease;z-index:1;}
 #v-vid{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:95%;max-width:480px;max-height:75vh;object-fit:contain;opacity:0;transition:opacity 1.5s ease;z-index:1;display:none;}
-#v-ley{position:absolute;bottom:12%;left:50%;transform:translateX(-50%);width:88%;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:700;font-size:clamp(20px,6vw,32px);color:rgba(245,230,190,.97);text-shadow:0 2px 20px rgba(0,0,0,.95),0 0 40px rgba(200,146,42,.4);opacity:0;transition:opacity 1s ease;z-index:2;}
+#v-ley{position:absolute;bottom:12%;left:50%;transform:translateX(-50%);width:88%;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:700;font-size:clamp(20px,6vw,32px);color:rgba(245,230,190,.97);text-shadow:0 2px 20px rgba(0,0,0,.95),0 0 40px rgba(200,146,42,.4);opacity:0;transition:opacity 1s ease;z-index:3;}
 #v-ley.show{opacity:1}
+.vl{position:absolute;inset:0;opacity:0;transition:opacity 1.4s ease-in-out;z-index:1;overflow:hidden;will-change:opacity;}
+.vl.on{opacity:1}
+.vl img{position:absolute;inset:0;width:100%;height:100%;display:block;}
+.vl .vb{object-fit:cover;filter:blur(28px) brightness(.5);transform:scale(1.15);}
+.vl .vf{object-fit:contain;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 9%,#000 91%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 9%,#000 91%,transparent 100%);}
+.vl.kb .vf{animation:kbz 6s ease-out forwards;}
+@keyframes kbz{from{transform:scale(1)}to{transform:scale(1.06)}}
+#v-grad{position:absolute;left:0;right:0;bottom:0;height:34%;background:linear-gradient(to top,rgba(0,0,0,.78),rgba(0,0,0,0));z-index:2;pointer-events:none;opacity:0;transition:opacity 1s ease;}
+#v-grad.show{opacity:1}
 
 /* PERGAMINO */
 #amb-franja{position:fixed;left:0;right:0;bottom:0;z-index:9000;padding:9px 0 calc(9px + env(safe-area-inset-bottom));background:rgba(255,150,0,.38);color:#fff;overflow:hidden;white-space:nowrap;font:600 14px/1.3 Georgia,serif;letter-spacing:.3px;text-shadow:0 1px 3px rgba(0,0,0,.9),0 0 6px rgba(0,0,0,.6);opacity:0;transition:opacity 1s ease;pointer-events:none}
@@ -192,8 +201,9 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 
 <!-- VENTANAS INICIO -->
 <div id="ventanas">
-  <img id="v-blur" src="" alt="">
-  <img id="v-img" src="" alt="">
+  <div class="vl" id="vl0"><img class="vb" alt=""><img class="vf" alt=""></div>
+  <div class="vl" id="vl1"><img class="vb" alt=""><img class="vf" alt=""></div>
+  <div id="v-grad"></div>
   <video id="v-vid" src="" autoplay muted playsinline style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:85%;max-width:360px;max-height:60vh;object-fit:contain;opacity:0;transition:opacity 1.5s ease;z-index:1;display:none;"></video>
   <div id="v-ley"></div>
 </div>
@@ -448,7 +458,7 @@ const CFG = {
     'fotos/sellos/sello15.png','fotos/sellos/sello16.png',
   ],
 
-  fotos_intro: ["fotos/extra/aldaba1.png","fotos/extra/aldaba2.png","fotos/extra/aldaba3.png","fotos/extra/aldaba4.png","fotos/extra/aldaba5.png","fotos/extra/aldaba6.png","fotos/extra/arandela01.jpg","fotos/extra/arandela02.jpg","fotos/extra/cerradura01.jpg","fotos/extra/chaveta01.jpg","fotos/extra/chaveta02.jpg","fotos/extra/chaveta03.jpg","fotos/extra/chaveta04.jpg","fotos/extra/chaveta05.jpg","fotos/extra/clavos01.png","fotos/extra/dintel01.jpg","fotos/extra/dintel02.jpg","fotos/extra/dintel03.jpg","fotos/extra/dintel04.jpg","fotos/extra/dintel05.jpg","fotos/extra/dintel06.jpg","fotos/extra/dintel07.jpg","fotos/extra/dintel08.jpg","fotos/extra/dintel09.jpg","fotos/extra/dintel10.jpg","fotos/extra/dintel11.jpg","fotos/extra/dintel12.jpg","fotos/extra/dintel13.jpg","fotos/extra/dintel14.jpg","fotos/extra/escudo01.jpg","fotos/extra/escudo02.jpg","fotos/extra/estela1.jpg","fotos/extra/zaguan1.png","fotos/extra/zaguan2.png","fotos/extra/ventana1.jpg","fotos/extra/ventana2.png","fotos/extra/ventana3.jpg","fotos/extra/ventana4.png","fotos/extra/ventana5.jpg","fotos/extra/ventana6.png","fotos/extra/ventana7.jpg","fotos/extra/ventana13.jpg","video/intro/rustico1.jpg","video/intro/rustico2.jpg","video/intro/rustico3.jpg","video/intro/rustico4.jpg"],
+  fotos_intro: ["fotos/extra_web/20260516_153001_2.webp", "fotos/extra_web/aldaba1.webp", "fotos/extra_web/aldaba2.webp", "fotos/extra_web/aldaba3.webp", "fotos/extra_web/aldaba4.webp", "fotos/extra_web/aldaba5.webp", "fotos/extra_web/aldaba6.webp", "fotos/extra_web/arandela01.webp", "fotos/extra_web/arandela02.webp", "fotos/extra_web/argoya01.webp", "fotos/extra_web/cerradura01.webp", "fotos/extra_web/chaveta03.webp", "fotos/extra_web/chaveta04.webp", "fotos/extra_web/clavos01.webp", "fotos/extra_web/cruz01.webp", "fotos/extra_web/dintel01.webp", "fotos/extra_web/dintel02.webp", "fotos/extra_web/dintel03.webp", "fotos/extra_web/dintel04.webp", "fotos/extra_web/dintel05.webp", "fotos/extra_web/dintel06.webp", "fotos/extra_web/dintel07.webp", "fotos/extra_web/dintel08.webp", "fotos/extra_web/dintel09.webp", "fotos/extra_web/dintel10.webp", "fotos/extra_web/dintel11.webp", "fotos/extra_web/dintel12.webp", "fotos/extra_web/dintel13.webp", "fotos/extra_web/dintel14.webp", "fotos/extra_web/escudo01.webp", "fotos/extra_web/escudo02.webp", "fotos/extra_web/estela1.webp", "fotos/extra_web/hexapetalo01.webp", "fotos/extra_web/pinas01.webp", "fotos/extra_web/ventana1.webp", "fotos/extra_web/ventana13.webp", "fotos/extra_web/ventana2.webp", "fotos/extra_web/ventana4.webp", "fotos/extra_web/ventana5.webp", "fotos/extra_web/ventana7.webp", "fotos/extra_web/zaguan1.webp", "fotos/extra_web/zaguan2.webp", "video/intro/rustico1.jpg", "video/intro/rustico2.jpg", "video/intro/rustico3.jpg", "video/intro/rustico4.jpg"],
 
   fotos_arcos: ["fotos/arcos/foto001.jpg","fotos/arcos/foto002.jpg","fotos/arcos/foto003.png","fotos/arcos/foto004.jpg","fotos/arcos/foto005.jpg","fotos/arcos/foto006.jpg","fotos/arcos/foto007.jpg","fotos/arcos/foto008.jpg","fotos/arcos/foto009.jpg","fotos/arcos/foto010.jpg","fotos/arcos/foto011.jpg","fotos/arcos/foto012.png","fotos/arcos/foto013.jpg","fotos/arcos/foto014.jpg","fotos/arcos/foto015.jpg","fotos/arcos/foto016.jpg","fotos/arcos/foto017.jpg","fotos/arcos/foto018.jpg","fotos/arcos/foto019.jpg","fotos/arcos/foto020.png","fotos/arcos/foto021.jpg","fotos/arcos/foto022.jpg","fotos/arcos/foto023.jpg","fotos/arcos/foto024.jpg","fotos/arcos/foto025.jpg","fotos/arcos/foto026.jpg","fotos/arcos/foto027.png","fotos/arcos/foto028.jpg","fotos/arcos/foto029.jpg","fotos/arcos/foto030.jpg","fotos/arcos/foto031.jpg","fotos/arcos/foto032.jpg","fotos/arcos/foto033.jpg","fotos/arcos/foto034.jpg","fotos/arcos/foto035.jpg","fotos/arcos/foto036.jpg","fotos/arcos/foto037.jpg","fotos/arcos/foto038.jpg","fotos/arcos/foto039.jpg","fotos/arcos/foto040.jpg","fotos/arcos/foto041.jpg","fotos/arcos/foto042.jpg","fotos/arcos/foto043.jpg","fotos/arcos/foto044.jpg","fotos/arcos/foto045.jpg","fotos/arcos/foto046.png","fotos/arcos/foto047.jpg","fotos/arcos/foto048.jpg","fotos/arcos/foto049.jpg","fotos/arcos/foto050.jpg","fotos/arcos/foto051.png","fotos/arcos/foto052.jpg","fotos/arcos/foto053.jpg","fotos/arcos/foto054.jpg","fotos/arcos/foto055.jpg","fotos/arcos/foto056.png","fotos/arcos/foto057.png","fotos/arcos/foto058.png","fotos/arcos/foto059.png","fotos/arcos/foto060.png","fotos/arcos/foto061.png","fotos/arcos/foto062.jpg","fotos/arcos/foto063.jpg","fotos/arcos/foto064.png","fotos/arcos/foto065.jpg","fotos/arcos/foto066.jpg","fotos/arcos/foto067.jpg","fotos/arcos/foto068.jpg","fotos/arcos/foto069.jpg","fotos/arcos/foto070.png","fotos/arcos/foto071.jpg","fotos/arcos/foto072.png","fotos/arcos/foto073.png","fotos/arcos/foto074.png","fotos/arcos/foto075.png","fotos/arcos/foto076.png","fotos/arcos/foto077.png","fotos/arcos/foto078.png","fotos/arcos/foto079.png","fotos/arcos/foto080.png","fotos/arcos/foto081.png","fotos/arcos/foto082.png","fotos/arcos/foto083.jpg","fotos/arcos/foto084.png","fotos/arcos/foto085.jpg","fotos/arcos/foto086.jpg","fotos/arcos/foto087.png","fotos/arcos/foto088.png","fotos/arcos/foto089.jpg","fotos/arcos/foto090.png","fotos/arcos/foto091.png","fotos/arcos/foto092.png","fotos/arcos/foto093.png","fotos/arcos/foto094.jpg","fotos/arcos/foto095.jpg","fotos/arcos/foto096.png","fotos/arcos/foto097.png"],
 
@@ -819,51 +829,45 @@ function iniciarAmbiente(){
 async function mostrarVentanas(ventanas){
   return new Promise(function(resolve){
     var div=document.getElementById('ventanas');
-    var vimg=document.getElementById('v-img');
-    var vblur=document.getElementById('v-blur');
+    var L=[document.getElementById('vl0'),document.getElementById('vl1')];
     var vley=document.getElementById('v-ley');
+    var vgrad=document.getElementById('v-grad');
     var vvid=document.getElementById('v-vid');
     div.style.display='';div.style.opacity='1';div.style.transition='';
     div.classList.add('show');
-    var idx=0;
+    L[0].className='vl';L[1].className='vl';
+    var idx=0,cur=-1;
+    function ley(t){
+      vley.classList.remove('show');vgrad.classList.remove('show');
+      setTimeout(function(){
+        vley.textContent=t||'';
+        if(t){vley.classList.add('show');vgrad.classList.add('show');}
+      },500);
+    }
     function sig(){
       if(idx>=ventanas.length){
-        div.style.transition='opacity 0.6s ease';div.style.opacity='0';
-        setTimeout(function(){div.style.display='none';div.style.opacity='1';resolve();},700);
+        div.style.transition='opacity 0.8s ease';div.style.opacity='0';
+        setTimeout(function(){div.style.display='none';div.style.opacity='1';
+          L[0].className='vl';L[1].className='vl';vley.classList.remove('show');vgrad.classList.remove('show');resolve();},900);
         return;
       }
       var data=ventanas[idx++];
-      vimg.style.opacity='0';vblur.style.opacity='0';
-      vley.classList.remove('show');vley.textContent='';
-      vvid.style.opacity='0';vvid.style.display='none';
-      if(vvid.pause)vvid.pause();
-      setTimeout(function(){
-        if(data.tipo==='video'){
-          vvid.style.display='block';
-          vvid.style.transition='opacity 1.5s ease';
-          vvid.src=data.src;vvid.load();vvid.play().catch(function(){});
-          var shown=false;
-          var showV=function(){
-            if(shown)return;shown=true;
-            vvid.style.opacity='1';vblur.style.opacity='0';
-            setTimeout(function(){vvid.style.transition='opacity 1.5s ease';vvid.style.opacity='0';},4500);
-            setTimeout(sig,6000);
-          };
-          vvid.oncanplay=showV;vvid.ontimeupdate=showV;
-          setTimeout(showV,1500);
-          vvid.onerror=function(){setTimeout(sig,500);};
-        } else {
-          vimg.src=data.src;vblur.src=data.src;
-          vimg.onload=function(){
-            vimg.style.opacity='1';vblur.style.opacity='1';
-            setTimeout(function(){
-              if(data.leyenda){vley.textContent=data.leyenda;vley.classList.add('show');}
-              setTimeout(sig,3200);
-            },900);
-          };
-          vimg.onerror=function(){setTimeout(sig,500);};
-        }
-      },600);
+      var nx=(cur+1)%2, capa=L[nx], prev=cur>=0?L[cur]:null;
+      var imgs=capa.querySelectorAll('img');
+      var done=false;
+      function mostrar(){
+        if(done)return;done=true;
+        capa.className='vl';void capa.offsetWidth;
+        capa.className='vl on kb';
+        if(prev){setTimeout(function(){prev.className='vl';},1500);}
+        cur=nx;
+        ley(data.leyenda);
+        setTimeout(sig,4200);
+      }
+      imgs[0].onload=null;
+      imgs[1].onload=function(){ (imgs[1].decode?imgs[1].decode():Promise.resolve()).catch(function(){}).then(mostrar); };
+      imgs[1].onerror=function(){ if(!done){done=true;setTimeout(sig,300);} };
+      imgs[0].src=data.src; imgs[1].src=data.src;
     }
     sig();
   });
