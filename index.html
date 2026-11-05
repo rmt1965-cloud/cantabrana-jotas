@@ -655,6 +655,7 @@ function ambElegir(){
 }
 function ambEsActual(f){try{return !!f&&f===ambActual&&aAmb.src===new URL(f,location.href).href;}catch(e){return false;}}
 function ambPlay(){
+  if(!_volOK&&window._jotaSuena)return;
   var f=ambActual;
   aAmb.play().catch(function(e){
     if(!ambEsActual(f))return;
@@ -773,7 +774,8 @@ function ocultarFranjaAmb(){window._franjaOff=true;var el=document.getElementByI
 function mostrarFranjaAmb(){window._franjaOff=false;ambFranjaTexto();var el=document.getElementById('amb-franja');if(el&&CFG.ambiente_info[ambActual])el.classList.add('show');}
 
 // ---- Postales: una al inicio y otra al final, nunca la misma en la misma visita ----
-CFG.escudo='fotos/escudo/escudo_cantabrana.webp';
+CFG.escudo='fotos/escudo/escudo01.webp';
+CFG.escudo_ini='fotos/escudo/escudo_inicio.webp';
 CFG.collage=['fotos/collage_web/collage_01.webp','fotos/collage_web/collage_02.webp','fotos/collage_web/collage_03.webp','fotos/collage_web/collage_04.webp','fotos/collage_web/collage_05.webp','fotos/collage_web/collage_06.webp','fotos/collage_web/collage_07.webp','fotos/collage_web/collage_08.webp','fotos/collage_web/collage_09.webp','fotos/collage_web/collage_10.webp','fotos/collage_web/collage_11.webp','fotos/collage_web/collage_12.webp','fotos/collage_web/collage_13.webp'];
 CFG.postales=['postal_001.webp','postal_002.webp','postal_003.webp','postal_005.webp','postal_006.webp','postal_007.webp','postal_008.webp','postal_009.webp','postal_010.webp','postal_011.webp','postal_012.webp','postal_014.webp','postal_015.webp','postal_017.webp','postal_018.webp','postal_019.webp','postal_021.webp','postal_022.webp','postal_023.webp','postal_025.webp','postal_026.webp','postal_027.webp','postal_028.webp','postal_029.webp','postal_031.webp','postal_033.webp','postal_034.webp','postal_035.webp','postal_036.webp','postal_037.webp','postal_038.webp','postal_039.webp','postal_041.webp','postal_042.webp','postal_043.webp','postal_044.webp','postal_045.webp','postal_047.webp','postal_048.webp','postal_049.webp','postal_050.webp','postal_054.webp','postal_055.webp','postal_056.webp','postal_058.webp','postal_059.webp','postal_060.webp','postal_061.webp','postal_063.webp','postal_064.webp','postal_065.webp','postal_066.webp','postal_067.webp'].map(function(n){return 'fotos/postales_web/'+n;});
 var POSTAL_INI=null,POSTAL_FIN=null;
@@ -854,6 +856,23 @@ async function mostrarVentanas(ventanas){
       }
       var data=ventanas[idx++];
       var nx=(cur+1)%2, capa=L[nx], prev=cur>=0?L[cur]:null;
+      if(data.tipo==='video'){
+        vley.classList.remove('show');vgrad.classList.remove('show');
+        var shown=false;
+        vvid.style.display='block';vvid.style.opacity='0';vvid.style.transition='opacity 1.4s ease-in-out';
+        vvid.src=data.src;vvid.load();vvid.play().catch(function(){});
+        var showV=function(){
+          if(shown)return;shown=true;
+          void vvid.offsetWidth;vvid.style.opacity='1';
+          if(prev){prev.className='vl';cur=-1;}
+          setTimeout(function(){vvid.style.opacity='0';sig();},4500);
+          setTimeout(function(){if(vvid.pause)vvid.pause();vvid.style.display='none';},6100);
+        };
+        vvid.oncanplay=showV;vvid.ontimeupdate=showV;
+        setTimeout(showV,1500);
+        vvid.onerror=function(){if(!shown){shown=true;setTimeout(sig,300);}};
+        return;
+      }
       var imgs=capa.querySelectorAll('img');
       var done=false;
       function mostrar(){
@@ -863,9 +882,8 @@ async function mostrarVentanas(ventanas){
         if(prev){setTimeout(function(){prev.className='vl';},1500);}
         cur=nx;
         ley(data.leyenda);
-        setTimeout(sig,4200);
+        setTimeout(sig,data.dur||4200);
       }
-      imgs[0].onload=null;
       imgs[1].onload=function(){ (imgs[1].decode?imgs[1].decode():Promise.resolve()).catch(function(){}).then(mostrar); };
       imgs[1].onerror=function(){ if(!done){done=true;setTimeout(sig,300);} };
       imgs[0].src=data.src; imgs[1].src=data.src;
@@ -951,14 +969,17 @@ async function init(){
     var vid=noVistasV[rnd(noVistasV.length)];
     histSet('cant_vids',[...histV,vid].slice(-Math.floor(CFG.videos_intro.length*0.6)));
 
+    // Escudo: al inicio, al final o ninguno (nunca los dos a la vez)
+    window._escudoDonde=['inicio','final','ninguno'][rnd(3)];
     const mediaPool=[
       {src:fotos_intro[0],leyenda:grupo[0],tipo:'foto'},
       {src:fotos_intro[1],leyenda:grupo[1],tipo:'foto'},
       {src:fotos_intro[2],leyenda:grupo[2],tipo:'foto'},
       {src:vid,leyenda:'',tipo:'video'},
     ];
+    if(window._escudoDonde==='inicio'){mediaPool.splice(rnd(mediaPool.length),0,{src:CFG.escudo_ini,leyenda:'',tipo:'foto',dur:6000});}
     // Collage: una imagen al azar, una mas entre las ventanas iniciales (antes de la 1.a, 2.a, 3.a foto o antes del video; nunca justo antes de la postal)
-    var posCol=rnd(4);
+    var posCol=rnd(mediaPool.length);
     var ventAntes=mediaPool.slice(0,posCol),ventDespues=mediaPool.slice(posCol);
     if(ventAntes.length)await mostrarVentanas(ventAntes);
     await new Promise(function(r){mostrarPostal(histNoRep(CFG.collage,'cant_collage',10),5000,r,false);});
@@ -1013,6 +1034,8 @@ async function iniciarJota(){
 
   // Bajar ambiente (volumen ambiente 0.02) y quitar la franja de la musica ambiente
   ocultarFranjaAmb();
+  // iOS (Safari y Chrome): no hay control de volumen, asi que la ambiente se PAUSA mientras suena la jota
+  if(!_volOK){window._jotaSuena=true;try{aAmb.muted=true;aAmb.pause();}catch(e){}}
   var av=ambVolGet();
   const fa=setInterval(()=>{av=Math.max(av-0.02,0.02);ambVolSet(av);if(av<=0.02)clearInterval(fa);},80);
   document.getElementById('amb-ind').classList.add('show');
@@ -1099,6 +1122,7 @@ function finJota(){
 
   // Subir ambiente y volver a mostrar la franja de la musica ambiente
   mostrarFranjaAmb();
+  if(!_volOK){window._jotaSuena=false;try{aAmb.muted=false;aAmb.play().catch(function(){var rt=function(){aAmb.play().catch(function(){});document.removeEventListener('touchend',rt);document.removeEventListener('click',rt);};document.addEventListener('touchend',rt);document.addEventListener('click',rt);});}catch(e){}}
   var v=ambVolGet();
   const fu=setInterval(()=>{v=Math.min(v+0.02,0.45);ambVolSet(v);if(v>=0.45)clearInterval(fu);},100);
 
@@ -1135,7 +1159,7 @@ function finJota(){
         function(cb){mostrarFotoFinal2(grupoFinal[2],cb);}
       ];
       // Escudo de Cantabrana: aparece al azar (1 de cada 2) y sustituye UNA de las dos fotos; nunca el video, la postal ni el sello
-      if(rnd(2)===0){
+      if(window._escudoDonde?window._escudoDonde==='final':rnd(2)===0){
         var iFoto=rnd(2)===0?0:2, fotoOrig=pasosFin[iFoto], fraseEsc=grupoFinal[iFoto];
         pasosFin[iFoto]=function(cb){mostrarEscudoFinal(fraseEsc,cb,fotoOrig);};
       }
@@ -1289,12 +1313,12 @@ function mostrarEscudoFinal(frase,callback,alternativa){
       div.style.display='none';
       if(alternativa){alternativa(callback);}else{callback();}
     };
-    img.style.width='auto';img.style.height='auto';img.style.maxWidth='80%';img.style.maxHeight='64vh';img.style.objectFit='contain';
+    img.style.width='auto';img.style.height='auto';img.style.maxWidth='94%';img.style.maxHeight='74vh';img.style.objectFit='contain';
     img.style.filter='drop-shadow(0 0 26px rgba(200,146,42,.55)) drop-shadow(0 8px 18px rgba(0,0,0,.8))';
     img.src=CFG.escudo;
     img.onload=function(){
       img.style.opacity='1';
-      img.style.animation='escudoFlota 7.5s ease-in-out forwards';
+      img.style.animation='escudoFlota 8.4s ease-in-out forwards';
       txt.textContent=frase;
     };
   },200);
@@ -1310,7 +1334,7 @@ function mostrarEscudoFinal(frase,callback,alternativa){
       img.style.filter='';img.style.animation='none';
       div.style.display='none';callback();
     },1500);
-  },6500);
+  },7800);
 }
 
 function mostrarSelloFinal(frase,callback){
