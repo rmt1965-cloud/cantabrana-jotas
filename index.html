@@ -333,6 +333,60 @@ const CFG = {
   ],
   // Pergaminos YA CON TEXTO integrado: una carpeta por mensaje (grupos) y la de advertencia.
   // Para añadir las carpetas 6 y 7, rellenar los dos últimos [] con las rutas de sus imágenes.
+  plantillas_qr: {
+    'Alboradas--01.mp3':["Exp_033.jpg"],
+    'Cecilio_Jose_Diaz_Linaje--09.mp3':["Exp_009.jpg"],
+    'Cecilio_Jose_Diaz_Linaje--10.mp3':["Exp_010.jpg"],
+    'Elena_Diaz_Linaje--39.mp3':["Exp_039.jpg"],
+    'Eleuterio_Pena_Rodriguez_y_Miguel_Alonso_Pena--59.mp3':["Exp_059.jpg"],
+    'Gregorio_Ojeda_Pena_y_Julian_Ojeda_Ojeda--02.mp3':["Exp_002.jpg", "Exp_057.jpg"],
+    'Gregorio_Ojeda_Pena_y_Julian_Ojeda_Ojeda--40.mp3':["Exp_040.jpg"],
+    'Gregorio_Ojeda_Pena_y_Julian_Ojeda_Ojeda--42.mp3':["Exp_042.jpg"],
+    'Gregorio_Ojeda_Pena_y_Julian_Ojeda_Ojeda--45.mp3':["Exp_045.jpg"],
+    'Gregorio_Ojeda_Pena_y_Julian_Ojeda_Ojeda--48.mp3':["Exp_016.jpg"],
+    'Grupal_himno_Cantabrana--27.mp3':["Exp_027.jpg", "Exp_062.jpg"],
+    'Grupo_Cantabrana--46.mp3':["Exp_007.jpg", "Exp_046.jpg", "Exp_058.jpg"],
+    'Grupo_Cantabrana--49.mp3':["Exp_049.jpg"],
+    'Julian-Ojeda-Ojeda--20.mp3':["Exp_020.jpg"],
+    'Julian-Ojeda-Ojeda--22.mp3':["Exp_022.jpg"],
+    'Julian-Ojeda-Ojeda--23.mp3':["Exp_023.jpg"],
+    'Julian-Ojeda-Ojeda-y-Gregorio-Ojeda-Pena--11.mp3':["Exp_011.jpg"],
+    'Julian_Ojeda_Ojeda--04.mp3':["Exp_004.jpg"],
+    'Julian_Ojeda_Ojeda--05.mp3':["Exp_005.jpg"],
+    'Julian_Ojeda_Ojeda--08.mp3':["Exp_008.jpg"],
+    'Julian_Ojeda_Ojeda--14.mp3':["Exp_014.jpg"],
+    'Julian_Ojeda_Ojeda--16.mp3':["Exp_048.jpg"],
+    'Julian_Ojeda_Ojeda--19.mp3':["Exp_019.jpg"],
+    'Julian_Ojeda_Ojeda--21.mp3':["Exp_021.jpg"],
+    'Julian_Ojeda_Ojeda--24.mp3':["Exp_024.jpg"],
+    'Julian_Ojeda_Ojeda--25.mp3':["Exp_025.jpg"],
+    'Julian_Ojeda_Ojeda--26.mp3':["Exp_026.jpg"],
+    'Julian_Ojeda_Ojeda--28.mp3':["Exp_028.jpg"],
+    'Julian_Ojeda_Ojeda--30.mp3':["Exp_030.jpg"],
+    'Julian_Ojeda_Ojeda--31.mp3':["Exp_031.jpg"],
+    'Julian_Ojeda_Ojeda--41.mp3':["Exp_041.jpg"],
+    'Julian_Ojeda_Ojeda--43.mp3':["Exp_043.jpg"],
+    'Julian_Ojeda_Ojeda--44.mp3':["Exp_044.jpg"],
+    'Julian_Ojeda_Ojeda--47.mp3':["Exp_047.jpg"],
+    'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--03.mp3':["Exp_003.jpg"],
+    'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--06.mp3':["Exp_006.jpg"],
+    'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--13.mp3':["Exp_013.jpg"],
+    'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--34.mp3':["Exp_034.jpg"],
+    'Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--35.mp3':["Exp_035.jpg"],
+    'Lucia_Ojeda_Pena--51.mp3':["Exp_051.jpg"],
+    'Lucia_Ojeda_Pena--52.mp3':["Exp_052.jpg"],
+    'Lucia_Ojeda_Pena--53.mp3':["Exp_053.jpg", "Exp_061.jpg"],
+    'Lucia_Ojeda_Pena--56.mp3':["Exp_056.jpg", "Exp_060.jpg"],
+    'Lucia_Ojeda_Pena_y_Julian_Ojeda_Ojeda--29.mp3':["Exp_029.jpg"],
+    'Pedro-Felix-Garcia-Linaje--38.mp3':["Exp_038.jpg"],
+    'Pedro_Felix_Garcia_Linaje--12.mp3':["Exp_012.jpg"],
+    'Pedro_Felix_Garcia_Linaje--33.mp3':["Exp_001.jpg"],
+    'Pedro_Felix_Garcia_Linaje--50.mp3':["Exp_017.jpg"],
+    'Pedro_Felix_Garcia_Linaje--54.mp3':["Exp_054.jpg"],
+    'Pedro_Felix_Garcia_Linaje--55.mp3':["Exp_055.jpg"],
+    'Salve--37.mp3':["Exp_015.jpg", "Exp_037.jpg"],
+    'julian-Ojeda-Ojeda--18.mp3':["Exp_018.jpg"]
+  },
   perg_texto: {
     sensible: ['fotos/pergaminos_texto/advertencia/aviso1.webp','fotos/pergaminos_texto/advertencia/aviso2.webp','fotos/pergaminos_texto/advertencia/aviso3.webp','fotos/pergaminos_texto/advertencia/aviso4.webp','fotos/pergaminos_texto/advertencia/aviso5.webp','fotos/pergaminos_texto/advertencia/aviso6.webp','fotos/pergaminos_texto/advertencia/aviso7.webp','fotos/pergaminos_texto/advertencia/aviso8.webp'],
     grupos: [
@@ -1340,17 +1394,21 @@ function compartirJota(){
   var nombre=jota.a.replace('.mp3','');
   var titulo=jota.t||jota.c;
   var base=location.origin+location.pathname.replace('index.html','');
-  var qrUrl=base+'fotos/qr/'+nombre+'.png';
-  fetch(qrUrl).then(function(r){return r.blob();}).then(function(blob){
-    var file=new File([blob],'cantabrana-'+nombre+'.png',{type:'image/png'});
+  var lista=(CFG.plantillas_qr||{})[jota.a];
+  var ext='jpg',qrUrl;
+  if(lista&&lista.length){
+    qrUrl=base+'fotos/plantillas_qr/'+histNoRep(lista,'cant_plantqr',1);
+  } else {
+    ext='png';qrUrl=base+'fotos/qr/'+nombre+'.png';
+  }
+  var mime=ext==='jpg'?'image/jpeg':'image/png';
+  function descargar(){var a=document.createElement('a');a.href=qrUrl;a.download='cantabrana-'+nombre+'.'+ext;a.click();}
+  fetch(qrUrl).then(function(r){if(!r.ok)throw new Error('x');return r.blob();}).then(function(blob){
+    var file=new File([blob],'cantabrana-'+nombre+'.'+ext,{type:mime});
     if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
-      navigator.share({title:'Cantabrana — '+titulo,text:titulo+' · Patrimonio Cultural de Cantabrana',files:[file]}).catch(function(){});
-    } else {
-      var a=document.createElement('a');a.href=qrUrl;a.download='cantabrana-'+nombre+'.png';a.click();
-    }
-  }).catch(function(){
-    var a=document.createElement('a');a.href=qrUrl;a.download='cantabrana-'+nombre+'.png';a.click();
-  });
+      navigator.share({title:'Cantabrana \u2014 '+titulo,text:titulo+' \u00b7 Patrimonio Cultural de Cantabrana',files:[file]}).catch(function(){});
+    } else {descargar();}
+  }).catch(descargar);
 }
 // Ocultar sello tras 6s en ventana final
 function ocultarSelloFinal(){
