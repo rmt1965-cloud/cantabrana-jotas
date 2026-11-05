@@ -34,7 +34,7 @@ html,body{width:100%;height:100%;background:rgba(0,0,0,.95);overflow:hidden;font
 #acc-msg{position:fixed;top:80px;left:18px;z-index:101;font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;background:rgba(0,0,0,.85);padding:6px 12px;border-radius:4px;border:1px solid rgba(200,146,42,.4);opacity:0;transition:opacity 0.5s ease;pointer-events:none;}
 body.acc-mode .p-aviso{font-size:clamp(26px,8vw,40px)!important;}
 body.acc-mode #v-ley{font-size:clamp(24px,7vw,36px)!important;}
-body.acc-mode #d-txt{font-size:clamp(22px,6.5vw,32px)!important;}
+body.acc-mode #d-txt,body.acc-mode #d-txt2{font-size:clamp(22px,6.5vw,32px)!important;}
 body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 
 /* VENTANAS */
@@ -128,10 +128,10 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 #modal-obras-box img{width:100%;max-width:220px;border-radius:4px;margin:10px auto;display:block;box-shadow:0 4px 20px rgba(0,0,0,.6);}
 #modal-obras-box p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(14px,4vw,18px);color:rgba(240,220,180,.9);line-height:1.8;margin-top:8px;}
 /* FASE FINAL */
-#pant-desp{position:fixed;inset:0;z-index:42;background:rgba(0,0,0,.95);display:none;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:16px;gap:12px;}
-#pant-desp.show{display:flex}
-#d-img{width:88%;max-width:500px;max-height:62vh;object-fit:contain;opacity:0;position:relative;}
-#d-txt{position:relative;width:85%;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,5.5vw,28px);font-weight:600;color:rgba(245,230,190,.97);text-shadow:0 2px 20px rgba(0,0,0,.95),0 0 40px rgba(200,146,42,.3);line-height:1.7;margin-top:8px;z-index:1;}
+#pant-desp,#pant-desp2{position:fixed;inset:0;z-index:42;background:rgba(0,0,0,.95);display:none;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:16px;gap:12px;}
+#pant-desp.show,#pant-desp2.show{display:flex}
+#d-img,#d-img2{width:88%;max-width:500px;max-height:62vh;object-fit:contain;opacity:0;position:relative;}
+#d-txt,#d-txt2{position:relative;width:85%;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,5.5vw,28px);font-weight:600;color:rgba(245,230,190,.97);text-shadow:0 2px 20px rgba(0,0,0,.95),0 0 40px rgba(200,146,42,.3);line-height:1.7;margin-top:8px;z-index:1;}
 
 /* PANTALLA FINAL */
 #pant-final{display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.93);align-items:center;justify-content:flex-start;flex-direction:column;gap:8px;text-align:center;padding:24px 20px;overflow-y:auto;}
@@ -158,7 +158,7 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
   #prog{bottom:52px;}
   #ticker{bottom:28px;}
   #ui-bot{padding:8px 16px;}
-  #d-img{max-height:70vh;max-width:55%;}
+  #d-img,#d-img2{max-height:70vh;max-width:55%;}
   .p-aviso{font-size:clamp(13px,3.5vw,20px);}
 }
 @keyframes kenburns1{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.15) translate(-3%,-2%)}}
@@ -258,6 +258,10 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 <div id="pant-desp">
   <img id="d-img" src="" alt="">
   <div id="d-txt"></div>
+</div>
+<div id="pant-desp2">
+  <img id="d-img2" src="" alt="">
+  <div id="d-txt2"></div>
 </div>
 
 <!-- VENTANA SELLO CREDITO -->
@@ -1165,11 +1169,9 @@ function finJota(){
   // Fade out portada y arrancar fase final
   setTimeout(function(){
     var pr=document.getElementById('pant-repro');
-    pr.style.transition='opacity 1.5s ease';
-    pr.style.opacity='0';
+    // la portada se disuelve mientras entra la primera escena final (sin pasar por negro)
+    setTimeout(function(){pr.style.transition='opacity 1.6s ease';pr.style.opacity='0';setTimeout(function(){pr.style.display='none';pr.style.opacity='1';},1800);},300);
     setTimeout(function(){
-      pr.style.display='none';
-      pr.style.opacity='1';
       // Pequeno delay para transicion suave
       var despDiv=document.getElementById('pant-desp');
       despDiv.style.opacity='0';
@@ -1204,29 +1206,33 @@ function finJota(){
             setTimeout(function(){psc.style.opacity='1';},100);
             // Tras 4s pasar a ventana final
             setTimeout(function(){
-              psc.style.opacity='0';
-              setTimeout(function(){
-                psc.style.display='none';
-                var pf=document.getElementById('pant-final');
-                pf.style.opacity='0';pf.classList.add('show');
-                pf.style.transition='opacity 1.5s ease';
-                setTimeout(function(){pf.style.opacity='1';},100);
-                setTimeout(ocultarSelloFinal,6000);
-              },1500);
+              var pf=document.getElementById('pant-final');
+              pf.style.opacity='0';pf.classList.add('show');
+              pf.style.transition='opacity 1.6s ease';
+              void pf.offsetWidth;
+              setTimeout(function(){pf.style.opacity='1';},50);
+              setTimeout(function(){psc.style.display='none';psc.style.opacity='0';},1900);
+              setTimeout(ocultarSelloFinal,6000);
             },7000);
       };
       (function sig(i){if(i>=pasosFin.length){finCreditos();return;}pasosFin[i](function(){sig(i+1);});})(0);
-    },1500);
+    },0);
   },5000);
 }
 
 // ================================================================
 // FASE FINAL: FOTO → VIDEO → SELLO
 // ================================================================
+var _faseN=0;
+// Escenas finales con dos capas alternas: la nueva se disuelve ENCIMA de la anterior (sin pasar por negro)
+function faseCapa(){
+  _faseN=1-_faseN;var k=_faseN?'2':'';
+  var div=document.getElementById('pant-desp'+k);
+  if(div.parentNode)div.parentNode.appendChild(div);
+  return {div:div,img:document.getElementById('d-img'+k),txt:document.getElementById('d-txt'+k)};
+}
 function mostrarFotoFinal(frase,callback){
-  var div=document.getElementById('pant-desp');
-  var img=document.getElementById('d-img');
-  var txt=document.getElementById('d-txt');
+  var C=faseCapa(),div=C.div,img=C.img,txt=C.txt;
   var KB=['kenburns1','kenburns2','kenburns3','kenburns4'];
   // Reset
   img.style.maxWidth='';img.style.maxHeight='';img.style.animation='none';
@@ -1248,15 +1254,13 @@ function mostrarFotoFinal(frase,callback){
     div.style.transition='opacity 1.5s ease';div.style.opacity='1';
   },300);
   setTimeout(function(){
-    div.style.transition='opacity 1.5s ease';div.style.opacity='0';
-    setTimeout(function(){div.style.display='none';callback();},1500);
-  },5000);
+    callback();
+    setTimeout(function(){div.style.display='none';div.style.opacity='0';img.style.animation='none';},1800);
+  },5300);
 }
 
 function mostrarFotoFinal2(frase,callback){
-  var div=document.getElementById('pant-desp');
-  var img=document.getElementById('d-img');
-  var txt=document.getElementById('d-txt');
+  var C=faseCapa(),div=C.div,img=C.img,txt=C.txt;
   var KB=['kenburns1','kenburns2','kenburns3','kenburns4'];
   img.style.maxWidth='';img.style.maxHeight='';img.style.animation='none';
   img.src='';img.style.opacity='0';txt.textContent='';
@@ -1277,14 +1281,12 @@ function mostrarFotoFinal2(frase,callback){
     div.style.transition='opacity 1.5s ease';div.style.opacity='1';
   },300);
   setTimeout(function(){
-    div.style.transition='opacity 1.5s ease';div.style.opacity='0';
-    setTimeout(function(){div.style.display='none';callback();},1500);
-  },5000);
+    callback();
+    setTimeout(function(){div.style.display='none';div.style.opacity='0';img.style.animation='none';},1800);
+  },5300);
 }
 function mostrarVideoFinal(frase,callback){
-  var div=document.getElementById('pant-desp');
-  var img=document.getElementById('d-img');
-  var txt=document.getElementById('d-txt');
+  var C=faseCapa(),div=C.div,img=C.img,txt=C.txt;
   img.src='';img.style.opacity='0';txt.textContent='';
   div.style.opacity='0';div.style.display='flex';
   div.style.flexDirection='column';
@@ -1292,7 +1294,7 @@ function mostrarVideoFinal(frase,callback){
   var vvf=document.createElement('video');
   vvf.autoplay=true;vvf.muted=true;vvf.setAttribute('playsinline','');
   vvf.style.cssText='width:95%;max-width:100%;max-height:82vh;object-fit:contain;opacity:0;transition:opacity 1.5s ease;';
-  var txt2=document.getElementById('d-txt');
+  var txt2=txt;
   div.insertBefore(vvf,txt2);
   var video=histPick(CFG.videos_final,'cant_vfinal');
   vvf.src=video;vvf.load();vvf.play().catch(function(){});
@@ -1306,22 +1308,18 @@ function mostrarVideoFinal(frase,callback){
     },100);
   };
   vvf.oncanplay=showVF;vvf.ontimeupdate=showVF;setTimeout(showVF,1500);
-  setTimeout(function(){vvf.style.transition='opacity 1.5s ease';vvf.style.opacity='0';},4500);
   setTimeout(function(){
-    div.style.transition='opacity 1s ease';div.style.opacity='0';
+    callback();
     setTimeout(function(){
       if(vvf.pause)vvf.pause();
       if(div.contains(vvf))div.removeChild(vvf);
-      div.style.display='none';
-      callback();
-    },1000);
-  },5500);
+      div.style.display='none';div.style.opacity='0';
+    },1800);
+  },5800);
 }
 
 function mostrarEscudoFinal(frase,callback,alternativa){
-  var div=document.getElementById('pant-desp');
-  var img=document.getElementById('d-img');
-  var txt=document.getElementById('d-txt');
+  var C=faseCapa(),div=C.div,img=C.img,txt=C.txt;
   var terminado=false;
   img.style.maxWidth='';img.style.maxHeight='';img.style.animation='none';img.style.filter='';
   img.src='';img.style.opacity='0';txt.textContent='';
@@ -1350,13 +1348,9 @@ function mostrarEscudoFinal(frase,callback,alternativa){
     div.style.transition='opacity 1.5s ease';div.style.opacity='1';
   },300);
   setTimeout(function(){
-    if(terminado)return;
-    div.style.transition='opacity 1.5s ease';div.style.opacity='0';
-    setTimeout(function(){
-      if(terminado)return;terminado=true;
-      img.style.filter='';img.style.animation='none';
-      div.style.display='none';callback();
-    },1500);
+    if(terminado)return;terminado=true;
+    callback();
+    setTimeout(function(){img.style.filter='';img.style.animation='none';div.style.display='none';div.style.opacity='0';},1800);
   },7800);
 }
 
