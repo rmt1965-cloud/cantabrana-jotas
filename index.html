@@ -854,9 +854,10 @@ async function mostrarVentanas(ventanas){
     }
     function sig(){
       if(idx>=ventanas.length){
-        div.style.transition='opacity 0.8s ease';div.style.opacity='0';
+        // pasa a la escena siguiente YA: esta se disuelve encima y las ventanas se retiran despues (sin pasar por negro)
+        resolve();
         setTimeout(function(){div.style.display='none';div.style.opacity='1';
-          L[0].className='vl';L[1].className='vl';vley.classList.remove('show');vgrad.classList.remove('show');resolve();},900);
+          L[0].className='vl';L[1].className='vl';vley.classList.remove('show');vgrad.classList.remove('show');},1900);
         return;
       }
       var data=ventanas[idx++];
@@ -1007,6 +1008,7 @@ async function init(){
 
     // Pergamino: 50 % imagen con texto ya hecha / 50 % pergamino en blanco + texto del sistema (azar total)
     mostrarPergamino(elegirPergamino(!!(jota&&jota.s)));
+    document.getElementById('pant-perg').style.transition='opacity .6s ease';
     document.getElementById('pant-perg').classList.add('show');
     window._pergTimer=setTimeout(irAJota,window._pergDur||7000);
   },600);
@@ -1023,9 +1025,8 @@ async function iniciarJota(){
 
   // Cerrar pergamino con fade
   var pp=document.getElementById('pant-perg');
-  pp.style.transition='opacity 1.5s ease';
-  pp.style.opacity='0';
-  setTimeout(function(){pp.classList.remove('show');},1500);
+  // el pergamino se queda debajo mientras la pantalla de la jota se disuelve encima (sin pasar por negro)
+  var quitarPerg=function(){pp.style.transition='none';pp.style.opacity='0';pp.classList.remove('show');};
 
   // Fotos arcos con historial
   var histF=histGet('cant_fotos');
@@ -1040,8 +1041,14 @@ async function iniciarJota(){
   // Fade in suave del reproductor
   var pr=document.getElementById('pant-repro');
   pr.style.opacity='0';pr.classList.add('show');
-  pr.style.transition='opacity 1s ease';
-  setTimeout(function(){pr.style.opacity='1';},100);
+  // la pantalla de la jota se disuelve sobre el pergamino SOLO cuando su primera foto ya esta lista (sin pasar por negro)
+  var prLista=false;
+  window._onPrimeraFoto=function(){
+    if(prLista)return;prLista=true;
+    pr.style.transition='opacity 1.2s ease';pr.style.opacity='1';
+    setTimeout(quitarPerg,1500);
+  };
+  setTimeout(function(){window._onPrimeraFoto&&window._onPrimeraFoto();},4000);
   setTimeout(function(){document.getElementById('ui-bot').classList.add('show');},2000);
   document.getElementById('cantante').textContent=jota.c;
   document.getElementById('municipio').textContent=jota.m;
@@ -1123,7 +1130,9 @@ function mostrarFoto(idx){
       blur2.style.transition='none';blur2.style.opacity='0';
     },1700);
     a.style.zIndex=2;b.style.zIndex=1;
+    if(idx===0){a.style.transition='none';}
     a.classList.add('show');
+    if(idx===0){void a.offsetWidth;a.style.transition='';if(window._onPrimeraFoto){window._onPrimeraFoto();}}
     setTimeout(function(){b.classList.remove('show');},1700);
     _capa=1-_capa;
     fotoTimer=setTimeout(function(){mostrarFoto(idx+1);},dur*1000);
