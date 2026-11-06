@@ -1498,7 +1498,7 @@ function finJota(){
       imq.onload=imq.onerror=function(){try{if(this.decode)this.decode().catch(function(){});}catch(e){}if(--pend<=0)iniciarVid();};(window._preImgs=window._preImgs||[]).push(imq);imq.src=vs;}
     setTimeout(iniciarVid,4000);   // por si alguna foto tardase
     _pre.vid=vp;
-    new Image().src=CFG.escudo;if(typeof POSTAL_FIN!=='undefined'&&POSTAL_FIN)new Image().src=POSTAL_FIN;
+    [CFG.escudo,(typeof POSTAL_FIN!=='undefined'&&POSTAL_FIN)?POSTAL_FIN:''].forEach(function(u){if(!u)return;var im=new Image();im.onload=function(){try{if(im.decode)im.decode().catch(function(){});}catch(e){}};(window._preImgs=window._preImgs||[]).push(im);im.src=u;});
   }catch(e){}
 
   // Subir ambiente y volver a mostrar la franja de la musica ambiente
@@ -1723,20 +1723,30 @@ function mostrarEscudoFinal(frase,callback,alternativa){
       if(desvanecido||terminado)return;desvanecido=true;
       img.style.opacity='1';
       img.style.animation='escudoFlota 6.6s ease-in-out forwards';
+      setTimeout(function(){
+        if(terminado)return;terminado=true;
+        _escSet(function(){img.style.filter='';img.style.animation='none';div.style.display='none';div.style.opacity='0';});
+        callback();
+      },6600);
       txt.textContent=frase;
       void div.offsetWidth;
       div.style.transition='opacity 1.5s ease';div.style.opacity='1';
       if(window._alArrancarFase)try{window._alArrancarFase();}catch(e){}
       _escLiberar();
     };
-    img.onload=function(){(img.decode?img.decode():Promise.resolve()).catch(function(){}).then(aparecer);};
-    setTimeout(aparecer,2500);
+    function fallo(){
+      if(terminado||desvanecido)return;terminado=true;
+      try{cantTrack('error','recurso no carga',CFG.escudo);}catch(e){}
+      div.style.display='none';
+      if(alternativa){alternativa(callback);}else{callback();}
+    }
+    img.onload=function(){
+      if(!img.naturalWidth){fallo();return;}
+      (img.decode?img.decode():Promise.resolve()).catch(function(){}).then(function(){if(img.naturalWidth)aparecer();else fallo();});
+    };
+    // si a los 6 s no hay imagen valida, nunca se muestra la escena vacia: se pasa a la alternativa
+    setTimeout(function(){if(desvanecido||terminado)return;if(img.complete&&img.naturalWidth)aparecer();else fallo();},6000);
   },200);
-  setTimeout(function(){
-    if(terminado)return;terminado=true;
-    _escSet(function(){img.style.filter='';img.style.animation='none';div.style.display='none';div.style.opacity='0';});
-    callback();
-  },6600);
 }
 
 function mostrarSelloFinal(frase,callback){
