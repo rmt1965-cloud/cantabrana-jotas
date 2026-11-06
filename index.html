@@ -745,6 +745,24 @@ function pergSistema(esSensible){
   return {tipo:'sistema',src:histNoRep(CFG.pergaminos,'cant_pergb',10),
     texto:esSensible?CFG.perg_sensible:histNoRep(CFG.textos_perg,'cant_pergtx',10),sensible:esSensible};
 }
+// Zona util (fraccion de la imagen: izq, arriba, der, abajo) de cada pergamino en blanco; el texto se coloca y se agranda para llenarla
+var PERG_AREA={'pergamino01':[.13,.10,.87,.88],'pergamino03':[.20,.23,.80,.79],'pergamino04':[.17,.19,.83,.82],'pergamino05':[.20,.25,.80,.77]};
+function ajustarTextoPerg(){
+  var img=document.getElementById('p-img'),box=document.querySelector('#pant-perg .p-texto'),av=document.getElementById('p-aviso');
+  if(!img||!box||!av||!img.offsetWidth)return;
+  var m=(img.src||'').match(/(pergamino\d+)/i),A=(m&&PERG_AREA[m[1].toLowerCase()])||[.18,.22,.82,.80];
+  var w=img.offsetWidth,h=img.offsetHeight,l=img.offsetLeft,t=img.offsetTop;
+  box.style.transform='none';box.style.maxHeight='none';
+  box.style.left=(l+A[0]*w)+'px';box.style.top=(t+A[1]*h)+'px';
+  box.style.width=((A[2]-A[0])*w)+'px';box.style.height=((A[3]-A[1])*h)+'px';
+  var lo=11,hi=46;
+  while(hi-lo>0.5){
+    var mid=(lo+hi)/2;av.style.fontSize=mid+'px';
+    if(av.offsetHeight<=box.clientHeight&&av.scrollWidth<=box.clientWidth+1)lo=mid;else hi=mid;
+  }
+  av.style.fontSize=lo+'px';
+}
+window.addEventListener('resize',function(){try{ajustarTextoPerg();}catch(e){}});
 function mostrarPergamino(pe){
   var img=document.getElementById('p-img'),pant=document.getElementById('pant-perg');
   img.onerror=null;
@@ -752,7 +770,10 @@ function mostrarPergamino(pe){
     img.onerror=function(){img.onerror=null;mostrarPergamino(pergSistema(pe.sensible));};
   }
   pant.classList.toggle('tx',pe.tipo==='texto');
-  if(pe.tipo==='sistema')document.getElementById('p-aviso').innerHTML=pe.texto;
+  if(pe.tipo==='sistema'){
+    document.getElementById('p-aviso').innerHTML=String(pe.texto).replace(/<br\s*\/?>\s*/gi,' ');
+    img.onload=function(){ajustarTextoPerg();};
+  }else{img.onload=null;}
   img.src=pe.src;
 }
 
