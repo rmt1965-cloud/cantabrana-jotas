@@ -1,1 +1,1 @@
-window.CANT_STATS_URL='';   // <- pega aqui la URL de la aplicacion web de Google Apps Script (termina en /exec)
+window.CANT_STATS_URL='https://script.google.com/macros/s/AKfycbzRadHvb0BVKeNzMVSOEPgg-ZEAYk3fDuzeJuO78Z4a6ReGRxy1kxEanipwJy8lNmS3/exec';
