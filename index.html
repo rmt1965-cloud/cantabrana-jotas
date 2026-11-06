@@ -40,6 +40,11 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 /* VENTANAS */
 #ventanas{position:fixed;inset:0;z-index:8;background:#0b0907;display:none;align-items:center;justify-content:center;overflow:hidden;}
 #ventanas.show{display:flex}
+/* Cabecera fija arriba durante las fotos del inicio y de la fase final */
+.cab-marca{position:absolute;top:0;left:0;right:0;z-index:6;padding:calc(14px + env(safe-area-inset-top,0px)) 14px 38px;text-align:center;pointer-events:none;background:linear-gradient(to bottom,rgba(0,0,0,.66),rgba(0,0,0,.3) 55%,rgba(0,0,0,0));}
+.cab-marca b{display:block;font-family:'Cinzel',serif;font-weight:600;font-size:clamp(15px,4.6vw,21px);letter-spacing:.24em;padding-left:.24em;color:#e6ac3c;text-transform:uppercase;line-height:1.2;text-shadow:0 0 18px rgba(200,146,42,.75),0 2px 5px rgba(0,0,0,.95);}
+.cab-marca i{display:block;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:clamp(16px,4.6vw,21px);letter-spacing:.08em;color:#f5cd74;line-height:1.2;margin-top:1px;text-shadow:0 0 14px rgba(200,146,42,.55),0 2px 5px rgba(0,0,0,.95);}
+.cab-marca span{display:block;font-family:'Cinzel',serif;font-size:clamp(10px,2.9vw,12.5px);letter-spacing:.32em;padding-left:.32em;color:#a8cbf5;text-transform:uppercase;margin-top:5px;text-shadow:0 0 12px rgba(80,140,220,.7),0 1px 4px rgba(0,0,0,.95);}
 #v-blur{position:absolute;inset:-20px;width:calc(100% + 40px);height:calc(100% + 40px);object-fit:cover;filter:blur(20px) brightness(.4);opacity:0;transition:opacity 1.5s ease;}
 #v-img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:85%;max-width:360px;max-height:60vh;object-fit:contain;background:transparent;opacity:0;transition:opacity 1.5s ease;z-index:1;}
 #v-vid{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:95%;max-width:480px;max-height:75vh;object-fit:contain;opacity:0;transition:opacity 1.5s ease;z-index:1;display:none;}
@@ -249,6 +254,7 @@ body.val-gr #acc-btn{display:none!important}
 
 <!-- VENTANAS INICIO -->
 <div id="ventanas">
+  <div class="cab-marca"><b>Cantabrana</b><i>Retazos de Vida</i><span>Rafael Molina Toledo</span></div>
   <div class="vl" id="vl0"><img class="vb" alt=""><img class="vf" alt=""></div>
   <div class="vl" id="vl1"><img class="vb" alt=""><img class="vf" alt=""></div>
   <div id="v-grad"></div>
@@ -303,17 +309,19 @@ body.val-gr #acc-btn{display:none!important}
 
 <!-- FASE FINAL: FOTO / VIDEO / SELLO -->
 <div id="pant-desp">
+  <div class="cab-marca"><b>Cantabrana</b><i>Retazos de Vida</i><span>Rafael Molina Toledo</span></div>
   <img id="d-img" src="" alt="">
   <div id="d-txt"></div>
 </div>
 <div id="pant-desp2">
+  <div class="cab-marca"><b>Cantabrana</b><i>Retazos de Vida</i><span>Rafael Molina Toledo</span></div>
   <img id="d-img2" src="" alt="">
   <div id="d-txt2"></div>
 </div>
 
 <!-- VENTANA SELLO CREDITO -->
 <div id="pant-sello-cred" style="display:none;position:fixed;inset:0;z-index:49;background:rgba(0,0,0,.95);flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:30px;opacity:0;transition:opacity 1.5s ease;">
-
+  <div class="cab-marca"><b>Cantabrana</b><i>Retazos de Vida</i><span>Rafael Molina Toledo</span></div>
   <img src="fotos/sellos/sello15.png" id="sello-cred-img" style="width:min(88vw,560px);height:min(88vw,560px);object-fit:contain;opacity:0.95;animation:selloZoom 6s ease-in-out infinite;">
   <div style="font-family:'Cinzel',serif;font-size:clamp(11px,3vw,14px);letter-spacing:3px;color:rgba(200,146,42,.95);text-transform:uppercase;margin-top:12px;text-shadow:0 0 20px rgba(200,146,42,.5);">Esta grabación ha sido realizada en la villa de Cantabrana</div>
   <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(15px,4vw,20px);color:rgba(240,192,96,.95);letter-spacing:2px;text-shadow:0 0 15px rgba(200,146,42,.4);">Archivo personal Rafael Molina Toledo</div>
