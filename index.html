@@ -470,6 +470,7 @@ const CFG = {
     'fotos/vistas/A08.jpg','fotos/vistas/A10.jpg',
   ],
   portada: 'fotos/portada/portada1.png',
+  portadas: ['fotos/portada_web/portada01.webp','fotos/portada_web/portada02.webp','fotos/portada_web/portada03.webp'],   // se elige una al azar para el final de cada jota
   dur_foto: 2.5,
   dur_trans: 0.25,
 
@@ -1171,6 +1172,12 @@ document.getElementById('pant-perg').addEventListener('click',function(){if(jota
 async function iniciarJota(){
   if(!jota)return;
   cantTrack('jota_play','','',jota.t);
+  // Portada del final: una al azar (sin repetir la anterior), precargada y decodificada para que entre al instante
+  try{
+    window._portada=histNoRep(CFG.portadas,'cant_portada',1)||CFG.portada;
+    window._portadaImg=new Image();window._portadaImg.src=window._portada;
+    if(window._portadaImg.decode)window._portadaImg.decode().catch(function(){});
+  }catch(e){window._portada=CFG.portada;}
 
   // Cerrar pergamino con fade
   var pp=document.getElementById('pant-perg');
@@ -1236,7 +1243,15 @@ async function iniciarJota(){
   aJota.onended=function(){if(_fjTimer)clearTimeout(_fjTimer);finJota();};
   aJota.addEventListener('loadedmetadata',()=>{
     if(aJota.duration&&isFinite(aJota.duration)){
-      _fjTimer=setTimeout(finJota,(aJota.duration+1)*1000);
+      var _ini=Date.now();
+      var _revisar=function(){
+        if(jotaFin)return;
+        var falta=aJota.duration-aJota.currentTime;
+        // solo termina si el audio de verdad ha acabado (o tras 3 min extra de seguridad)
+        if(aJota.ended||falta<=0.3||Date.now()-_ini>(aJota.duration+180)*1000){finJota();return;}
+        _fjTimer=setTimeout(_revisar,Math.max(400,Math.min(falta,30)*1000+500));
+      };
+      _fjTimer=setTimeout(_revisar,(aJota.duration+1)*1000);
       window._durFoto=Math.min(7,Math.max(4,aJota.duration/30));
     }
   },{once:true});
@@ -1329,21 +1344,25 @@ function finJota(){
     if(portadaOk)return;portadaOk=true;
     pa.style.animation='none';pa.classList.add('fit');pa.style.zIndex=3;pb.style.zIndex=1;
     pbl2.style.transition='none';pbl2.style.opacity='0';
-    pbl2.style.backgroundImage="url('"+CFG.portada+"')";void pbl2.offsetWidth;
+    pbl2.style.backgroundImage="url('"+(window._portada||CFG.portada)+"')";void pbl2.offsetWidth;
     pbl2.style.transition='opacity 1.6s ease';pbl2.style.opacity='1';
-    setTimeout(function(){pbl.style.backgroundImage="url('"+CFG.portada+"')";pbl2.style.transition='none';pbl2.style.opacity='0';},1700);
+    setTimeout(function(){pbl.style.backgroundImage="url('"+(window._portada||CFG.portada)+"')";pbl2.style.transition='none';pbl2.style.opacity='0';},1700);
     pa.classList.add('show');
     setTimeout(function(){pb.classList.remove('show');},1800);
   }
   pa.onload=function(){(pa.decode?pa.decode():Promise.resolve()).catch(function(){}).then(ponerPortada);};
-  pa.src=CFG.portada;
+  pa.src=window._portada||CFG.portada;
   setTimeout(ponerPortada,1500);
 
-  // Fade out portada y arrancar fase final
+  // La portada se queda a la vista ~7 s; despues entra la primera escena SOLO cuando su imagen ya esta lista (sin huecos en negro)
   setTimeout(function(){
-    var pr=document.getElementById('pant-repro');
-    // la portada se disuelve mientras entra la primera escena final (sin pasar por negro)
-    setTimeout(function(){pr.style.transition='opacity 1.6s ease';pr.style.opacity='0';setTimeout(function(){pr.style.display='none';pr.style.opacity='1';pr.classList.remove('portada');pa.style.zIndex='';pb.style.zIndex='';pa.classList.remove('show');pb.classList.remove('show');},1800);},300);
+    var pr=document.getElementById('pant-repro'),prFuera=false;
+    function ocultarPr(){
+      if(prFuera)return;prFuera=true;
+      setTimeout(function(){pr.style.transition='opacity 1.6s ease';pr.style.opacity='0';setTimeout(function(){pr.style.display='none';pr.style.opacity='1';pr.classList.remove('portada');pa.style.zIndex='';pb.style.zIndex='';pa.classList.remove('show');pb.classList.remove('show');},1800);},300);
+    }
+    window._alArrancarFase=ocultarPr;      // lo llama la primera escena cuando ya se ve
+    setTimeout(ocultarPr,4500);            // seguridad por si la escena no avisa
     setTimeout(function(){
       // Pequeno delay para transicion suave
       var despDiv=document.getElementById('pant-desp');
@@ -1390,7 +1409,7 @@ function finJota(){
       };
       (function sig(i){if(i>=pasosFin.length){finCreditos();return;}pasosFin[i](function(){sig(i+1);});})(0);
     },0);
-  },5000);
+  },7000);
 }
 
 // ================================================================
@@ -1404,60 +1423,39 @@ function faseCapa(){
   if(div.parentNode)div.parentNode.appendChild(div);
   return {div:div,img:document.getElementById('d-img'+k),txt:document.getElementById('d-txt'+k)};
 }
-function mostrarFotoFinal(frase,callback){
+// Escena de foto: espera a que la imagen este cargada y decodificada ANTES de disolverse (sin huecos en negro)
+function escenaFoto(frase,callback){
   var C=faseCapa(),div=C.div,img=C.img,txt=C.txt;
   var KB=['kenburns1','kenburns2','kenburns3','kenburns4'];
-  // Reset
+  var arrancada=false;
+  img.onload=null;img.onerror=null;
   img.style.maxWidth='';img.style.maxHeight='';img.style.animation='none';
   img.src='';img.style.opacity='0';txt.textContent='';
-  div.style.opacity='0';div.style.display='flex';
+  div.style.transition='none';div.style.opacity='0';div.style.display='flex';
   div.style.flexDirection='column';
   div.style.alignItems='center';div.style.justifyContent='center';
-  setTimeout(function(){
-    var vista=histNoRep(CFG.vistas,'cant_vistas_n',10);
-    img.style.width='88%';img.style.maxWidth='500px';img.style.maxHeight='72vh';img.style.objectFit='contain';
-    img.src=vista;
-    img.onload=function(){
-      img.style.opacity='0.9';
-      img.style.animation=KB[rnd(4)]+' 8s ease-in-out forwards';
-      txt.textContent=frase;
-    };
-  },200);
-  setTimeout(function(){
+  function arrancar(){
+    if(arrancada)return;arrancada=true;
+    img.style.opacity='0.9';
+    img.style.animation=KB[rnd(4)]+' 8s ease-in-out forwards';
+    txt.textContent=frase;
+    void div.offsetWidth;
     div.style.transition='opacity 1.5s ease';div.style.opacity='1';
-  },300);
-  setTimeout(function(){
-    callback();
-    setTimeout(function(){div.style.display='none';div.style.opacity='0';img.style.animation='none';},1800);
-  },5300);
+    if(window._alArrancarFase)try{window._alArrancarFase();}catch(e){}
+    setTimeout(function(){
+      callback();
+      setTimeout(function(){div.style.display='none';div.style.opacity='0';img.style.animation='none';},1800);
+    },5000);
+  }
+  var vista=histNoRep(CFG.vistas,'cant_vistas_n',10);
+  img.style.width='88%';img.style.maxWidth='500px';img.style.maxHeight='72vh';img.style.objectFit='contain';
+  img.onload=function(){(img.decode?img.decode():Promise.resolve()).catch(function(){}).then(arrancar);};
+  img.onerror=function(){setTimeout(arrancar,100);};
+  img.src=vista;
+  setTimeout(arrancar,3000);   // seguridad si la imagen tardase demasiado
 }
-
-function mostrarFotoFinal2(frase,callback){
-  var C=faseCapa(),div=C.div,img=C.img,txt=C.txt;
-  var KB=['kenburns1','kenburns2','kenburns3','kenburns4'];
-  img.style.maxWidth='';img.style.maxHeight='';img.style.animation='none';
-  img.src='';img.style.opacity='0';txt.textContent='';
-  div.style.opacity='0';div.style.display='flex';
-  div.style.flexDirection='column';
-  div.style.alignItems='center';div.style.justifyContent='center';
-  setTimeout(function(){
-    var vista=histNoRep(CFG.vistas,'cant_vistas_n',10);
-    img.style.width='88%';img.style.maxWidth='500px';img.style.maxHeight='72vh';img.style.objectFit='contain';
-    img.src=vista;
-    img.onload=function(){
-      img.style.opacity='0.9';
-      img.style.animation=KB[rnd(4)]+' 8s ease-in-out forwards';
-      txt.textContent=frase;
-    };
-  },200);
-  setTimeout(function(){
-    div.style.transition='opacity 1.5s ease';div.style.opacity='1';
-  },300);
-  setTimeout(function(){
-    callback();
-    setTimeout(function(){div.style.display='none';div.style.opacity='0';img.style.animation='none';},1800);
-  },5300);
-}
+function mostrarFotoFinal(frase,callback){escenaFoto(frase,callback);}
+function mostrarFotoFinal2(frase,callback){escenaFoto(frase,callback);}
 function mostrarVideoFinal(frase,callback){
   var C=faseCapa(),div=C.div,img=C.img,txt=C.txt;
   img.src='';img.style.opacity='0';txt.textContent='';
@@ -1478,10 +1476,19 @@ function mostrarVideoFinal(frase,callback){
     setTimeout(function(){
       div.style.transition='opacity 1.5s ease';div.style.opacity='1';
       txt.textContent=frase;
+      if(window._alArrancarFase)try{window._alArrancarFase();}catch(e){}
     },100);
+  };
+  var saltado=false;
+  vvf.onerror=function(){   // si el video no carga, se pasa a la siguiente escena sin dejar la pantalla en negro
+    if(shown||saltado)return;saltado=true;shown=true;
+    try{if(div.contains(vvf))div.removeChild(vvf);}catch(e){}
+    div.style.display='none';div.style.opacity='0';
+    setTimeout(callback,50);
   };
   vvf.oncanplay=showVF;vvf.ontimeupdate=showVF;setTimeout(showVF,1500);
   setTimeout(function(){
+    if(saltado)return;
     callback();
     setTimeout(function(){
       if(vvf.pause)vvf.pause();
@@ -1510,16 +1517,19 @@ function mostrarEscudoFinal(frase,callback,alternativa){
     img.style.width='auto';img.style.height='auto';img.style.maxWidth='94%';img.style.maxHeight='74vh';img.style.objectFit='contain';
     img.style.filter='drop-shadow(0 0 26px rgba(200,146,42,.55)) drop-shadow(0 8px 18px rgba(0,0,0,.8))';
     img.src=CFG.escudo;
-    img.onload=function(){
+    var desvanecido=false;
+    var aparecer=function(){
+      if(desvanecido||terminado)return;desvanecido=true;
       img.style.opacity='1';
       img.style.animation='escudoFlota 8.4s ease-in-out forwards';
       txt.textContent=frase;
+      void div.offsetWidth;
+      div.style.transition='opacity 1.5s ease';div.style.opacity='1';
+      if(window._alArrancarFase)try{window._alArrancarFase();}catch(e){}
     };
+    img.onload=function(){(img.decode?img.decode():Promise.resolve()).catch(function(){}).then(aparecer);};
+    setTimeout(aparecer,2500);
   },200);
-  setTimeout(function(){
-    if(terminado)return;
-    div.style.transition='opacity 1.5s ease';div.style.opacity='1';
-  },300);
   setTimeout(function(){
     if(terminado)return;terminado=true;
     callback();
