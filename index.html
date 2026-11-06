@@ -354,6 +354,7 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
     <p>Este archivo sonoro fue recopilado y digitalizado por Rafael Molina Toledo como parte de un esfuerzo personal por preservar el patrimonio cultural inmaterial de Cantabrana. Las grabaciones corresponden a registros del archivo familiar Molina_Prado.</p>
     <div class="modal-libro">Toda esta información está recogida en el libro<br><em>“Cantabrana, Retazos de Vida”</em><br>del autor Rafael Molina Toledo.<br><br>Patrimonio Cultural &middot; Cantabrana &middot; 2026</div>
     <p style="font-size:13px;opacity:.6;text-align:center;margin-top:14px;">Se recogen estad&iacute;sticas de uso an&oacute;nimas (sin datos personales ni cookies) para mejorar la experiencia.</p>
+    <p id="cc-pref" style="display:none;text-align:center;font-size:13px;margin-top:6px;"><a href="#" onclick="cantConsent();return false" style="color:rgba(200,146,42,.9)">Preferencias de anal&iacute;tica (Google Analytics)</a></p>
     <div style="text-align:center;margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
       <button class="btn" onclick="cerrarInfo()" style="font-size:15px;letter-spacing:3px;padding:14px 26px;">&#8592; Volver</button>
       <button class="btn" onclick="abrirObras()" style="font-size:15px;letter-spacing:3px;padding:14px 26px;">+ Obras autor</button>
@@ -609,9 +610,10 @@ const CFG = {
 var cantTrack=(function(){
   var URL_=window.CANT_STATS_URL||'';
   function rid(){return Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);}
-  var sid,vid;
+  var sid,vid,esNuevo=false;
   try{sid=sessionStorage.getItem('cant_sid');if(!sid){sid=rid();sessionStorage.setItem('cant_sid',sid);}}catch(e){sid=rid();}
-  try{vid=localStorage.getItem('cant_vid');if(!vid){vid=rid();localStorage.setItem('cant_vid',vid);}}catch(e){vid=sid;}
+  try{vid=localStorage.getItem('cant_vid');if(!vid){vid=rid();localStorage.setItem('cant_vid',vid);esNuevo=true;}}catch(e){vid=sid;}
+  var tz='';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';}catch(e){}
   var ua=navigator.userAgent||'';
   var disp=/iPhone|iPad|iPod/.test(ua)?'iOS':/Android/.test(ua)?'Android':/Windows|Macintosh|Linux|CrOS/.test(ua)?'Escritorio':'Otro';
   var nav=/Edg\//.test(ua)?'Edge':/OPR\/|Opera/.test(ua)?'Opera':/Firefox|FxiOS/.test(ua)?'Firefox':/CriOS|Chrome/.test(ua)?'Chrome':/Safari/.test(ua)?'Safari':'Otro';
@@ -626,6 +628,9 @@ var cantTrack=(function(){
     try{fetch(URL_,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=UTF-8'},body:body}).catch(function(){});}catch(e){}
   }
   function track(t,v,x,j){
+    try{
+      if(!bot&&!local&&t!=='bloqueo'&&window._gaEvt)window._gaEvt(t,v,x,j);
+    }catch(e){}
     try{
       if(!URL_||local)return;
       if(bot){if(!vistos.__bot){vistos.__bot=1;post('bloqueo','bot',ua.slice(0,160));}return;}
@@ -645,7 +650,41 @@ var cantTrack=(function(){
     }catch(x){}
   },true);
   window.addEventListener('unhandledrejection',function(e){try{var r=e.reason;track('error','promesa rechazada: '+String((r&&r.message)||r).slice(0,100),'',window._jotaNom);}catch(x){}});
+  track.nuevo=esNuevo;track.tz=tz;
   return track;
+})();
+
+// ================================================================
+// GOOGLE ANALYTICS 4 (opcional): solo se carga si hay ID en stats-config.js Y el visitante acepta
+// ================================================================
+(function(){
+  var ID=window.CANT_GA_ID||'';
+  if(!ID||/^(localhost|127\.)/.test(location.hostname)||location.protocol==='file:')return;
+  var tz='';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';}catch(e){}
+  function cargarGA(){
+    if(window._gaOn)return;window._gaOn=true;
+    var sc=document.createElement('script');sc.async=true;sc.src='https://www.googletagmanager.com/gtag/js?id='+encodeURIComponent(ID);document.head.appendChild(sc);
+    window.dataLayer=window.dataLayer||[];window.gtag=function(){window.dataLayer.push(arguments);};
+    gtag('js',new Date());gtag('config',ID,{anonymize_ip:true,allow_google_signals:false,allow_ad_personalization_signals:false});
+    window._gaEvt=function(t,v,x,j){try{gtag('event','cant_'+t,{jota:String(j||'').slice(0,100),valor:String(v||'').slice(0,100)});}catch(e){}};
+    window._gaEvt('visita','',tz,window._jotaNom||'');
+  }
+  function guardar(v){try{localStorage.setItem('cant_consent',v);}catch(e){}}
+  function banner(){
+    if(document.getElementById('cant-cons'))return;
+    var d=document.createElement('div');d.id='cant-cons';d.setAttribute('role','dialog');d.setAttribute('aria-label','Analítica');
+    d.style.cssText='position:fixed;left:50%;bottom:max(14px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:99999;width:min(94vw,440px);box-sizing:border-box;padding:16px 18px;border:1px solid rgba(200,146,42,.55);border-radius:8px;background:rgba(14,9,5,.96);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);box-shadow:0 0 40px rgba(0,0,0,.6);font-family:"Cormorant Garamond",serif;color:#f1e7d0;text-align:center;';
+    d.innerHTML='<div style="font-size:clamp(15px,4.2vw,18px);line-height:1.4;margin-bottom:12px">Para saber, de forma agregada, desde qué lugares se escuchan estas jotas, usamos <b>Google Analytics</b>. ¿Nos lo permites?</div><div style="display:flex;gap:10px"><button id="cc-no" style="flex:1;padding:12px 8px;border:1px solid rgba(200,146,42,.5);background:none;color:#d9c9a0;font-family:Cinzel,serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;border-radius:4px;cursor:pointer">Rechazar</button><button id="cc-si" style="flex:1;padding:12px 8px;border:1px solid #c8922a;background:#c8922a;color:#1a1208;font-family:Cinzel,serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;border-radius:4px;cursor:pointer;font-weight:600">Aceptar</button></div>';
+    document.body.appendChild(d);
+    document.getElementById('cc-si').onclick=function(e){e.stopPropagation();guardar('si');d.remove();cargarGA();};
+    document.getElementById('cc-no').onclick=function(e){e.stopPropagation();guardar('no');d.remove();};
+    ['click','touchend'].forEach(function(ev){d.addEventListener(ev,function(e){e.stopPropagation();});});
+  }
+  window.cantConsent=function(){guardar('');banner();};
+  var c='';try{c=localStorage.getItem('cant_consent')||'';}catch(e){}
+  if(c==='si')cargarGA();else if(c!=='no')(document.body?banner:function(){document.addEventListener('DOMContentLoaded',banner);})();
+  window.addEventListener('DOMContentLoaded',function(){var l=document.getElementById('cc-pref');if(l)l.style.display='block';});
+  var l=document.getElementById('cc-pref');if(l)l.style.display='block';
 })();
 
 let jota=null, fotos=[], fotoIdx=0, fotoTimer=null, progresoInter=null, jotaFin=false;
@@ -1045,7 +1084,7 @@ async function init(){
   }
 
   window._jotaNom=jota.t;
-  cantTrack('visita','','',jota.t);
+  cantTrack('visita',cantTrack.nuevo?'nuevo':'recurrente',cantTrack.tz,jota.t);
   // Precargar las 3 fotos de inicio mientras se ve la portada (para que salgan al instante tras pulsar)
   try{window._fotosIntroPre=histNoRepArr(CFG.fotos_intro,'cant_intro2',3,30);window._fotosIntroPre.forEach(function(u){var i=new Image();i.src=u;if(i.decode)i.decode().catch(function(){});});}catch(e){}
 
