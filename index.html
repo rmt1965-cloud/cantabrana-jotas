@@ -1305,7 +1305,7 @@ async function init(){
     (function(){
       var n=99;try{n=parseInt(localStorage.getItem('cant_esc_gap')||'99',10);if(isNaN(n))n=99;}catch(e){}
       var donde='ninguno';
-      if(n>=6&&rnd(2)===0)donde=rnd(2)===0?'inicio':'final';
+      if(n>=6&&rnd(2)===0&&rnd(2)===0)donde='inicio';   // el escudo01 ya NO sale despues de la jota (daba problemas); solo puede salir al inicio
       n=(donde==='ninguno')?n+1:0;
       try{localStorage.setItem('cant_esc_gap',String(n));}catch(e){}
       window._escudoDonde=donde;
@@ -1523,7 +1523,7 @@ function finJota(){
       imq.onload=imq.onerror=function(){try{if(this.decode)this.decode().catch(function(){});}catch(e){}if(--pend<=0)iniciarVid();};(window._preImgs=window._preImgs||[]).push(imq);imq.src=vs;}
     setTimeout(iniciarVid,4000);   // por si alguna foto tardase
     _pre.vid=vp;
-    [CFG.escudo,(typeof POSTAL_FIN!=='undefined'&&POSTAL_FIN)?POSTAL_FIN:''].forEach(function(u){if(!u)return;var im=new Image();im.onload=function(){try{if(im.decode)im.decode().catch(function(){});}catch(e){}};(window._preImgs=window._preImgs||[]).push(im);im.src=u;});
+    [(typeof POSTAL_FIN!=='undefined'&&POSTAL_FIN)?POSTAL_FIN:''].forEach(function(u){if(!u)return;var im=new Image();im.onload=function(){try{if(im.decode)im.decode().catch(function(){});}catch(e){}};(window._preImgs=window._preImgs||[]).push(im);im.src=u;});
   }catch(e){}
 
   // Subir ambiente y volver a mostrar la franja de la musica ambiente
