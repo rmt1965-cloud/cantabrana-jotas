@@ -1544,9 +1544,23 @@ function mostrarVideoFinal(frase,callback,pre){
       div.style.transition='opacity 1.5s ease';div.style.opacity='1';
       txt.textContent=frase;
       if(window._alArrancarFase)try{window._alArrancarFase();}catch(e){}
+      // La escena dura lo que dura el video: la disolucion hacia la siguiente empieza 1,5 s antes de su final (nunca queda congelado)
+      var dur=(isFinite(vvf.duration)&&vvf.duration>0)?vvf.duration*1000:6900;
+      var rest=Math.max(dur-(vvf.currentTime||0)*1000,0);
+      setTimeout(terminar,Math.min(Math.max(rest-1500,2500),9000));
     },100);
   };
-  var saltado=false;
+  var saltado=false,terminado=false;
+  function terminar(){
+    if(saltado||terminado)return;terminado=true;
+    callback();
+    setTimeout(function(){
+      if(vvf.pause)vvf.pause();
+      if(div.contains(vvf))div.removeChild(vvf);
+      div.style.display='none';div.style.opacity='0';
+    },1800);
+  }
+  vvf.onended=function(){if(shown)terminar();};
   vvf.onerror=function(){   // si el video no carga, se pasa a la siguiente escena sin dejar la pantalla en negro
     if(shown||saltado)return;saltado=true;shown=true;
     try{if(div.contains(vvf))div.removeChild(vvf);}catch(e){}
@@ -1554,15 +1568,6 @@ function mostrarVideoFinal(frase,callback,pre){
     setTimeout(callback,50);
   };
   vvf.oncanplay=showVF;vvf.ontimeupdate=showVF;setTimeout(showVF,1500);if(pre&&vvf.readyState>=3)setTimeout(showVF,50);
-  setTimeout(function(){
-    if(saltado)return;
-    callback();
-    setTimeout(function(){
-      if(vvf.pause)vvf.pause();
-      if(div.contains(vvf))div.removeChild(vvf);
-      div.style.display='none';div.style.opacity='0';
-    },1800);
-  },5400);
 }
 
 function mostrarEscudoFinal(frase,callback,alternativa){
