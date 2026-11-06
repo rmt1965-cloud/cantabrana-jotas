@@ -700,6 +700,16 @@ var cantTrack=(function(){
   var ref='';try{ref=document.referrer?new URL(document.referrer).hostname:'';}catch(e){}
   var origen=/[?&](jota|j)=/.test(location.search)?'QR / enlace de jota':(ref&&ref!==location.hostname?'Web: '+ref:'Directo');
   var cnt=0,vistos={},local=/^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname)||location.protocol==='file:';
+  // Modo propietario: ?propietario=1 marca este dispositivo y deja de contar sus visitas; ?propietario=0 lo desmarca
+  var propietario=false;
+  try{
+    var mp=location.search.match(/[?&]propietario=([01])/);
+    if(mp){localStorage.setItem('cant_owner',mp[1]);
+      setTimeout(function(){var t=document.createElement('div');t.textContent=mp[1]==='1'?'Modo propietario activado: este dispositivo ya no cuenta en las estadísticas':'Modo propietario desactivado: este dispositivo vuelve a contar';
+        t.style.cssText='position:fixed;left:50%;bottom:90px;transform:translateX(-50%);z-index:9999;max-width:84vw;text-align:center;font:600 13px/1.5 Cinzel,serif;letter-spacing:1px;color:#fff;background:rgba(0,0,0,.88);border:1px solid rgba(200,146,42,.7);border-radius:10px;padding:12px 18px;';
+        document.body.appendChild(t);setTimeout(function(){t.style.transition='opacity 1s';t.style.opacity='0';setTimeout(function(){t.remove();},1100);},4500);},800);}
+    propietario=localStorage.getItem('cant_owner')==='1';
+  }catch(e){}
   function post(t,v,x,j){
     var d={t:t,j:j||'',s:sid,v:vid,d:disp,n:nav,p:innerWidth+'x'+innerHeight,l:(navigator.language||'').slice(0,5),o:origen,x:String(v==null?'':v).slice(0,200),y:String(x==null?'':x).slice(0,500),h:''};
     var body=JSON.stringify(d);
@@ -707,6 +717,7 @@ var cantTrack=(function(){
     try{fetch(URL_,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=UTF-8'},body:body}).catch(function(){});}catch(e){}
   }
   function track(t,v,x,j){
+    if(propietario)return;
     try{
       if(!bot&&!local&&t!=='bloqueo'&&window._gaEvt)window._gaEvt(t,v,x,j);
     }catch(e){}
