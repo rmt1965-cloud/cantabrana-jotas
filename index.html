@@ -152,6 +152,9 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 .val-box{width:min(92vw,420px);margin:auto;text-align:center;padding:6px 6px 10px;display:flex;flex-direction:column;align-items:center;opacity:0;transform:translateY(14px);transition:opacity .7s ease .15s,transform .7s ease .15s;}
 #valora.in .val-box{opacity:1;transform:none}
 .val-sello{width:min(58vw,30vh,250px);height:min(58vw,30vh,250px);object-fit:contain;opacity:.95;margin-bottom:6px;filter:drop-shadow(0 0 40px rgba(180,30,30,.6));animation:selloZoom 6s ease-in-out infinite;transition:width .5s ease,height .5s ease;}
+#valora.gr,#valora.gr.in{background:#050302;-webkit-backdrop-filter:none;backdrop-filter:none;}
+.val-box.gr .val-stars,.val-box.gr .val-lbl,.val-box.gr .val-linea,.val-box.gr .val-sub,.val-box.gr textarea,.val-box.gr .val-ok,.val-box.gr .val-skip{display:none!important;}
+.val-box.gr .val-sello{width:min(62vw,36vh,280px);height:min(62vw,36vh,280px);}
 .val-box.conc .val-sello{width:min(30vw,15vh,120px);height:min(30vw,15vh,120px);}
 .val-linea{width:150px;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);animation:pulse 2s ease-in-out infinite;margin:10px auto 0;}
 .val-tit{font-family:'Cinzel',serif;font-size:clamp(17px,5vw,24px);letter-spacing:4px;color:var(--gold);text-transform:uppercase;line-height:1.35;text-shadow:0 0 30px rgba(200,146,42,1),0 0 60px rgba(200,146,42,.6),0 0 100px rgba(200,146,42,.35);}
@@ -1636,7 +1639,7 @@ function valorar(accion){
   _valAccion=accion;
   var V=document.getElementById('valora'),st=document.getElementById('val-stars'),lb=document.getElementById('val-lbl');
   var tx=['Mejorable','Regular','Buena','Muy buena','Extraordinaria'];
-  _valNota=0;st.innerHTML='';lb.textContent='';V.firstChild.classList.remove('conc');
+  _valNota=0;st.innerHTML='';lb.textContent='';V.firstChild.classList.remove('conc','gr');V.classList.remove('gr');
   document.getElementById('val-com').style.display='none';document.getElementById('val-com').value='';
   document.getElementById('val-ok').classList.remove('act');
   for(var i=1;i<=5;i++)(function(n){
@@ -1659,13 +1662,11 @@ function _valCerrar(enviar){
     try{var l=JSON.parse(localStorage.getItem('cant_valoraciones')||'[]');l.push(d);localStorage.setItem('cant_valoraciones',JSON.stringify(l.slice(-50)));}catch(e){}
     cantTrack('valoracion',d.estrellas,d.comentario,window._jotaNom);
     document.getElementById('val-tit').innerHTML='Muchas gracias';
-    document.getElementById('val-sub').textContent='Tu valoración ya forma parte de este archivo.';
-    document.getElementById('val-stars').style.pointerEvents='none';
-    document.getElementById('val-ok').style.display='none';document.getElementById('val-skip').style.display='none';document.getElementById('val-com').style.display='none';
+    V.classList.add('gr');V.firstChild.classList.add('gr');
     _valHecha=true;
-    setTimeout(function(){V.classList.remove('in');setTimeout(function(){V.classList.remove('show');_valAccion&&_valAccion();},500);},1400);
+    setTimeout(function(){_valAccion&&_valAccion();},1600);
   }else{
-    _valHecha=true;V.classList.remove('in');setTimeout(function(){V.classList.remove('show');_valAccion&&_valAccion();},500);
+    _valHecha=true;V.classList.add('gr');setTimeout(function(){_valAccion&&_valAccion();},350);
   }
 }
 document.getElementById('val-ok').onclick=function(){_valCerrar(true);};
