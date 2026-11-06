@@ -1,0 +1,146 @@
+/**
+ * CANTABRANA · RETAZOS DE VIDA — Recolector de estadísticas (Google Apps Script)
+ * ---------------------------------------------------------------------------
+ * Recibe eventos anónimos desde la web (POST) y los guarda en la hoja "Eventos".
+ * Sirve los datos al panel de estadísticas (GET) SOLO si se aporta la clave.
+ *
+ * Instalación: ver INSTRUCCIONES_ESTADISTICAS.md
+ */
+
+// 1) CAMBIA ESTA CLAVE (solo la sabrás tú) y ejecuta la función  configurar()  una vez.
+var CLAVE_INICIAL = 'CAMBIA-ESTA-CLAVE';
+
+var HOJA = 'Eventos';
+var COLS = ['Fecha (UTC)', 'Tipo', 'Jota', 'Sesion', 'Visitante', 'Dispositivo', 'Navegador', 'Pantalla', 'Idioma', 'Origen', 'Valor', 'Detalle'];
+var TIPOS = ['visita', 'inicio', 'jota_play', 'jota_fin', 'valoracion', 'error', 'bloqueo', 'compartir'];
+var MAX_FILAS_RESPUESTA = 60000;
+
+/** Ejecutar UNA vez desde el editor: crea la hoja y guarda la clave. */
+function configurar() {
+  if (!CLAVE_INICIAL || CLAVE_INICIAL === 'CAMBIA-ESTA-CLAVE' || CLAVE_INICIAL.length < 10) {
+    throw new Error('Cambia CLAVE_INICIAL por una clave tuya de al menos 10 caracteres y vuelve a ejecutar.');
+  }
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(HOJA) || ss.insertSheet(HOJA);
+  if (sh.getLastRow() === 0) {
+    sh.getRange(1, 1, 1, COLS.length).setValues([COLS]).setFontWeight('bold').setBackground('#c8922a').setFontColor('#ffffff');
+    sh.setFrozenRows(1);
+  }
+  sh.getRange('A:L').setNumberFormat('@'); // todo como texto: evita que Sheets convierta fechas o fórmulas
+  PropertiesService.getScriptProperties().setProperty('CLAVE', CLAVE_INICIAL);
+  Logger.log('Listo. Hoja "' + HOJA + '" preparada y clave guardada. Ahora: Implementar > Nueva implementación > Aplicación web.');
+}
+
+// ------------------------------------------------------------------ ESCRITURA
+function doPost(e) {
+  try {
+    var raw = (e && e.postData && e.postData.contents) || '';
+    if (raw.length > 4000) return bloquear_('payload_enorme', '', raw.length + ' bytes');
+    var d;
+    try { d = JSON.parse(raw); } catch (x) { return bloquear_('payload_invalido', '', raw.slice(0, 80)); }
+    if (!d || typeof d !== 'object') return bloquear_('payload_invalido', '', '');
+    if (d.h) return bloquear_('honeypot', d.s, 'campo trampa relleno'); // campo que un humano nunca rellena
+    var tipo = String(d.t || '');
+    if (TIPOS.indexOf(tipo) < 0) return bloquear_('tipo_desconocido', d.s, tipo.slice(0, 40));
+
+    var sid = limpiar_(d.s, 24);
+    // Límite de frecuencia: máx. 40 eventos por sesión y minuto
+    var cache = CacheService.getScriptCache();
+    var kr = 'r_' + sid, n = parseInt(cache.get(kr) || '0', 10) + 1;
+    cache.put(kr, String(n), 60);
+    if (n > 40) { if (n === 41) bloquear_('flood', sid, 'más de 40 eventos/min'); return ok_(); }
+
+    var valor = limpiar_(d.x, 200), detalle = limpiar_(d.y, 500), jota = limpiar_(d.j, 120);
+
+    if (tipo === 'valoracion') {
+      var nota = parseInt(valor, 10);
+      if (!(nota >= 1 && nota <= 5)) return bloquear_('valoracion_invalida', sid, valor);
+      if (cache.get('v_' + sid)) return bloquear_('valoracion_duplicada', sid, '');
+      cache.put('v_' + sid, '1', 3600);
+      valor = String(nota);
+    }
+    // Defensa contra inyección de fórmulas / HTML en comentarios y textos
+    var t1 = neutralizar_(valor), t2 = neutralizar_(detalle);
+    if (t1.alerta || t2.alerta) bloquear_(t1.alerta || t2.alerta, sid, (valor + ' ' + detalle).slice(0, 120), true);
+    registrar_([new Date().toISOString(), tipo, jota, sid, limpiar_(d.v, 24), limpiar_(d.d, 20), limpiar_(d.n, 20),
+      limpiar_(d.p, 12), limpiar_(d.l, 6), limpiar_(d.o, 80), t1.texto, t2.texto]);
+    return ok_();
+  } catch (err) {
+    return ok_(); // nunca devolver errores internos
+  }
+}
+
+// ------------------------------------------------------------------ LECTURA (panel)
+function doGet(e) {
+  var p = (e && e.parameter) || {};
+  if (p.accion === 'ping') return json_({ ok: true });
+  if (p.accion !== 'datos') return json_({ ok: false, error: 'sin_accion' });
+
+  var cache = CacheService.getScriptCache();
+  var fallos = parseInt(cache.get('fallos') || '0', 10);
+  if (fallos >= 8) return json_({ ok: false, error: 'bloqueado' }); // 8 claves erróneas = 15 min de bloqueo
+
+  var clave = PropertiesService.getScriptProperties().getProperty('CLAVE') || '';
+  if (!clave || !igual_(String(p.clave || ''), clave)) {
+    cache.put('fallos', String(fallos + 1), 900);
+    registrar_([new Date().toISOString(), 'bloqueo', '', '', '', '', '', '', '', '', 'clave_incorrecta', 'intento de acceso al panel (' + (fallos + 1) + ')']);
+    return json_({ ok: false, error: 'clave' });
+  }
+  cache.remove('fallos');
+
+  var desde = String(p.desde || '0000'), hasta = String(p.hasta || '9999');
+  var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(HOJA);
+  var out = [];
+  if (sh && sh.getLastRow() > 1) {
+    var fin = sh.getLastRow(), bloque = 5000;
+    while (fin > 1 && out.length < MAX_FILAS_RESPUESTA) {
+      var ini = Math.max(2, fin - bloque + 1);
+      var vals = sh.getRange(ini, 1, fin - ini + 1, COLS.length).getValues();
+      var masAntiguo = false;
+      for (var i = vals.length - 1; i >= 0; i--) {
+        var f = String(vals[i][0]);
+        if (f < desde) { masAntiguo = true; continue; }
+        if (f <= hasta) out.push(vals[i].map(String));
+      }
+      if (masAntiguo) break;
+      fin = ini - 1;
+    }
+  }
+  out.reverse();
+  return json_({ ok: true, cols: COLS, filas: out, truncado: out.length >= MAX_FILAS_RESPUESTA });
+}
+
+// ------------------------------------------------------------------ utilidades
+function ok_() { return ContentService.createTextOutput('ok'); }
+function json_(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
+function limpiar_(v, max) { return String(v == null ? '' : v).replace(/[\u0000-\u001f]/g, ' ').slice(0, max); }
+function igual_(a, b) { if (a.length !== b.length) return false; var r = 0; for (var i = 0; i < a.length; i++) r |= a.charCodeAt(i) ^ b.charCodeAt(i); return r === 0; }
+
+function neutralizar_(t) {
+  var alerta = '';
+  if (/<\s*\/?\s*(script|iframe|img|svg|object|embed|link|style|on\w+\s*=)/i.test(t) || /javascript:/i.test(t)) { alerta = 'html_bloqueado'; t = t.replace(/[<>]/g, ''); }
+  if (/^[=+\-@\t\r]/.test(t) && !/^-?\d+([.,]\d+)?$/.test(t)) { alerta = alerta || 'formula_bloqueada'; t = "'" + t; }
+  return { texto: t, alerta: alerta };
+}
+
+function registrar_(fila) {
+  var lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(HOJA);
+    if (!sh) { configurar_silencioso_(); sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(HOJA); }
+    var r = sh.getLastRow() + 1;
+    sh.getRange(r, 1, 1, fila.length).setNumberFormat('@').setValues([fila]);
+  } finally { lock.releaseLock(); }
+}
+function configurar_silencioso_() {
+  var sh = SpreadsheetApp.getActiveSpreadsheet().insertSheet(HOJA);
+  sh.getRange(1, 1, 1, COLS.length).setValues([COLS]).setFontWeight('bold');
+  sh.setFrozenRows(1);
+}
+function bloquear_(motivo, sid, detalle, noRespuesta) {
+  try {
+    registrar_([new Date().toISOString(), 'bloqueo', '', limpiar_(sid, 24), '', '', '', '', '', '', motivo, limpiar_(detalle, 200)]);
+  } catch (e) {}
+  return noRespuesta ? null : ok_();
+}
