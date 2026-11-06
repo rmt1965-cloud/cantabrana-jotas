@@ -184,7 +184,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 
     <div class="sec pdf-b" id="s-jotas">
       <div class="card"><h3>Jotas</h3>
-        <div class="ay">Ordenadas por escuchas. «Hasta el final» es el porcentaje que la escuchó entera; «Tiempo medio» es cuánto la oyeron de media.</div>
+        <div class="ay">Ordenadas por escuchas. «Hasta el final» es el porcentaje que la escuchó entera; «Saltadas» cuántas veces se pulsó «Saltar jota»; «Tiempo medio» es cuánto la oyeron de media.</div>
         <div id="topJotas"></div></div>
     </div>
 
@@ -269,9 +269,9 @@ function calc(rs){
   var v=rs.filter(function(x){return x.tipo==='visita'});
   var u={},nu={},re={};v.forEach(function(x){u[x.vid]=1;if(x.valor==='nuevo')nu[x.vid]=1;else if(x.valor==='recurrente')re[x.vid]=1;});
   var vals=rs.filter(function(x){return x.tipo==='valoracion'}).map(function(x){return parseInt(x.valor,10)||0}).filter(Boolean);
-  var fn=rs.filter(function(x){return x.tipo==='jota_fin'}),plays=rs.filter(function(x){return x.tipo==='jota_play'}).length,fins=fn.length;
+  var fa=rs.filter(function(x){return x.tipo==='jota_fin'}),fn=fa.filter(function(x){return x.det!=='saltada'}),sk=fa.filter(function(x){return x.det==='saltada'}),plays=rs.filter(function(x){return x.tipo==='jota_play'}).length,fins=fn.length;
   var segs=fn.map(function(x){return parseFloat(x.valor)||0}).filter(function(n){return n>0});
-  return {visitas:v.length,unicos:Object.keys(u).length,nuevos:Object.keys(nu).length,recurr:Object.keys(re).length,inicios:rs.filter(function(x){return x.tipo==='inicio'}).length,plays:plays,fins:fins,compl:pct(fins,plays),
+  return {visitas:v.length,unicos:Object.keys(u).length,nuevos:Object.keys(nu).length,recurr:Object.keys(re).length,inicios:rs.filter(function(x){return x.tipo==='inicio'}).length,plays:plays,fins:fins,compl:pct(fins,plays),salt:sk.length,psalt:pct(sk.length,plays),tsalt:(function(){var a=sk.map(function(x){return parseFloat(x.valor)||0}).filter(function(n){return n>0});return a.length?a.reduce(function(q,w){return q+w},0)/a.length:0})(),
     tmedio:segs.length?segs.reduce(function(a,b){return a+b},0)/segs.length:0,
     nota:vals.length?vals.reduce(function(a,b){return a+b},0)/vals.length:0,nval:vals.length,
     err:rs.filter(function(x){return x.tipo==='error'}).length,amen:rs.filter(function(x){return x.tipo==='bloqueo'}).length,shares:rs.filter(function(x){return x.tipo==='compartir'}).length,vals:vals};}
@@ -304,7 +304,7 @@ function resumen(c,p,rs){
     var dv=p.visitas?Math.round(100*(c.visitas-p.visitas)/p.visitas):null;
     L.push('<b>'+c.visitas+' visitas</b> de <b>'+c.unicos+' personas distintas</b> en '+nombrePeriodo()+(dv===null?'.':(dv>0?', un '+dv+'% más que el periodo anterior.':dv<0?', un '+Math.abs(dv)+'% menos que el periodo anterior.':', igual que el periodo anterior.')));
     if(c.nuevos+c.recurr)L.push(c.nuevos+' eran nuevas y '+c.recurr+' ya habían estado antes.');
-    if(c.plays)L.push('Se escucharon <b>'+c.plays+' jotas</b>; <b>'+c.compl+'%</b> hasta el final'+(c.tmedio?', con un tiempo medio de '+dur(c.tmedio)+'.':'.'));
+    if(c.plays)L.push('Se escucharon <b>'+c.plays+' jotas</b>; <b>'+c.compl+'%</b> hasta el final'+(c.salt?', <b>'+c.salt+'</b> saltadas':'')+(c.tmedio?', con un tiempo medio de '+dur(c.tmedio)+'.':'.'));
     var m={};rs.forEach(function(x){if(x.tipo==='jota_play'&&x.jota)m[x.jota]=(m[x.jota]||0)+1;});var top=Object.keys(m).sort(function(a,b){return m[b]-m[a]})[0];
     if(top)L.push('La más escuchada: <b>'+esc(top)+'</b> ('+m[top]+' veces).');
     var pa={};rs.filter(function(x){return x.tipo==='visita'}).forEach(function(x){var k=pais(x.det);pa[k]=(pa[k]||0)+1;});var tp=Object.keys(pa).filter(function(k){return k!=='Sin dato'}).sort(function(a,b){return pa[b]-pa[a]});
@@ -324,7 +324,8 @@ function kpis(c,p){
    ['Personas distintas',c.unicos,delta(c.unicos,p.unicos),'Móviles diferentes. Si una persona vuelve, no se cuenta dos veces.'],
    ['Pulsaron iniciar',c.inicios,'<span class="eq">'+pct(c.inicios,c.visitas)+'% de las visitas</span>','Quienes tocaron la pantalla de entrada para empezar la experiencia.'],
    ['Jotas escuchadas',c.plays,delta(c.plays,p.plays),'Veces que arrancó una jota.'],
-   ['Hasta el final',c.compl+'%','<span class="eq">'+c.fins+' de '+c.plays+'</span>','De las jotas que empezaron, cuántas se oyeron enteras.'],
+   ['Hasta el final',c.compl+'%','<span class="eq">'+c.fins+' de '+c.plays+'</span>','De las jotas que empezaron, cuántas se oyeron enteras (sin saltar).'],
+   ['Saltaron la jota',c.salt,'<span class="eq">'+c.psalt+'% de las jotas'+(c.tsalt?' · tras '+dur(c.tsalt):'')+'</span>','Veces que alguien pulsó «Saltar jota» (y cuánto había escuchado de media antes de saltar).'],
    ['Tiempo medio',c.tmedio?dur(c.tmedio):'—','<span class="eq">de escucha por jota</span>','Cuánto tiempo oyen de media cada jota completa.'],
    ['Valoración media',c.nval?c.nota.toFixed(1)+' ★':'—','<span class="eq">'+c.nval+' valoraciones</span> '+(c.nval&&p.nval?delta(c.nota,p.nota):''),'Nota de 1 a 5 que dan los visitantes al terminar.'],
    ['Compartidas',c.shares,delta(c.shares,p.shares),'Veces que alguien pulsó «Compartir QR».'],
@@ -378,10 +379,10 @@ function tablas(rs,c){
   var pk=Object.keys(pa).sort(function(a,b){return pa[b]-pa[a]}).slice(0,8),pm=pk.length?pa[pk[0]]:1;
   $('paises').innerHTML=pk.length?pk.map(function(k){return '<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between"><span>'+esc(k)+'</span><b class="cin" style="color:var(--gold-l)">'+pa[k]+'</b></div><div class="bar"><i style="width:'+Math.round(100*pa[k]/pm)+'%"></i></div></div>'}).join(''):'<div class="vacio">Sin visitas en este periodo.</div>';
   /* jotas */
-  var m={};rs.forEach(function(x){if(!x.jota)return;var o=m[x.jota]||(m[x.jota]={p:0,f:0,v:0,s:0,sn:0,r:0,rn:0});
-    if(x.tipo==='jota_play')o.p++;else if(x.tipo==='jota_fin'){o.f++;var s=parseFloat(x.valor)||0;if(s>0){o.s+=s;o.sn++;}}else if(x.tipo==='visita')o.v++;else if(x.tipo==='valoracion'){o.r+=parseInt(x.valor,10)||0;o.rn++;}});
+  var m={};rs.forEach(function(x){if(!x.jota)return;var o=m[x.jota]||(m[x.jota]={p:0,f:0,k:0,v:0,s:0,sn:0,r:0,rn:0});
+    if(x.tipo==='jota_play')o.p++;else if(x.tipo==='jota_fin'){if(x.det==='saltada')o.k++;else{o.f++;var s=parseFloat(x.valor)||0;if(s>0){o.s+=s;o.sn++;}}}else if(x.tipo==='visita')o.v++;else if(x.tipo==='valoracion'){o.r+=parseInt(x.valor,10)||0;o.rn++;}});
   var arr=Object.keys(m).map(function(k){return [k,m[k]]}).filter(function(x){return x[1].p||x[1].v}).sort(function(a,b){return (b[1].p+b[1].v/1000)-(a[1].p+a[1].v/1000)}).slice(0,12);
-  $('topJotas').innerHTML=arr.length?'<table><tr><th>Jota</th><th class="n">Escuchas</th><th class="n">Hasta el final</th><th class="n">Tiempo medio</th><th class="n">Nota</th></tr>'+arr.map(function(a,i){var o=a[1];return '<tr><td>'+(i+1)+'. '+esc(a[0])+'</td><td class="n">'+(o.p||'—')+'</td><td class="n">'+(o.p?pct(o.f,o.p)+'%':'—')+'</td><td class="n">'+(o.sn?dur(o.s/o.sn):'—')+'</td><td class="n star">'+(o.rn?(o.r/o.rn).toFixed(1)+' ★':'—')+'</td></tr>'}).join('')+'</table>':'<div class="vacio">Sin escuchas en este periodo.</div>';
+  $('topJotas').innerHTML=arr.length?'<table><tr><th>Jota</th><th class="n">Escuchas</th><th class="n">Hasta el final</th><th class="n">Saltadas</th><th class="n">Tiempo medio</th><th class="n">Nota</th></tr>'+arr.map(function(a,i){var o=a[1];return '<tr><td>'+(i+1)+'. '+esc(a[0])+'</td><td class="n">'+(o.p||'—')+'</td><td class="n">'+(o.p?pct(o.f,o.p)+'%':'—')+'</td><td class="n">'+(o.k?o.k+' ('+pct(o.k,o.p)+'%)':'—')+'</td><td class="n">'+(o.sn?dur(o.s/o.sn):'—')+'</td><td class="n star">'+(o.rn?(o.r/o.rn).toFixed(1)+' ★':'—')+'</td></tr>'}).join('')+'</table>':'<div class="vacio">Sin escuchas en este periodo.</div>';
   /* comentarios */
   var cm=rs.filter(function(x){return x.tipo==='valoracion'&&x.det}).reverse().slice(0,15);
   $('coment').innerHTML=cm.length?cm.map(function(x){var n=parseInt(x.valor,10)||0;return '<div style="padding:10px 0;border-bottom:1px solid rgba(200,146,42,.12)"><div class="star">'+'★'.repeat(n)+'<span style="opacity:.3">'+'★'.repeat(5-n)+'</span> <span style="color:var(--mut);font-size:12px;letter-spacing:0"> · '+esc(x.jota)+' · '+fmtF(x.ts)+'</span></div><div style="margin-top:4px">«'+esc(x.det)+'»</div></div>'}).join(''):'<div class="vacio">Todavía no hay comentarios escritos en este periodo.</div>';
@@ -410,7 +411,7 @@ function pintarCarga(){
 
 /* ---------- exportar ---------- */
 function resumenTxt(){var r=rango(),c=calc(enPeriodo(r.a,r.b));
-  return 'Cantabrana · Retazos de Vida — '+etiqueta()+'\nVisitas: '+c.visitas+' ('+c.unicos+' personas)\nJotas escuchadas: '+c.plays+' ('+c.compl+'% completas)\nValoración media: '+(c.nval?c.nota.toFixed(1)+'/5 ('+c.nval+')':'sin datos')+'\nErrores: '+c.err+' · Amenazas bloqueadas: '+c.amen;}
+  return 'Cantabrana · Retazos de Vida — '+etiqueta()+'\nVisitas: '+c.visitas+' ('+c.unicos+' personas)\nJotas escuchadas: '+c.plays+' ('+c.compl+'% completas, '+c.salt+' saltadas)\nValoración media: '+(c.nval?c.nota.toFixed(1)+'/5 ('+c.nval+')':'sin datos')+'\nErrores: '+c.err+' · Amenazas bloqueadas: '+c.amen;}
 function nombreArchivo(ext){var a=rango().a;return 'Cantabrana_estadisticas_'+periodo+'_'+a.getFullYear()+'-'+String(a.getMonth()+1).padStart(2,'0')+'-'+String(a.getDate()).padStart(2,'0')+'.'+ext;}
 async function crearPDF(){
   document.body.classList.add('pdf');document.body.classList.remove('ayuda');sinAnim=true;pintar();

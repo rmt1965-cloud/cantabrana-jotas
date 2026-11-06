@@ -115,6 +115,10 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
 #ui-bot{position:fixed;bottom:0;left:0;right:0;z-index:30;padding:16px 20px;padding-bottom:max(16px,env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(0,0,0,.8),transparent);display:flex;gap:12px;justify-content:center;opacity:0;transition:opacity 1s ease;pointer-events:none;}
 #ui-bot.show{opacity:1;pointer-events:all}
+#saltar-jota{position:fixed;left:50%;bottom:104px;transform:translateX(-50%) translateY(8px);z-index:31;display:none;opacity:0;transition:opacity 1s ease,transform 1s ease;font-family:'Cinzel',serif;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(240,220,170,.92);background:rgba(10,8,4,.45);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid rgba(200,146,42,.55);border-radius:22px;padding:10px 22px;cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap;}
+#saltar-jota.show{opacity:1;transform:translateX(-50%) translateY(0);}
+#saltar-jota:active{background:rgba(200,146,42,.3);}
+#pant-repro.portada #saltar-jota{opacity:0!important;pointer-events:none;}
 .btn{font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;padding:14px 28px;border:2px solid rgba(200,146,42,.8);background:rgba(200,146,42,.15);color:var(--gold-l);cursor:pointer;border-radius:4px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);text-shadow:0 0 15px rgba(200,146,42,.6);animation:pulse 2s ease-in-out infinite;}
 
 /* MODAL INFORMACION */
@@ -201,6 +205,7 @@ body.val-gr #acc-btn{display:none!important}
   #ui-top{padding:12px 16px 20px;}
   #prog{bottom:52px;}
   #ticker{bottom:28px;}
+  #saltar-jota{bottom:84px;padding:7px 16px;font-size:11px;}
   #ui-bot{padding:8px 16px;}
   #d-img,#d-img2{max-height:70vh;max-width:55%;}
   .p-aviso{font-size:clamp(13px,3.5vw,20px);}
@@ -300,6 +305,7 @@ body.val-gr #acc-btn{display:none!important}
       <span class="amb-lbl">Ambiente</span>
     </div>
   </div>
+  <button id="saltar-jota" type="button" onclick="saltarJota()">Saltar jota &#9197;</button>
   <div id="prog"><div id="prog-bar"><div id="prog-fill"></div></div></div>
   <div id="ticker"><span id="ticker-in">&#9834; Cantabrana &middot; Retazos de Vida &middot; Patrimonio Musical &#9834;</span></div>
   <div id="ui-bot" style="display:none;">
@@ -322,7 +328,6 @@ body.val-gr #acc-btn{display:none!important}
 
 <!-- VENTANA SELLO CREDITO -->
 <div id="pant-sello-cred" style="display:none;position:fixed;inset:0;z-index:49;background:rgba(0,0,0,.95);flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:30px;opacity:0;transition:opacity 1.5s ease;">
-  <div class="cab-marca"><b>Cantabrana</b><i>Retazos de Vida</i><span>Rafael Molina Toledo</span></div>
   <img src="fotos/sellos_web/sello15.webp" id="sello-cred-img" onerror="this.onerror=null;this.src='fotos/sellos/sello15.png'" style="width:min(62vw,380px);height:min(62vw,380px);object-fit:contain;opacity:0.95;animation:selloZoom 6s ease-in-out infinite;" alt="Sello Cantabrana">
   <div style="font-family:'Cinzel',serif;font-size:clamp(11px,3vw,14px);letter-spacing:3px;color:rgba(200,146,42,.95);text-transform:uppercase;margin-top:12px;text-shadow:0 0 20px rgba(200,146,42,.5);">Esta grabación ha sido realizada en la villa de Cantabrana</div>
   <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(15px,4vw,20px);color:rgba(240,192,96,.95);letter-spacing:2px;text-shadow:0 0 15px rgba(200,146,42,.4);">Archivo personal Rafael Molina Toledo</div>
@@ -1346,6 +1351,8 @@ async function iniciarJota(){
   var vj=0.4;
   var fj=setInterval(function(){vj=Math.min(vj+0.04,1);aJota.volume=vj;if(vj>=1)clearInterval(fj);},150);
   iniciarProgreso();
+  (function(){var sb=document.getElementById('saltar-jota');if(!sb)return;sb.classList.remove('show');sb.style.display='none';
+    setTimeout(function(){if(jotaFin)return;sb.style.display='block';void sb.offsetWidth;sb.classList.add('show');},3000);})();
   aJota.onerror=function(){
     document.getElementById('ticker-in').textContent='⚠ Error al cargar el audio. Comprueba tu conexión.';
     setTimeout(reiniciar,4000);
@@ -1433,9 +1440,19 @@ function iniciarProgreso(){
 // ================================================================
 // FIN JOTA → PORTADA con FADE → FASE FINAL
 // ================================================================
+// Saltar jota: el audio se apaga con suavidad y el proceso pasa directamente a la parte final (portada y escenas)
+function saltarJota(){
+  if(jotaFin)return;
+  window._jotaSaltada=true;
+  var sb=document.getElementById('saltar-jota');if(sb){sb.classList.remove('show');sb.style.pointerEvents='none';}
+  try{var v0=aJota.volume,pasos=0,fi=setInterval(function(){pasos++;try{aJota.volume=Math.max(0,v0*(1-pasos/8));}catch(e){}
+    if(pasos>=8){clearInterval(fi);try{aJota.pause();}catch(e){}}},90);}catch(e){}
+  finJota();
+}
 function finJota(){
   if(jotaFin)return;jotaFin=true;
-  cantTrack('jota_fin',Math.round(aJota.currentTime||0),'',window._jotaNom);
+  (function(){var sb=document.getElementById('saltar-jota');if(sb){sb.classList.remove('show');setTimeout(function(){sb.style.display='none';},1100);}})();
+  cantTrack('jota_fin',Math.round(aJota.currentTime||0),window._jotaSaltada?'saltada':'',window._jotaNom);
   clearTimeout(fotoTimer);fotoIdx=0;
   clearInterval(progresoInter);
   document.getElementById('prog-fill').style.width='100%';
