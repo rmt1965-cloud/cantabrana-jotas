@@ -146,13 +146,15 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 #pant-final .fin-btns .btn,#pant-final .fin-extra .btn{font-size:clamp(12px,3.7vw,16px)!important;letter-spacing:1.5px!important;padding:15px 6px!important;opacity:1!important;line-height:1.25;white-space:normal;min-height:56px;display:flex;align-items:center;justify-content:center;text-align:center;}
 #pant-final .fin-extra .btn{border-color:rgba(200,146,42,.7)!important;}
 @media (max-height:700px){#pant-final .fin-btns .btn,#pant-final .fin-extra .btn{min-height:48px;padding:11px 6px!important;}}
-#valora{position:fixed;inset:0;z-index:95;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(5,3,2,.0);transition:background .6s ease;}
+#valora{position:fixed;inset:0;z-index:95;display:none;align-items:center;justify-content:center;padding:14px 20px;overflow-y:auto;background:rgba(5,3,2,.0);transition:background .6s ease;}
 #valora.show{display:flex}
 #valora.in{background:rgba(5,3,2,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);}
-.val-box{width:min(92vw,400px);text-align:center;padding:30px 22px 22px;border:1px solid rgba(200,146,42,.45);border-radius:6px;background:linear-gradient(160deg,rgba(40,26,12,.9),rgba(12,8,5,.95));box-shadow:0 0 60px rgba(200,146,42,.18);opacity:0;transform:translateY(14px);transition:opacity .7s ease .15s,transform .7s ease .15s;}
+.val-box{width:min(92vw,420px);margin:auto;text-align:center;padding:6px 6px 10px;display:flex;flex-direction:column;align-items:center;opacity:0;transform:translateY(14px);transition:opacity .7s ease .15s,transform .7s ease .15s;}
 #valora.in .val-box{opacity:1;transform:none}
-.val-sello{width:64px;height:64px;object-fit:contain;opacity:.9;margin-bottom:6px}
-.val-tit{font-family:'Cinzel',serif;font-size:clamp(16px,4.6vw,21px);letter-spacing:3px;color:var(--gold);text-transform:uppercase;line-height:1.35;text-shadow:0 0 24px rgba(200,146,42,.45);}
+.val-sello{width:min(58vw,30vh,250px);height:min(58vw,30vh,250px);object-fit:contain;opacity:.95;margin-bottom:6px;filter:drop-shadow(0 0 40px rgba(180,30,30,.6));animation:selloZoom 6s ease-in-out infinite;transition:width .5s ease,height .5s ease;}
+.val-box.conc .val-sello{width:min(30vw,15vh,120px);height:min(30vw,15vh,120px);}
+.val-linea{width:150px;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);animation:pulse 2s ease-in-out infinite;margin:10px auto 0;}
+.val-tit{font-family:'Cinzel',serif;font-size:clamp(17px,5vw,24px);letter-spacing:4px;color:var(--gold);text-transform:uppercase;line-height:1.35;text-shadow:0 0 30px rgba(200,146,42,1),0 0 60px rgba(200,146,42,.6),0 0 100px rgba(200,146,42,.35);}
 .val-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(17px,4.8vw,21px);color:rgba(240,192,96,.9);margin:8px 0 18px;line-height:1.4}
 .val-stars{display:flex;justify-content:center;gap:6px;margin-bottom:8px}
 .val-stars button{background:none;border:none;padding:4px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
@@ -315,8 +317,9 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 
 <!-- VALORACION -->
 <div id="valora"><div class="val-box">
-  <img class="val-sello" src="fotos/sellos/sello15.png" alt="">
+  <img class="val-sello" src="fotos/sellos/sello9.png" alt="Sello Cantabrana">
   <div class="val-tit" id="val-tit">&iquest;Qu&eacute; te ha parecido esta experiencia?</div>
+  <div class="val-linea"></div>
   <div class="val-sub" id="val-sub">Tu opini&oacute;n nos ayuda a seguir cuidando la memoria de Cantabrana.</div>
   <div class="val-stars" id="val-stars"></div>
   <div class="val-lbl" id="val-lbl"></div>
@@ -1633,7 +1636,7 @@ function valorar(accion){
   _valAccion=accion;
   var V=document.getElementById('valora'),st=document.getElementById('val-stars'),lb=document.getElementById('val-lbl');
   var tx=['Mejorable','Regular','Buena','Muy buena','Extraordinaria'];
-  _valNota=0;st.innerHTML='';lb.textContent='';
+  _valNota=0;st.innerHTML='';lb.textContent='';V.firstChild.classList.remove('conc');
   document.getElementById('val-com').style.display='none';document.getElementById('val-com').value='';
   document.getElementById('val-ok').classList.remove('act');
   for(var i=1;i<=5;i++)(function(n){
@@ -1642,7 +1645,7 @@ function valorar(accion){
     b.onclick=function(){
       _valNota=n;lb.textContent=tx[n-1];
       [].forEach.call(st.children,function(c,k){c.classList.toggle('on',k<n);});
-      document.getElementById('val-com').style.display='block';
+      document.getElementById('val-com').style.display='block';V.firstChild.classList.add('conc');
       document.getElementById('val-ok').classList.add('act');
     };
     st.appendChild(b);
