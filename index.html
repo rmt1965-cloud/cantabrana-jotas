@@ -524,9 +524,9 @@ const CFG = {
     {f:'fotos/final_web/fondo11.webp',g:false,s:[7,15,16],cx:50,cy:32,w:84}
   ],
   vistas: [
-    'fotos/vistas/A01.jpg','fotos/vistas/A02.JPG','fotos/vistas/A03.jpg',
-    'fotos/vistas/A04.jpg','fotos/vistas/A05.jpg','fotos/vistas/A06.jpg',
-    'fotos/vistas/A08.jpg','fotos/vistas/A10.jpg',
+    'fotos/vistas_web/A01.webp','fotos/vistas_web/A02.webp','fotos/vistas_web/A03.webp',
+    'fotos/vistas_web/A04.webp','fotos/vistas_web/A05.webp','fotos/vistas_web/A06.webp',
+    'fotos/vistas_web/A08.webp','fotos/vistas_web/A10.webp',
   ],
   portada: 'fotos/portada/portada1.png',
   portadas: ['fotos/portada_web/portada01.webp','fotos/portada_web/portada02.webp','fotos/portada_web/portada03.webp'],   // se elige una al azar para el final de cada jota
@@ -1441,9 +1441,14 @@ function finJota(){
   // Precarga de las escenas finales mientras se ve la portada: asi ninguna escena entra a medio cargar (sin huecos en negro)
   var _pre={v:[],vid:null};
   try{
-    for(var q=0;q<3;q++){var vs=histNoRep(CFG.vistas,'cant_vistas_n',10);_pre.v.push(vs);var imq=new Image();imq.src=vs;}
     var vp=document.createElement('video');vp.muted=true;vp.preload='auto';vp.setAttribute('playsinline','');
-    vp.src=histPick(CFG.videos_final,'cant_vfinal');vp.load();_pre.vid=vp;
+    var vidSrc=histPick(CFG.videos_final,'cant_vfinal'),vidIni=false;
+    var iniciarVid=function(){if(vidIni)return;vidIni=true;vp.src=vidSrc;vp.load();};
+    var pend=3;
+    for(var q=0;q<3;q++){var vs=histNoRep(CFG.vistas,'cant_vistas_n',10);_pre.v.push(vs);var imq=new Image();
+      imq.onload=imq.onerror=function(){if(--pend<=0)iniciarVid();};imq.src=vs;}
+    setTimeout(iniciarVid,4000);   // por si alguna foto tardase
+    _pre.vid=vp;
     new Image().src=CFG.escudo;if(typeof POSTAL_FIN!=='undefined'&&POSTAL_FIN)new Image().src=POSTAL_FIN;
   }catch(e){}
 
@@ -1480,7 +1485,7 @@ function finJota(){
       setTimeout(function(){pr.style.transition='opacity 1.6s ease';pr.style.opacity='0';setTimeout(function(){pr.style.display='none';pr.style.opacity='1';pr.classList.remove('portada');pa.style.zIndex='';pb.style.zIndex='';pa.classList.remove('show');pb.classList.remove('show');},1800);},300);
     }
     window._alArrancarFase=ocultarPr;      // lo llama la primera escena cuando ya se ve
-    setTimeout(ocultarPr,4500);            // seguridad por si la escena no avisa
+    setTimeout(ocultarPr,10000);           // seguridad: la portada solo se retira cuando ya hay escena visible
     setTimeout(function(){
       // Pequeno delay para transicion suave
       var despDiv=document.getElementById('pant-desp');
@@ -1571,7 +1576,7 @@ function escenaFoto(frase,callback,srcPre){
   img.onload=function(){(img.decode?img.decode():Promise.resolve()).catch(function(){}).then(arrancar);};
   img.onerror=function(){setTimeout(arrancar,100);};
   img.src=vista;
-  setTimeout(arrancar,3000);   // seguridad si la imagen tardase demasiado
+  setTimeout(arrancar,8000);   // seguridad (la imagen ya viene precargada; no se muestra la escena hasta que este lista)
 }
 function mostrarFotoFinal(frase,callback,src){escenaFoto(frase,callback,src);}
 function mostrarFotoFinal2(frase,callback,src){escenaFoto(frase,callback,src);}
