@@ -502,12 +502,12 @@ const CFG = {
   // Pantalla final de la valoracion: fondo 9:16 + sello (uno de 's', al azar, el que mejor casa con el color de la foto) + "GRACIAS" latente abajo
   // cx/cy = centro del sello en % de la pantalla; w = ancho del sello en vw; t = color del texto
   final_gracias: [
-    {f:'fotos/final_web/final01.webp',t:'#ffe6a8',s:[14,15],cx:50,cy:30,w:72},
+    {f:'fotos/final_web/final01.webp',t:'#ffe6a8',s:[14,15],cx:50,cy:30,w:64},
     {f:'fotos/final_web/final02.webp',t:'#ffffff',s:[11,12],cx:36,cy:42,w:56},
     {f:'fotos/final_web/final03.webp',t:'#ffffff',s:[11,12],cx:50,cy:42,w:66},
     {f:'fotos/final_web/final04.webp',t:'#fff4d2',s:[15,14],cx:50,cy:42,w:66},
     {f:'fotos/final_web/final05.webp',t:'#fff4d2',s:[14,15],cx:50,cy:42,w:66},
-    {f:'fotos/final_web/final06.webp',t:'#ffe6a8',s:[15,14],cx:50,cy:30,w:72},
+    {f:'fotos/final_web/final06.webp',t:'#ffe6a8',s:[15,14],cx:50,cy:30,w:64},
     {f:'fotos/final_web/final07.webp',t:'#ffffff',s:[11,12],cx:27,cy:44,w:46},
     // Estancias con ventana: ya traen el pergamino "Muchas gracias" pintado abajo (g:false = sin texto encima)
     {f:'fotos/final_web/fondo01.webp',g:false},
@@ -1741,12 +1741,23 @@ function _vfMostrar(){
   bx.style.transition='opacity .45s ease';bx.style.opacity='0';
   setTimeout(function(){bx.classList.add('gr');document.body.classList.add('val-gr');void fin.offsetWidth;fin.classList.add('on');},480);
 }
+// La musica ambiente se apaga poco a poco (curva suave, sin corte seco): empieza antes que la imagen y llega a silencio justo al volver al inicio
+function _valBajarAudio(total){
+  try{
+    if(window._valAudioFade)return;window._valAudioFade=true;
+    var v0=ambVolGet(),t0=Date.now();
+    var fi=setInterval(function(){
+      var k=Math.min((Date.now()-t0)/total,1),sm=k*k*(3-2*k),g=(1-sm)*(1-sm);
+      ambVolSet(v0*g);
+      if(k>=1){clearInterval(fi);try{aAmb.pause();}catch(e){}}
+    },50);
+  }catch(e){}
+}
 // Respiro antes de la accion elegida: el contenido se desvanece, se queda un momento en negro y solo entonces continua
 function _valRespiro(fundido,pausa){
   var V=document.getElementById('valora'),fin=document.getElementById('val-fin');
   fin.style.transition='opacity '+fundido+'ms ease-in-out';fin.classList.remove('on');
-  // la musica ambiente baja poco a poco junto con la imagen (sin corte seco al volver al inicio)
-  try{var v0=ambVolGet(),tt=fundido+pausa,t0=Date.now(),fi=setInterval(function(){var k=Math.min((Date.now()-t0)/tt,1);ambVolSet(v0*(1-k));if(k>=1)clearInterval(fi);},80);}catch(e){}
+
   setTimeout(function(){_valAccion&&_valAccion();},fundido+pausa);
 }
 function _valCerrar(enviar){
@@ -1756,9 +1767,10 @@ function _valCerrar(enviar){
     try{var l=JSON.parse(localStorage.getItem('cant_valoraciones')||'[]');l.push(d);localStorage.setItem('cant_valoraciones',JSON.stringify(l.slice(-50)));}catch(e){}
     cantTrack('valoracion',d.estrellas,d.comentario,window._jotaNom);
     V.classList.add('gr');_valHecha=true;_vfMostrar();
+    setTimeout(function(){_valBajarAudio(5200);},480+1400+5200-1700);
     setTimeout(function(){_valRespiro(2000,1500);},480+1400+5200);
   }else{
-    _valHecha=true;V.classList.add('gr');_vfMostrar();setTimeout(function(){_valRespiro(2000,1500);},480+1400+3600);
+    _valHecha=true;V.classList.add('gr');_vfMostrar();setTimeout(function(){_valBajarAudio(5200);},480+1400+3600-1700);setTimeout(function(){_valRespiro(2000,1500);},480+1400+3600);
   }
 }
 document.getElementById('val-ok').onclick=function(){_valCerrar(true);};
