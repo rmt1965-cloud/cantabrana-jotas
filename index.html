@@ -638,6 +638,7 @@ var cantTrack=(function(){
     try{
       var t=e.target;
       if(t&&t!==window&&(t.src||t.currentSrc||t.href)){
+        if((t.tagName==='AUDIO'||t.tagName==='VIDEO'||t.tagName==='IMG')&&!t.getAttribute('src'))return; // vaciado a proposito (reiniciar/salir)
         var u=t.currentSrc||t.src||t.href;if(!u||u===location.href||u.slice(-1)==='/')return;
         track('error','recurso no carga',u.replace(location.origin+location.pathname.replace(/[^\/]*$/,''),''),window._jotaNom);
       }else track('error',String(e.message||'error').slice(0,120),((e.filename||'').split('/').pop()||'')+':'+(e.lineno||0),window._jotaNom);
