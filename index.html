@@ -323,13 +323,13 @@ body.val-gr #acc-btn{display:none!important}
 <!-- VENTANA SELLO CREDITO -->
 <div id="pant-sello-cred" style="display:none;position:fixed;inset:0;z-index:49;background:rgba(0,0,0,.95);flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:30px;opacity:0;transition:opacity 1.5s ease;">
   <div class="cab-marca"><b>Cantabrana</b><i>Retazos de Vida</i><span>Rafael Molina Toledo</span></div>
-  <img src="fotos/sellos/sello15.png" id="sello-cred-img" style="width:min(88vw,560px);height:min(88vw,560px);object-fit:contain;opacity:0.95;animation:selloZoom 6s ease-in-out infinite;">
+  <img src="fotos/sellos_web/sello15.webp" id="sello-cred-img" onerror="this.onerror=null;this.src='fotos/sellos/sello15.png'" style="width:min(62vw,380px);height:min(62vw,380px);object-fit:contain;opacity:0.95;animation:selloZoom 6s ease-in-out infinite;" alt="Sello Cantabrana">
   <div style="font-family:'Cinzel',serif;font-size:clamp(11px,3vw,14px);letter-spacing:3px;color:rgba(200,146,42,.95);text-transform:uppercase;margin-top:12px;text-shadow:0 0 20px rgba(200,146,42,.5);">Esta grabación ha sido realizada en la villa de Cantabrana</div>
   <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(15px,4vw,20px);color:rgba(240,192,96,.95);letter-spacing:2px;text-shadow:0 0 15px rgba(200,146,42,.4);">Archivo personal Rafael Molina Toledo</div>
 </div>
 <!-- PANTALLA FINAL CREDITOS -->
 <div id="pant-final">
-  <img src="fotos/sellos/sello15.png" style="width:80px;height:80px;object-fit:contain;opacity:0.85;margin-bottom:4px;" alt="Sello Cantabrana">
+  <img src="fotos/sellos_web/sello15.webp" onerror="this.onerror=null;this.src='fotos/sellos/sello15.png'" style="width:64px;height:64px;object-fit:contain;opacity:0.85;margin-bottom:4px;" alt="Sello Cantabrana">
   <div class="fin-tit">Cantabrana</div>
   <div class="fin-sub">Retazos de Vida</div>
   <div class="fin-aut">Rafael Molina Toledo</div>
@@ -776,7 +776,7 @@ function mostrarAvisoCarga(reconsultar){
   var d=document.createElement('div');d.id='cant-sat';d.setAttribute('role','alertdialog');
   d.style.cssText='position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(5,3,2,.97);opacity:0;transition:opacity .8s ease;';
   d.innerHTML='<div style="width:min(92vw,420px);text-align:center;padding:30px 22px 22px;border:1px solid rgba(200,146,42,.5);border-radius:8px;background:linear-gradient(160deg,rgba(40,26,12,.95),rgba(12,8,5,.98));box-shadow:0 0 60px rgba(200,146,42,.18);font-family:\'Cormorant Garamond\',serif;color:#f1e7d0">'
-   +'<img src="fotos/sellos/sello15.png" alt="" style="width:72px;height:72px;object-fit:contain;opacity:.9;margin-bottom:8px" onerror="this.style.display=\'none\'">'
+   +'<img src="fotos/sellos_web/sello15.webp" alt="" style="width:80px;height:80px;object-fit:contain;opacity:.9;margin-bottom:8px" onerror="this.style.display=\'none\'">'
    +'<div style="font-family:Cinzel,serif;font-size:clamp(15px,4.4vw,19px);letter-spacing:3px;color:#c8922a;text-transform:uppercase;line-height:1.4">Muchas personas est&aacute;n escuchando ahora mismo</div>'
    +'<div style="font-size:clamp(17px,4.8vw,21px);line-height:1.5;margin:14px 0 6px;color:#f0c060;font-style:italic">Para que disfrutes de la experiencia sin cortes, te pedimos unos minutos de paciencia.</div>'
    +'<div style="font-size:clamp(15px,4.2vw,17px);opacity:.75;margin-bottom:18px">Gracias por tu inter&eacute;s en la memoria de Cantabrana.</div>'
@@ -1033,6 +1033,7 @@ function ocultarFranjaAmb(){window._franjaOff=true;var el=document.getElementByI
 function mostrarFranjaAmb(){window._franjaOff=false;ambFranjaTexto();var el=document.getElementById('amb-franja');if(el&&CFG.ambiente_info[ambActual])el.classList.add('show');}
 
 // ---- Postales: una al inicio y otra al final, nunca la misma en la misma visita ----
+try{var _s15=new Image();_s15.src='fotos/sellos_web/sello15.webp';if(_s15.decode)_s15.decode().catch(function(){});}catch(e){}
 CFG.escudo='fotos/escudo/escudo01.webp';
 CFG.escudo_ini='fotos/escudo/escudo_inicio.webp';
 CFG.collage=['fotos/collage_web/collage_01.webp','fotos/collage_web/collage_02.webp','fotos/collage_web/collage_03.webp','fotos/collage_web/collage_04.webp','fotos/collage_web/collage_05.webp','fotos/collage_web/collage_06.webp','fotos/collage_web/collage_07.webp','fotos/collage_web/collage_08.webp','fotos/collage_web/collage_09.webp','fotos/collage_web/collage_10.webp','fotos/collage_web/collage_11.webp','fotos/collage_web/collage_12.webp','fotos/collage_web/collage_13.webp'];
