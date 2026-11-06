@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#000000">
 <meta name="color-scheme" content="dark">
+<style>html{background:#000}</style>
 <title>Cantabrana &mdash; Retazos de Vida</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%238B1A1A' stroke='%23c8922a' stroke-width='3'/><text y='65' x='50' text-anchor='middle' font-size='50' font-family='serif' fill='%23f0c060'>C</text></svg>">
 <style>
@@ -247,8 +248,8 @@ body.val-gr #acc-btn{display:none!important}
 // Al volver al inicio tras la despedida, la pantalla de inicio aparece despacio (sin corte brusco)
 (function(){try{if(sessionStorage.getItem('cant_resp')){sessionStorage.removeItem('cant_resp');
   var l=document.getElementById('loading');l.style.transition='none';l.style.opacity='0';
-  setTimeout(function(){l.style.transition='opacity 2.4s ease';l.style.opacity='1';},600);
-  setTimeout(function(){l.style.transition='';l.style.opacity='';},3200);
+  setTimeout(function(){l.style.transition='opacity 3.2s ease-in-out';l.style.opacity='1';},900);
+  setTimeout(function(){l.style.transition='';l.style.opacity='';},4300);
 }}catch(e){}})();
 </script>
 
@@ -501,13 +502,26 @@ const CFG = {
   // Pantalla final de la valoracion: fondo 9:16 + sello (uno de 's', al azar, el que mejor casa con el color de la foto) + "GRACIAS" latente abajo
   // cx/cy = centro del sello en % de la pantalla; w = ancho del sello en vw; t = color del texto
   final_gracias: [
-    {f:'fotos/final_web/final01.webp',t:'#ffe6a8',s:[15,16],cx:50,cy:28,w:74},
-    {f:'fotos/final_web/final02.webp',t:'#ffffff',s:[11,12],cx:35,cy:60,w:58},
-    {f:'fotos/final_web/final03.webp',t:'#ffffff',s:[11,12],cx:50,cy:60,w:66},
-    {f:'fotos/final_web/final04.webp',t:'#fff4d2',s:[13,15],cx:50,cy:60,w:66},
-    {f:'fotos/final_web/final05.webp',t:'#fff4d2',s:[13,14],cx:50,cy:60,w:66},
-    {f:'fotos/final_web/final06.webp',t:'#ffe6a8',s:[15,7],cx:50,cy:28,w:74},
-    {f:'fotos/final_web/final07.webp',t:'#ffffff',s:[11,12],cx:26,cy:60,w:48}
+    {f:'fotos/final_web/final01.webp',t:'#ffe6a8',s:[14,15],cx:50,cy:30,w:72},
+    {f:'fotos/final_web/final02.webp',t:'#ffffff',s:[11,12],cx:36,cy:42,w:56},
+    {f:'fotos/final_web/final03.webp',t:'#ffffff',s:[11,12],cx:50,cy:42,w:66},
+    {f:'fotos/final_web/final04.webp',t:'#fff4d2',s:[15,14],cx:50,cy:42,w:66},
+    {f:'fotos/final_web/final05.webp',t:'#fff4d2',s:[14,15],cx:50,cy:42,w:66},
+    {f:'fotos/final_web/final06.webp',t:'#ffe6a8',s:[15,14],cx:50,cy:30,w:72},
+    {f:'fotos/final_web/final07.webp',t:'#ffffff',s:[11,12],cx:27,cy:44,w:46},
+    // Estancias con ventana: ya traen el pergamino "Muchas gracias" pintado abajo (g:false = sin texto encima)
+    {f:'fotos/final_web/fondo01.webp',g:false},
+    {f:'fotos/final_web/fondo02.webp',g:false},
+    {f:'fotos/final_web/fondo03.webp',g:false},
+    {f:'fotos/final_web/fondo04.webp',g:false},
+    {f:'fotos/final_web/fondo05.webp',g:false},
+    {f:'fotos/final_web/fondo06.webp',g:false},
+    {f:'fotos/final_web/fondo07.webp',g:false},
+    {f:'fotos/final_web/fondo08.webp',g:false},
+    {f:'fotos/final_web/fondo09.webp',g:false},
+    {f:'fotos/final_web/fondo10.webp',g:false},
+    // Pergamino "Muchas gracias" sobre negro, con el sello grande arriba
+    {f:'fotos/final_web/fondo11.webp',g:false,s:[7,15,16],cx:50,cy:32,w:84}
   ],
   vistas: [
     'fotos/vistas/A01.jpg','fotos/vistas/A02.JPG','fotos/vistas/A03.jpg',
@@ -1714,12 +1728,12 @@ function _vfPreparar(){
   try{
     var lista=CFG.final_gracias.map(function(o){return o.f;});
     var f=histNoRep(lista,'cant_fgr',3),o=CFG.final_gracias.filter(function(x){return x.f===f;})[0]||CFG.final_gracias[0];
-    var n=o.s[rnd(o.s.length)],src='fotos/sellos_web/sello'+n+'.webp';
+    var n=o.s?o.s[rnd(o.s.length)]:0,src=n?'fotos/sellos_web/sello'+n+'.webp':'';
     var bg=document.getElementById('vf-bg'),im=document.getElementById('vf-sello-img'),se=document.getElementById('vf-sello'),tx=document.getElementById('vf-gracias');
     var a=new Image();a.onload=function(){bg.style.backgroundImage="url('"+o.f+"')";};a.src=o.f;
-    im.src=src;
-    se.style.left=o.cx+'%';se.style.top=o.cy+'%';se.style.width='min('+o.w+'vw,'+Math.round(o.w*4.8)+'px)';
-    tx.style.color=o.t;
+    if(src)im.src=src;else im.removeAttribute('src');se.style.display=src?'':'none';
+    if(src){se.style.left=o.cx+'%';se.style.top=o.cy+'%';se.style.width='min('+o.w+'vw,'+Math.round(o.w*4.8)+'px)';}
+    tx.style.color=o.t||'#fff';tx.style.display=(o.g===false)?'none':'';
   }catch(e){}
 }
 function _vfMostrar(){
@@ -1730,7 +1744,9 @@ function _vfMostrar(){
 // Respiro antes de la accion elegida: el contenido se desvanece, se queda un momento en negro y solo entonces continua
 function _valRespiro(fundido,pausa){
   var V=document.getElementById('valora'),fin=document.getElementById('val-fin');
-  fin.style.transition='opacity '+fundido+'ms ease';fin.classList.remove('on');
+  fin.style.transition='opacity '+fundido+'ms ease-in-out';fin.classList.remove('on');
+  // la musica ambiente baja poco a poco junto con la imagen (sin corte seco al volver al inicio)
+  try{var v0=ambVolGet(),tt=fundido+pausa,t0=Date.now(),fi=setInterval(function(){var k=Math.min((Date.now()-t0)/tt,1);ambVolSet(v0*(1-k));if(k>=1)clearInterval(fi);},80);}catch(e){}
   setTimeout(function(){_valAccion&&_valAccion();},fundido+pausa);
 }
 function _valCerrar(enviar){
@@ -1740,9 +1756,9 @@ function _valCerrar(enviar){
     try{var l=JSON.parse(localStorage.getItem('cant_valoraciones')||'[]');l.push(d);localStorage.setItem('cant_valoraciones',JSON.stringify(l.slice(-50)));}catch(e){}
     cantTrack('valoracion',d.estrellas,d.comentario,window._jotaNom);
     V.classList.add('gr');_valHecha=true;_vfMostrar();
-    setTimeout(function(){_valRespiro(1500,1000);},480+1400+5200);
+    setTimeout(function(){_valRespiro(2000,1500);},480+1400+5200);
   }else{
-    _valHecha=true;V.classList.add('gr');_vfMostrar();setTimeout(function(){_valRespiro(1500,1000);},480+1400+3600);
+    _valHecha=true;V.classList.add('gr');_vfMostrar();setTimeout(function(){_valRespiro(2000,1500);},480+1400+3600);
   }
 }
 document.getElementById('val-ok').onclick=function(){_valCerrar(true);};
