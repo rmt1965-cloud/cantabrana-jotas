@@ -229,6 +229,14 @@ body.val-gr #acc-btn{display:none!important}
   <div class="ld-autor">Rafael Molina Toledo</div>
   <div id="ld-btn" onclick="arrancar()" ontouchstart="arrancar()">Pulsar para iniciar</div>
 </div>
+<script>
+// Al volver al inicio tras la despedida, la pantalla de inicio aparece despacio (sin corte brusco)
+(function(){try{if(sessionStorage.getItem('cant_resp')){sessionStorage.removeItem('cant_resp');
+  var l=document.getElementById('loading');l.style.transition='none';l.style.opacity='0';
+  setTimeout(function(){l.style.transition='opacity 2.4s ease';l.style.opacity='1';},600);
+  setTimeout(function(){l.style.transition='';l.style.opacity='';},3200);
+}}catch(e){}})();
+</script>
 
 <!-- VENTANAS INICIO -->
 <div id="ventanas">
@@ -1654,7 +1662,7 @@ function valorar(accion){
   _valAccion=accion;
   var V=document.getElementById('valora'),st=document.getElementById('val-stars'),lb=document.getElementById('val-lbl');
   var tx=['Mejorable','Regular','Buena','Muy buena','Extraordinaria'];
-  _valNota=0;st.innerHTML='';lb.textContent='';V.firstChild.classList.remove('conc','gr');V.classList.remove('gr');
+  _valNota=0;st.innerHTML='';lb.textContent='';V.firstChild.classList.remove('conc','gr');V.classList.remove('gr');V.firstChild.style.opacity='';V.firstChild.style.transition='';document.body.classList.remove('val-gr');
   document.getElementById('val-com').style.display='none';document.getElementById('val-com').value='';
   document.getElementById('val-ok').classList.remove('act');
   for(var i=1;i<=5;i++)(function(n){
@@ -1670,6 +1678,12 @@ function valorar(accion){
   })(i);
   V.classList.add('show');void V.offsetWidth;V.classList.add('in');
 }
+// Respiro antes de la accion elegida: el contenido se desvanece, se queda un momento en negro y solo entonces continua
+function _valRespiro(fundido,pausa){
+  var V=document.getElementById('valora'),bx=V.firstChild;
+  bx.style.transition='opacity '+fundido+'ms ease';bx.style.opacity='0';
+  setTimeout(function(){_valAccion&&_valAccion();},fundido+pausa);
+}
 function _valCerrar(enviar){
   var V=document.getElementById('valora');
   if(enviar&&_valNota){
@@ -1679,14 +1693,14 @@ function _valCerrar(enviar){
     document.getElementById('val-tit').innerHTML='Muchas gracias';
     V.classList.add('gr');V.firstChild.classList.add('gr');document.body.classList.add('val-gr');
     _valHecha=true;
-    setTimeout(function(){_valAccion&&_valAccion();},1600);
+    setTimeout(function(){_valRespiro(1200,1000);},1600);
   }else{
-    _valHecha=true;V.classList.add('gr');setTimeout(function(){_valAccion&&_valAccion();},350);
+    _valHecha=true;V.classList.add('gr');_valRespiro(700,800);
   }
 }
 document.getElementById('val-ok').onclick=function(){_valCerrar(true);};
 document.getElementById('val-skip').onclick=function(){_valCerrar(false);};
-function _reiniciarReal(){aJota.pause();aJota.src='';clearTimeout(fotoTimer);clearInterval(progresoInter);location.reload();}
+function _reiniciarReal(){aJota.pause();aJota.src='';clearTimeout(fotoTimer);clearInterval(progresoInter);try{sessionStorage.setItem('cant_resp','1');}catch(e){}location.reload();}
 function reiniciar(){valorar(_reiniciarReal);}
 function salir(){valorar(_salirReal);}
 function _salirReal(){
