@@ -1615,12 +1615,28 @@ function escenaFoto(frase,callback,srcPre){
       callback();
     },6500);
   }
-  var vista=srcPre||histNoRep(CFG.vistas,'cant_vistas_n',10);
   img.style.width='88%';img.style.maxWidth='500px';img.style.maxHeight='72vh';img.style.objectFit='contain';
-  img.onload=function(){(img.decode?img.decode():Promise.resolve()).catch(function(){}).then(arrancar);};
-  img.onerror=function(){setTimeout(arrancar,100);};
-  img.src=vista;
-  setTimeout(arrancar,8000);   // seguridad (la imagen ya viene precargada; no se muestra la escena hasta que este lista)
+  // Si una foto no carga (o llega vacia) se prueba con otra: nunca se muestra una escena en negro ni una foto rota
+  var intentos=0,saltada=false;
+  function cargar(src){
+    img.onload=function(){
+      if(!img.naturalWidth){fallo(src);return;}
+      (img.decode?img.decode():Promise.resolve()).catch(function(){}).then(function(){if(img.naturalWidth)arrancar();else fallo(src);});
+    };
+    img.onerror=function(){fallo(src);};
+    img.src=src;
+  }
+  function fallo(src){
+    if(arrancada||saltada)return;
+    try{cantTrack('error','recurso no carga',src);}catch(e){}
+    if(++intentos<=3){cargar(histNoRep(CFG.vistas,'cant_vistas_n',10));}
+    else{saltada=true;arrancada=true;div.style.display='none';div.style.opacity='0';setTimeout(callback,50);}   // sin foto valida: se pasa a la siguiente escena (la anterior sigue visible)
+  }
+  cargar(srcPre||histNoRep(CFG.vistas,'cant_vistas_n',10));
+  setTimeout(function(){   // seguridad: si a los 8 s sigue sin imagen valida, no se muestra la escena vacia
+    if(arrancada||saltada)return;
+    if(img.complete&&img.naturalWidth)arrancar();else fallo(img.src);
+  },8000);
 }
 function mostrarFotoFinal(frase,callback,src){escenaFoto(frase,callback,src);}
 function mostrarFotoFinal2(frase,callback,src){escenaFoto(frase,callback,src);}
