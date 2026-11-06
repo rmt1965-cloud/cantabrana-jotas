@@ -15,6 +15,12 @@ var COLS = ['Fecha (UTC)', 'Tipo', 'Jota', 'Sesion', 'Visitante', 'Dispositivo',
 var TIPOS = ['visita', 'inicio', 'jota_play', 'jota_fin', 'valoracion', 'error', 'bloqueo', 'compartir'];
 var MAX_FILAS_RESPUESTA = 60000;
 
+// ---- CARGA Y SATURACIÓN (ajusta estos valores a tu criterio) ----
+var CAPACIDAD_SIMULTANEA = 200;   // personas activas a la vez (ventana de los últimos 5 min) que consideras el 100 %
+var UMBRAL_AVISO = 0.85;          // a partir del 85 % se avisa al visitante de que espere unos minutos
+var CUOTA_MENSUAL_GB = 100;       // límite orientativo de GitHub Pages por mes
+var MB_POR_VISITA = 12;           // peso medio estimado de una visita completa (audio, fotos, vídeo)
+
 /** Ejecutar UNA vez desde el editor: crea la hoja y guarda la clave. */
 function configurar() {
   if (!CLAVE_INICIAL || CLAVE_INICIAL === 'CAMBIA-ESTA-CLAVE' || CLAVE_INICIAL.length < 10) {
@@ -62,6 +68,7 @@ function doPost(e) {
     // Defensa contra inyección de fórmulas / HTML en comentarios y textos
     var t1 = neutralizar_(valor), t2 = neutralizar_(detalle);
     if (t1.alerta || t2.alerta) bloquear_(t1.alerta || t2.alerta, sid, (valor + ' ' + detalle).slice(0, 120), true);
+    if (tipo !== 'bloqueo') marcarActivo_(sid, tipo);
     registrar_([new Date().toISOString(), tipo, jota, sid, limpiar_(d.v, 24), limpiar_(d.d, 20), limpiar_(d.n, 20),
       limpiar_(d.p, 12), limpiar_(d.l, 6), limpiar_(d.o, 80), t1.texto, t2.texto]);
     return ok_();
@@ -74,6 +81,7 @@ function doPost(e) {
 function doGet(e) {
   var p = (e && e.parameter) || {};
   if (p.accion === 'ping') return json_({ ok: true });
+  if (p.accion === 'estado') { var e_ = estado_(); return json_({ ok: true, nivel: e_.nivel, pct: e_.pct }); }
   if (p.accion !== 'datos') return json_({ ok: false, error: 'sin_accion' });
 
   var cache = CacheService.getScriptCache();
@@ -107,8 +115,47 @@ function doGet(e) {
     }
   }
   out.reverse();
-  return json_({ ok: true, cols: COLS, filas: out, truncado: out.length >= MAX_FILAS_RESPUESTA });
+  return json_({ ok: true, cols: COLS, filas: out, truncado: out.length >= MAX_FILAS_RESPUESTA, carga: estado_() });
 }
+
+// ------------------------------------------------------------------ CARGA
+// Personas activas = sesiones distintas con algún evento en los últimos 5 minutos (se guardan por minuto en la caché).
+function marcarActivo_(sid, tipo) {
+  try {
+    var cache = CacheService.getScriptCache(), min = Math.floor(Date.now() / 60000), k = 'sm_' + min;
+    var lock = LockService.getScriptLock();
+    lock.waitLock(5000);
+    try {
+      var arr = JSON.parse(cache.get(k) || '[]');
+      if (arr.indexOf(sid) < 0 && arr.length < 5000) { arr.push(sid); cache.put(k, JSON.stringify(arr), 600); }
+      if (tipo === 'visita') {
+        var props = PropertiesService.getScriptProperties(), mk = 'VM_' + new Date().toISOString().slice(0, 7);
+        props.setProperty(mk, String((parseInt(props.getProperty(mk) || '0', 10)) + 1));
+      }
+    } finally { lock.releaseLock(); }
+  } catch (e) {}
+}
+function estado_() {
+  var cache = CacheService.getScriptCache(), c = cache.get('estado');
+  if (c) { try { return JSON.parse(c); } catch (e) {} }
+  var props = PropertiesService.getScriptProperties();
+  var min = Math.floor(Date.now() / 60000), vistos = {}, n = 0;
+  for (var i = 0; i < 5; i++) {
+    try { JSON.parse(cache.get('sm_' + (min - i)) || '[]').forEach(function (s) { if (!vistos[s]) { vistos[s] = 1; n++; } }); } catch (e) {}
+  }
+  var pct = Math.round(100 * n / CAPACIDAD_SIMULTANEA);
+  var visMes = parseInt(props.getProperty('VM_' + new Date().toISOString().slice(0, 7)) || '0', 10);
+  var gb = visMes * MB_POR_VISITA / 1024;
+  var forzado = props.getProperty('AVISO_FORZADO') === '1';
+  var nivel = forzado || pct >= UMBRAL_AVISO * 100 ? 'saturado' : pct >= 60 ? 'alto' : 'ok';
+  var r = { nivel: nivel, forzado: forzado, activos: n, capacidad: CAPACIDAD_SIMULTANEA, pct: pct,
+    mes: { visitas: visMes, gb: Math.round(gb * 10) / 10, cuota: CUOTA_MENSUAL_GB, pct: Math.round(100 * gb / CUOTA_MENSUAL_GB) } };
+  cache.put('estado', JSON.stringify(r), 20);
+  return r;
+}
+/** Interruptor manual: ejecuta estas funciones desde el editor para mostrar / quitar el aviso a todos los visitantes. */
+function activarAviso() { PropertiesService.getScriptProperties().setProperty('AVISO_FORZADO', '1'); CacheService.getScriptCache().remove('estado'); }
+function desactivarAviso() { PropertiesService.getScriptProperties().deleteProperty('AVISO_FORZADO'); CacheService.getScriptCache().remove('estado'); }
 
 // ------------------------------------------------------------------ utilidades
 function ok_() { return ContentService.createTextOutput('ok'); }

@@ -688,6 +688,56 @@ var cantTrack=(function(){
   var l=document.getElementById('cc-pref');if(l)l.style.display='block';
 })();
 
+// ================================================================
+// AVISO DE SATURACION: si hay demasiada gente a la vez (>=85 %), se pide esperar unos minutos
+// Si no se puede consultar (sin conexion o lento) se deja entrar siempre.
+// ================================================================
+function comprobarCarga(){
+  return new Promise(function(resolve){
+    var U=window.CANT_STATS_URL||'',forzar=/[?&]saturado=1/.test(location.search);
+    var local=/^(localhost|127\.)/.test(location.hostname)||location.protocol==='file:';
+    if(!forzar&&(!U||local)){resolve(true);return;}
+    var hecho=false;function fin(ok){if(hecho)return;hecho=true;resolve(ok);}
+    function consultar(){
+      if(forzar){fin(false);mostrarAvisoCarga(consultarDeNuevo);return;}
+      var ctl=window.AbortController?new AbortController():null,t=setTimeout(function(){try{ctl&&ctl.abort();}catch(e){}fin(true);},2000);
+      fetch(U+(U.indexOf('?')<0?'?':'&')+'accion=estado&_='+Date.now(),ctl?{signal:ctl.signal}:{}).then(function(r){return r.json();}).then(function(j){
+        clearTimeout(t);
+        if(j&&j.ok&&j.nivel==='saturado'){fin(false);mostrarAvisoCarga(consultarDeNuevo);}else fin(true);
+      }).catch(function(){clearTimeout(t);fin(true);});
+    }
+    function consultarDeNuevo(cb){
+      if(forzar){cb(false);return;}
+      fetch(U+(U.indexOf('?')<0?'?':'&')+'accion=estado&_='+Date.now()).then(function(r){return r.json();}).then(function(j){cb(!(j&&j.ok&&j.nivel==='saturado'));}).catch(function(){cb(true);});
+    }
+    consultar();
+  });
+}
+function mostrarAvisoCarga(reconsultar){
+  var d=document.createElement('div');d.id='cant-sat';d.setAttribute('role','alertdialog');
+  d.style.cssText='position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(5,3,2,.97);opacity:0;transition:opacity .8s ease;';
+  d.innerHTML='<div style="width:min(92vw,420px);text-align:center;padding:30px 22px 22px;border:1px solid rgba(200,146,42,.5);border-radius:8px;background:linear-gradient(160deg,rgba(40,26,12,.95),rgba(12,8,5,.98));box-shadow:0 0 60px rgba(200,146,42,.18);font-family:\'Cormorant Garamond\',serif;color:#f1e7d0">'
+   +'<img src="fotos/sellos/sello15.png" alt="" style="width:72px;height:72px;object-fit:contain;opacity:.9;margin-bottom:8px" onerror="this.style.display=\'none\'">'
+   +'<div style="font-family:Cinzel,serif;font-size:clamp(15px,4.4vw,19px);letter-spacing:3px;color:#c8922a;text-transform:uppercase;line-height:1.4">Muchas personas est&aacute;n escuchando ahora mismo</div>'
+   +'<div style="font-size:clamp(17px,4.8vw,21px);line-height:1.5;margin:14px 0 6px;color:#f0c060;font-style:italic">Para que disfrutes de la experiencia sin cortes, te pedimos unos minutos de paciencia.</div>'
+   +'<div style="font-size:clamp(15px,4.2vw,17px);opacity:.75;margin-bottom:18px">Gracias por tu inter&eacute;s en la memoria de Cantabrana.</div>'
+   +'<div id="sat-cuenta" style="font-family:Cinzel,serif;font-size:12px;letter-spacing:2px;color:rgba(240,192,96,.85);margin-bottom:14px"></div>'
+   +'<button id="sat-reint" style="width:100%;padding:14px 10px;border:1px solid #c8922a;background:#c8922a;color:#1a1208;font-family:Cinzel,serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;border-radius:4px;cursor:pointer;font-weight:600">Reintentar ahora</button>'
+   +'<button id="sat-entrar" style="margin-top:12px;background:none;border:none;color:rgba(240,200,130,.55);font-family:inherit;font-style:italic;font-size:16px;text-decoration:underline;text-underline-offset:4px;cursor:pointer;padding:8px 12px">Entrar de todos modos</button></div>';
+  document.body.appendChild(d);void d.offsetWidth;d.style.opacity='1';
+  var seg=45,tm=null;
+  function quitar(){clearInterval(tm);d.style.opacity='0';setTimeout(function(){d.remove();},800);window._avisoCargaCerrado=true;if(window._resolverCarga)window._resolverCarga();}
+  function intentar(){
+    var b=document.getElementById('sat-reint');if(b){b.disabled=true;b.style.opacity='.6';}
+    reconsultar(function(ok){if(ok)quitar();else{seg=45;if(b){b.disabled=false;b.style.opacity='1';}}});
+  }
+  tm=setInterval(function(){seg--;var c=document.getElementById('sat-cuenta');if(c)c.textContent='Reintentando en '+seg+' s';if(seg<=0){seg=45;intentar();}},1000);
+  document.getElementById('sat-cuenta').textContent='Reintentando en '+seg+' s';
+  document.getElementById('sat-reint').onclick=function(e){e.stopPropagation();intentar();};
+  document.getElementById('sat-entrar').onclick=function(e){e.stopPropagation();quitar();};
+  ['click','touchend'].forEach(function(ev){d.addEventListener(ev,function(e){e.stopPropagation();});});
+}
+
 let jota=null, fotos=[], fotoIdx=0, fotoTimer=null, progresoInter=null, jotaFin=false;
 const aJota=document.getElementById('aJota');
 const aAmb=document.getElementById('aAmb');
@@ -1055,6 +1105,7 @@ function arrancar(){
 
 async function init(){
   keepScreen();
+  try{comprobarCarga();}catch(e){}   // en paralelo: si hay saturacion, el aviso se pone encima y tapa la pantalla de entrada
 
   // Detectar jota por QR
   const p=new URLSearchParams(location.search);

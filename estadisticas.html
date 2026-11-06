@@ -200,6 +200,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
       <div class="stit"><h2>Salud y seguridad</h2></div>
       <div class="grid2">
         <div class="card"><h3>Errores detectados</h3><div class="ay">Cosas que no han funcionado en el móvil de alguien. Cada una trae una pista de cómo arreglarla.</div><div id="errores"></div></div>
+        <div class="card"><h3>Carga y capacidad</h3><div class="ay">Personas activas ahora frente a la capacidad que has fijado, y consumo mensual estimado frente al límite orientativo de GitHub Pages. A partir del 85 % se avisa a quien entra de que espere unos minutos.</div><div id="carga"></div></div>
         <div class="card"><h3>Amenazas bloqueadas</h3><div class="ay">Intentos que el sistema ha frenado o descartado: robots, abusos o datos manipulados. No requieren que hagas nada.</div><div id="amen"></div></div>
       </div>
     </div>
@@ -220,7 +221,7 @@ var DIAS_L=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'
 var TXT_AMEN={bot:'Robots / navegadores automáticos',flood:'Exceso de peticiones (flood)',honeypot:'Formulario trampa (bots)',payload_invalido:'Datos mal formados',payload_enorme:'Datos de tamaño anómalo',tipo_desconocido:'Evento desconocido',valoracion_invalida:'Valoración manipulada',valoracion_duplicada:'Valoración repetida',html_bloqueado:'Código HTML/script en un texto',formula_bloqueada:'Inyección de fórmulas en un texto',clave_incorrecta:'Intento de acceso al panel con clave errónea'};
 var PAISES={'Europe/Madrid':'España','Atlantic/Canary':'España','Africa/Ceuta':'España','Europe/Paris':'Francia','Europe/London':'Reino Unido','Europe/Lisbon':'Portugal','Atlantic/Azores':'Portugal','Europe/Berlin':'Alemania','Europe/Rome':'Italia','Europe/Brussels':'Bélgica','Europe/Amsterdam':'Países Bajos','Europe/Zurich':'Suiza','Europe/Andorra':'Andorra','Europe/Dublin':'Irlanda','Europe/Vienna':'Austria','America/Mexico_City':'México','America/Bogota':'Colombia','America/Lima':'Perú','America/Santiago':'Chile','America/Caracas':'Venezuela','America/Montevideo':'Uruguay','America/Guayaquil':'Ecuador','America/La_Paz':'Bolivia','America/Asuncion':'Paraguay','America/Havana':'Cuba','America/Santo_Domingo':'Rep. Dominicana','America/Panama':'Panamá','America/Costa_Rica':'Costa Rica','America/Guatemala':'Guatemala','America/Sao_Paulo':'Brasil','Africa/Casablanca':'Marruecos','Africa/Algiers':'Argelia'};
 function pais(tz){if(!tz)return 'Sin dato';if(PAISES[tz])return PAISES[tz];if(/^America\/Argentina|^America\/Buenos_Aires/.test(tz))return 'Argentina';if(/^America\/(New_York|Chicago|Denver|Los_Angeles|Phoenix|Anchorage|Detroit)/.test(tz))return 'EE. UU.';if(/^America\/(Toronto|Vancouver|Montreal)/.test(tz))return 'Canadá';return 'Otros ('+tz.split('/')[0]+')';}
-var demo=false,clave='',periodo='mes',ancla=new Date(),filas=[],serie='visitas',comparar=true,charts={},sinAnim=false,timer=null;
+var carga=null,demo=false,clave='',periodo='mes',ancla=new Date(),filas=[],serie='visitas',comparar=true,charts={},sinAnim=false,timer=null;
 
 /* ---------- fechas ---------- */
 function ini(p,d){d=new Date(d);
@@ -252,13 +253,13 @@ function toast(m,ms){var t=$('toast');t.textContent=m;t.style.display='block';cl
 function parse(f){return {ts:new Date(f[0]),tipo:f[1],jota:f[2],sid:f[3],vid:f[4],disp:f[5],nav:f[6],pant:f[7],idi:f[8],ori:f[9],valor:f[10],det:f[11]};}
 function cargar(silencioso){
   var r=rango();
-  if(demo){filas=demoDatos();pintar();return Promise.resolve();}
+  if(demo){filas=demoDatos();carga={nivel:'alto',forzado:false,activos:96,capacidad:150,pct:64,mes:{visitas:420,gb:4.9,cuota:100,pct:5}};pintar();return Promise.resolve();}
   if(!silencioso)$('cargando').style.display='flex';
   var u=URL_+(URL_.indexOf('?')<0?'?':'&')+'accion=datos&clave='+encodeURIComponent(clave)+'&desde='+encodeURIComponent(r.pa.toISOString())+'&hasta='+encodeURIComponent(r.b.toISOString());
   return fetch(u).then(function(x){return x.json()}).then(function(j){
     $('cargando').style.display='none';
     if(!j.ok){throw new Error(j.error||'error');}
-    filas=j.filas.map(parse);
+    filas=j.filas.map(parse);carga=j.carga||null;
     if(j.truncado)toast('Hay demasiados datos: se muestran los más recientes.');
     pintar();
   }).catch(function(e){$('cargando').style.display='none';throw e;});
@@ -292,6 +293,7 @@ function pintar(){
   chipsEvo();
   grafs(rs,pr,r,c);
   tablas(rs,c);
+  pintarCarga();
 }
 function resumen(c,p,rs){
   var ratio=c.visitas?100*c.err/c.visitas:(c.err?100:0),col=ratio<2?'var(--ok)':ratio<8?'var(--warn)':'var(--bad)';
@@ -311,6 +313,8 @@ function resumen(c,p,rs){
   }
   if(c.nval)L.push('Valoración media <b>'+c.nota.toFixed(1)+' ★</b> sobre '+c.nval+' '+(c.nval===1?'opinión':'opiniones')+'.');
   if(c.err)L.push('<b>'+c.err+'</b> '+(c.err===1?'error detectado':'errores detectados')+' (ver «Salud y seguridad»).');
+  if(carga&&carga.mes&&carga.mes.pct>=85)L.push('<b>Atención:</b> el consumo mensual estimado ronda el '+carga.mes.pct+'% del límite orientativo de GitHub Pages.');
+  if(carga&&carga.nivel==='saturado')L.push('Ahora mismo hay <b>saturación</b>: los visitantes ven el aviso de espera.');
   if(c.amen)L.push(c.amen+' '+(c.amen===1?'amenaza bloqueada':'amenazas bloqueadas')+' automáticamente; no hace falta que hagas nada.');
   $('resumen').innerHTML='<div class="sem"><span class="dot" style="color:'+col+';background:'+col+'"></span><b>'+estado+'</b></div><ul>'+L.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul>';
 }
@@ -395,6 +399,15 @@ function tablas(rs,c){
   $('amen').innerHTML=aa.length?aa.map(function(k){return '<div style="padding:10px 0;border-bottom:1px solid rgba(200,146,42,.12)"><div style="display:flex;justify-content:space-between;gap:8px"><span>'+esc(TXT_AMEN[k]||'Otro')+'</span><span class="tag">'+a[k].n+'</span></div><div style="color:var(--mut);font-size:12.5px">código «'+esc(k)+'» · último '+fmtF(a[k].u)+'</div></div>'}).join(''):'<div class="vacio">Ninguna amenaza detectada en este periodo. ✔</div>';
 }
 
+function medidor(t,pct,det){var col=pct>=85?'var(--bad)':pct>=60?'var(--warn)':'var(--ok)';
+  return '<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;gap:8px"><span>'+t+'</span><b class="cin" style="color:'+col+'">'+pct+'%</b></div><div class="bar"><i style="width:'+Math.min(100,pct)+'%;background:'+col+'"></i></div><div class="hint">'+det+'</div></div>';}
+function pintarCarga(){
+  var el=$('carga');if(!el)return;
+  if(!carga){el.innerHTML='<div class="vacio">Sin datos de carga todavía: hay que actualizar el script de Google (Code.gs).</div>';return;}
+  var m=carga.mes||{},txt=carga.forzado?'<b style="color:var(--bad)">Aviso forzado manualmente:</b> los visitantes ven el mensaje de espera.':carga.nivel==='saturado'?'<b style="color:var(--bad)">Saturación:</b> los visitantes están viendo el aviso de espera.':carga.nivel==='alto'?'<b style="color:var(--warn)">Carga alta.</b> Cerca del umbral de aviso.':'<b style="color:var(--ok)">Carga normal.</b>';
+  el.innerHTML='<div style="margin-bottom:12px">'+txt+'</div>'+medidor('Personas activas ahora',carga.pct,carga.activos+' de '+carga.capacidad+' (últimos 5 min)')+medidor('Consumo mensual estimado',m.pct||0,(m.gb||0)+' GB de ~'+(m.cuota||100)+' GB · '+(m.visitas||0)+' visitas este mes (estimación)');
+}
+
 /* ---------- exportar ---------- */
 function resumenTxt(){var r=rango(),c=calc(enPeriodo(r.a,r.b));
   return 'Cantabrana · Retazos de Vida — '+etiqueta()+'\nVisitas: '+c.visitas+' ('+c.unicos+' personas)\nJotas escuchadas: '+c.plays+' ('+c.compl+'% completas)\nValoración media: '+(c.nval?c.nota.toFixed(1)+'/5 ('+c.nval+')':'sin datos')+'\nErrores: '+c.err+' · Amenazas bloqueadas: '+c.amen;}
@@ -459,7 +472,7 @@ function entrar(c,rec){
 }
 $('entrar').onclick=function(){if(!URL_){$('lmsg').textContent='Falta la URL en stats-config.js (mira las instrucciones).';return;}if(!$('clave').value)return;entrar($('clave').value,$('recordar').checked);};
 $('clave').addEventListener('keydown',function(e){if(e.key==='Enter')$('entrar').click();});
-$('demo').onclick=function(){demo=true;$('login').style.display='none';$('app').style.display='block';filas=demoDatos();pintar();};
+$('demo').onclick=function(){demo=true;$('login').style.display='none';$('app').style.display='block';filas=demoDatos();carga={nivel:'alto',forzado:false,activos:96,capacidad:150,pct:64,mes:{visitas:420,gb:4.9,cuota:100,pct:5}};pintar();};
 $('bsalir').onclick=function(){try{localStorage.removeItem('cant_stats_clave');}catch(e){}location.reload();};
 $('bayuda').onclick=function(){ayudaOn=!ayudaOn;document.body.classList.toggle('ayuda',ayudaOn);try{localStorage.setItem('cant_stats_ayuda',ayudaOn?'1':'0');}catch(e){}toast(ayudaOn?'Ayudas activadas: explican cada dato':'Ayudas ocultas');};
 [].forEach.call($('seg').children,function(b){b.onclick=function(){periodo=b.dataset.p;[].forEach.call($('seg').children,function(x){x.classList.toggle('on',x===b)});cargar().catch(function(){toast('No se pudieron cargar los datos');});};});
