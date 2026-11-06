@@ -37,6 +37,18 @@ body.acc-mode .p-aviso{font-size:clamp(26px,8vw,40px)!important;}
 body.acc-mode #v-ley{font-size:clamp(24px,7vw,36px)!important;}
 body.acc-mode #d-txt,body.acc-mode #d-txt2{font-size:clamp(22px,6.5vw,32px)!important;}
 body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
+/* Modo accesibilidad: letra grande en la reproduccion, mas contraste y rotulo mas lento y legible */
+body.acc-mode .cantante{font-size:clamp(16px,4.6vw,22px)!important;color:#fff!important;letter-spacing:1.5px;}
+body.acc-mode .municipio{font-size:clamp(18px,5vw,25px)!important;}
+body.acc-mode #tipo-jota{font-size:clamp(18px,5.2vw,25px)!important;color:#f3c668!important;}
+body.acc-mode #ui-top{background:linear-gradient(to bottom,rgba(0,0,0,.92),rgba(0,0,0,.55) 70%,transparent)!important;padding-bottom:64px;}
+body.acc-mode #ticker{height:40px;background:rgba(0,0,0,.72);}
+body.acc-mode #ticker-in{font-size:16px;line-height:40px;color:#fff;animation-duration:48s;}
+body.acc-mode #prog{bottom:96px;}
+body.acc-mode #saltar-jota{font-size:15px;padding:13px 26px;bottom:128px;color:#fff;background:rgba(0,0,0,.7);}
+body.acc-mode .btn{font-size:clamp(15px,4.2vw,19px)!important;color:#fff!important;}
+body.acc-mode #modal-box p{font-size:clamp(22px,6.4vw,30px);}
+body.acc-mode #acc-btn svg text{fill:#f0c060!important;}
 
 /* VENTANAS */
 #ventanas{position:fixed;inset:0;z-index:8;background:#0b0907;display:none;align-items:center;justify-content:center;overflow:hidden;}
@@ -1818,7 +1830,8 @@ function toggleAcc(){
   var active=document.body.classList.toggle('acc-mode');
   btn.classList.toggle('active',active);
   try{localStorage.setItem('cant_acc',active?'1':'0');}catch(e){}
-  msg.style.opacity='1';
+  msg.textContent=active?'Accesibilidad activada: letra grande, más contraste y más tiempo en cada foto':'Accesibilidad desactivada';
+  msg.style.maxWidth='260px';msg.style.lineHeight='1.5';msg.style.opacity='1';
   if(active){
     CFG.dur_foto=5;
     window._pergDur=14000;
@@ -1826,7 +1839,7 @@ function toggleAcc(){
     CFG.dur_foto=2.5;
     window._pergDur=7000;
   }
-  setTimeout(function(){msg.style.opacity='0';},2500);
+  setTimeout(function(){msg.style.opacity='0';},3800);
 }
 // Restaurar modo accesibilidad al cargar
 (function(){
