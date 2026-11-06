@@ -153,6 +153,7 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 #valora.in .val-box{opacity:1;transform:none}
 .val-sello{width:min(58vw,30vh,250px);height:min(58vw,30vh,250px);object-fit:contain;opacity:.95;margin-bottom:6px;filter:drop-shadow(0 0 40px rgba(180,30,30,.6));animation:selloZoom 6s ease-in-out infinite;transition:width .5s ease,height .5s ease;}
 #valora.gr,#valora.gr.in{background:#050302;-webkit-backdrop-filter:none;backdrop-filter:none;}
+body.val-gr #acc-btn{display:none!important}
 .val-box.gr .val-stars,.val-box.gr .val-lbl,.val-box.gr .val-linea,.val-box.gr .val-sub,.val-box.gr textarea,.val-box.gr .val-ok,.val-box.gr .val-skip{display:none!important;}
 .val-box.gr .val-sello{width:min(62vw,36vh,280px);height:min(62vw,36vh,280px);}
 .val-box.conc .val-sello{width:min(30vw,15vh,120px);height:min(30vw,15vh,120px);}
@@ -1385,6 +1386,14 @@ function finJota(){
   clearTimeout(fotoTimer);fotoIdx=0;
   clearInterval(progresoInter);
   document.getElementById('prog-fill').style.width='100%';
+  // Precarga de las escenas finales mientras se ve la portada: asi ninguna escena entra a medio cargar (sin huecos en negro)
+  var _pre={v:[],vid:null};
+  try{
+    for(var q=0;q<3;q++){var vs=histNoRep(CFG.vistas,'cant_vistas_n',10);_pre.v.push(vs);var imq=new Image();imq.src=vs;}
+    var vp=document.createElement('video');vp.muted=true;vp.preload='auto';vp.setAttribute('playsinline','');
+    vp.src=histPick(CFG.videos_final,'cant_vfinal');vp.load();_pre.vid=vp;
+    new Image().src=CFG.escudo;if(typeof POSTAL_FIN!=='undefined'&&POSTAL_FIN)new Image().src=POSTAL_FIN;
+  }catch(e){}
 
   // Subir ambiente y volver a mostrar la franja de la musica ambiente
   mostrarFranjaAmb();
@@ -1428,9 +1437,10 @@ function finJota(){
       var idxFinal=rnd(CFG.frases_final.length);
       var grupoFinal=CFG.frases_final[idxFinal];
       var pasosFin=[
-        function(cb){mostrarFotoFinal(grupoFinal[0],cb);},
-        function(cb){mostrarVideoFinal(grupoFinal[1],cb);},
-        function(cb){mostrarFotoFinal2(grupoFinal[2],cb);}
+        function(cb){mostrarFotoFinal(grupoFinal[0],cb,_pre.v[0]);},
+        // El video solo entra si ya esta listo para reproducirse; si no, se usa una foto (nunca pantalla en negro)
+        function(cb){if(_pre.vid&&_pre.vid.readyState>=3)mostrarVideoFinal(grupoFinal[1],cb,_pre.vid);else mostrarFotoFinal2(grupoFinal[1],cb,_pre.v[1]);},
+        function(cb){mostrarFotoFinal2(grupoFinal[2],cb,_pre.v[2]);}
       ];
       // Escudo de Cantabrana: aparece al azar (1 de cada 2) y sustituye UNA de las dos fotos; nunca el video, la postal ni el sello
       if(window._escudoDonde==='final'){
@@ -1481,7 +1491,7 @@ function faseCapa(){
   return {div:div,img:document.getElementById('d-img'+k),txt:document.getElementById('d-txt'+k)};
 }
 // Escena de foto: espera a que la imagen este cargada y decodificada ANTES de disolverse (sin huecos en negro)
-function escenaFoto(frase,callback){
+function escenaFoto(frase,callback,srcPre){
   var C=faseCapa(),div=C.div,img=C.img,txt=C.txt;
   var KB=['kenburns1','kenburns2','kenburns3','kenburns4'];
   var arrancada=false;
@@ -1504,32 +1514,32 @@ function escenaFoto(frase,callback){
       setTimeout(function(){div.style.display='none';div.style.opacity='0';img.style.animation='none';},1800);
     },5000);
   }
-  var vista=histNoRep(CFG.vistas,'cant_vistas_n',10);
+  var vista=srcPre||histNoRep(CFG.vistas,'cant_vistas_n',10);
   img.style.width='88%';img.style.maxWidth='500px';img.style.maxHeight='72vh';img.style.objectFit='contain';
   img.onload=function(){(img.decode?img.decode():Promise.resolve()).catch(function(){}).then(arrancar);};
   img.onerror=function(){setTimeout(arrancar,100);};
   img.src=vista;
   setTimeout(arrancar,3000);   // seguridad si la imagen tardase demasiado
 }
-function mostrarFotoFinal(frase,callback){escenaFoto(frase,callback);}
-function mostrarFotoFinal2(frase,callback){escenaFoto(frase,callback);}
-function mostrarVideoFinal(frase,callback){
+function mostrarFotoFinal(frase,callback,src){escenaFoto(frase,callback,src);}
+function mostrarFotoFinal2(frase,callback,src){escenaFoto(frase,callback,src);}
+function mostrarVideoFinal(frase,callback,pre){
   var C=faseCapa(),div=C.div,img=C.img,txt=C.txt;
   img.src='';img.style.opacity='0';txt.textContent='';
   div.style.opacity='0';div.style.display='flex';
   div.style.flexDirection='column';
   div.style.alignItems='center';div.style.justifyContent='center';
-  var vvf=document.createElement('video');
+  var vvf=pre||document.createElement('video');
   vvf.autoplay=true;vvf.muted=true;vvf.setAttribute('playsinline','');
-  vvf.style.cssText='width:95%;max-width:100%;max-height:82vh;object-fit:contain;opacity:0;transition:opacity 1.5s ease;';
+  vvf.style.cssText='width:95%;max-width:100%;max-height:82vh;object-fit:contain;opacity:1;';
   var txt2=txt;
   div.insertBefore(vvf,txt2);
-  var video=histPick(CFG.videos_final,'cant_vfinal');
-  vvf.src=video;vvf.load();vvf.play().catch(function(){});
+  if(!pre){vvf.src=histPick(CFG.videos_final,'cant_vfinal');vvf.load();}
+  else{try{vvf.currentTime=0;}catch(e){}}
+  vvf.play().catch(function(){});
   var shown=false;
   var showVF=function(){
     if(shown)return;shown=true;
-    vvf.style.opacity='1';
     setTimeout(function(){
       div.style.transition='opacity 1.5s ease';div.style.opacity='1';
       txt.textContent=frase;
@@ -1543,7 +1553,7 @@ function mostrarVideoFinal(frase,callback){
     div.style.display='none';div.style.opacity='0';
     setTimeout(callback,50);
   };
-  vvf.oncanplay=showVF;vvf.ontimeupdate=showVF;setTimeout(showVF,1500);
+  vvf.oncanplay=showVF;vvf.ontimeupdate=showVF;setTimeout(showVF,1500);if(pre&&vvf.readyState>=3)setTimeout(showVF,50);
   setTimeout(function(){
     if(saltado)return;
     callback();
@@ -1552,7 +1562,7 @@ function mostrarVideoFinal(frase,callback){
       if(div.contains(vvf))div.removeChild(vvf);
       div.style.display='none';div.style.opacity='0';
     },1800);
-  },5800);
+  },5400);
 }
 
 function mostrarEscudoFinal(frase,callback,alternativa){
@@ -1578,7 +1588,7 @@ function mostrarEscudoFinal(frase,callback,alternativa){
     var aparecer=function(){
       if(desvanecido||terminado)return;desvanecido=true;
       img.style.opacity='1';
-      img.style.animation='escudoFlota 8.4s ease-in-out forwards';
+      img.style.animation='escudoFlota 6.6s ease-in-out forwards';
       txt.textContent=frase;
       void div.offsetWidth;
       div.style.transition='opacity 1.5s ease';div.style.opacity='1';
@@ -1591,7 +1601,7 @@ function mostrarEscudoFinal(frase,callback,alternativa){
     if(terminado)return;terminado=true;
     callback();
     setTimeout(function(){img.style.filter='';img.style.animation='none';div.style.display='none';div.style.opacity='0';},1800);
-  },7800);
+  },6600);
 }
 
 function mostrarSelloFinal(frase,callback){
@@ -1662,7 +1672,7 @@ function _valCerrar(enviar){
     try{var l=JSON.parse(localStorage.getItem('cant_valoraciones')||'[]');l.push(d);localStorage.setItem('cant_valoraciones',JSON.stringify(l.slice(-50)));}catch(e){}
     cantTrack('valoracion',d.estrellas,d.comentario,window._jotaNom);
     document.getElementById('val-tit').innerHTML='Muchas gracias';
-    V.classList.add('gr');V.firstChild.classList.add('gr');
+    V.classList.add('gr');V.firstChild.classList.add('gr');document.body.classList.add('val-gr');
     _valHecha=true;
     setTimeout(function(){_valAccion&&_valAccion();},1600);
   }else{
