@@ -154,6 +154,15 @@ body.acc-mode #fin-frase{font-size:clamp(22px,6.5vw,30px)!important;}
 .val-sello{width:min(58vw,30vh,250px);height:min(58vw,30vh,250px);object-fit:contain;opacity:.95;margin-bottom:6px;filter:drop-shadow(0 0 40px rgba(180,30,30,.6));animation:selloZoom 6s ease-in-out infinite;transition:width .5s ease,height .5s ease;}
 #valora.gr,#valora.gr.in{background:#050302;-webkit-backdrop-filter:none;backdrop-filter:none;}
 body.val-gr #acc-btn{display:none!important}
+.val-box.gr{display:none!important}
+#val-fin{position:absolute;inset:0;z-index:2;opacity:0;pointer-events:none;transition:opacity 1.4s ease;overflow:hidden;}
+#val-fin.on{opacity:1}
+.vf-bg{position:absolute;inset:0;background:#050302 center/cover no-repeat;transform:scale(1.04);transition:transform 9s ease-out;}
+#val-fin.on .vf-bg{transform:scale(1)}
+.vf-sello{position:absolute;left:50%;top:30%;width:min(66vw,320px);transform:translate(-50%,-50%);}
+.vf-sello img{width:100%;height:auto;display:block;animation:selloZoom 6s ease-in-out infinite;filter:drop-shadow(0 10px 26px rgba(0,0,0,.6)) drop-shadow(0 0 2px rgba(0,0,0,.5));}
+.vf-gracias{position:absolute;left:0;right:0;bottom:calc(5.5% + env(safe-area-inset-bottom,0px));text-align:center;font-family:'Cinzel',serif;font-weight:600;font-size:clamp(22px,7.2vw,34px);letter-spacing:.42em;padding-left:.42em;text-transform:uppercase;color:#fff;text-shadow:0 0 18px rgba(0,0,0,.9),0 0 6px rgba(0,0,0,.8),0 2px 3px rgba(0,0,0,.9);animation:latir 3.4s ease-in-out infinite;}
+@keyframes latir{0%,100%{opacity:.45}50%{opacity:1}}
 .val-box.gr .val-stars,.val-box.gr .val-lbl,.val-box.gr .val-linea,.val-box.gr .val-sub,.val-box.gr textarea,.val-box.gr .val-ok,.val-box.gr .val-skip{display:none!important;}
 .val-box.gr .val-sello{width:min(62vw,36vh,280px);height:min(62vw,36vh,280px);}
 .val-box.conc .val-sello{width:min(30vw,15vh,120px);height:min(30vw,15vh,120px);}
@@ -338,7 +347,9 @@ body.val-gr #acc-btn{display:none!important}
   <textarea id="val-com" maxlength="400" placeholder="&iquest;Quieres a&ntilde;adir un comentario? (opcional)"></textarea>
   <button class="btn val-ok" id="val-ok">Enviar y continuar</button><br>
   <button class="val-skip" id="val-skip">Ahora no</button>
-</div></div>
+</div>
+<div id="val-fin"><div class="vf-bg" id="vf-bg"></div><div class="vf-sello" id="vf-sello"><img id="vf-sello-img" alt="" decoding="async"></div><div class="vf-gracias" id="vf-gracias">Gracias</div></div>
+</div>
 
 <!-- MODAL OBRAS -->
 <div id="modal-obras">
@@ -478,6 +489,17 @@ const CFG = {
     'fotos/pergaminos/pergamino01.jpg',
     'fotos/pergaminos/pergamino03.jpg','fotos/pergaminos/pergamino04.jpg',
     'fotos/pergaminos/pergamino05.jpg',
+  ],
+  // Pantalla final de la valoracion: fondo 9:16 + sello (uno de 's', al azar, el que mejor casa con el color de la foto) + "GRACIAS" latente abajo
+  // cx/cy = centro del sello en % de la pantalla; w = ancho del sello en vw; t = color del texto
+  final_gracias: [
+    {f:'fotos/final_web/final01.webp',t:'#ffe6a8',s:[15,16],cx:50,cy:28,w:74},
+    {f:'fotos/final_web/final02.webp',t:'#ffffff',s:[11,12],cx:35,cy:60,w:58},
+    {f:'fotos/final_web/final03.webp',t:'#ffffff',s:[11,12],cx:50,cy:60,w:66},
+    {f:'fotos/final_web/final04.webp',t:'#fff4d2',s:[13,15],cx:50,cy:60,w:66},
+    {f:'fotos/final_web/final05.webp',t:'#fff4d2',s:[13,14],cx:50,cy:60,w:66},
+    {f:'fotos/final_web/final06.webp',t:'#ffe6a8',s:[15,7],cx:50,cy:28,w:74},
+    {f:'fotos/final_web/final07.webp',t:'#ffffff',s:[11,12],cx:26,cy:60,w:48}
   ],
   vistas: [
     'fotos/vistas/A01.jpg','fotos/vistas/A02.JPG','fotos/vistas/A03.jpg',
@@ -1662,7 +1684,8 @@ function valorar(accion){
   _valAccion=accion;
   var V=document.getElementById('valora'),st=document.getElementById('val-stars'),lb=document.getElementById('val-lbl');
   var tx=['Mejorable','Regular','Buena','Muy buena','Extraordinaria'];
-  _valNota=0;st.innerHTML='';lb.textContent='';V.firstChild.classList.remove('conc','gr');V.classList.remove('gr');V.firstChild.style.opacity='';V.firstChild.style.transition='';document.body.classList.remove('val-gr');
+  _vfPreparar();
+  _valNota=0;st.innerHTML='';lb.textContent='';V.firstChild.classList.remove('conc','gr');V.classList.remove('gr');V.firstChild.style.opacity='';V.firstChild.style.transition='';var _fv=document.getElementById('val-fin');_fv.classList.remove('on');_fv.style.transition='';document.body.classList.remove('val-gr');
   document.getElementById('val-com').style.display='none';document.getElementById('val-com').value='';
   document.getElementById('val-ok').classList.remove('act');
   for(var i=1;i<=5;i++)(function(n){
@@ -1678,10 +1701,28 @@ function valorar(accion){
   })(i);
   V.classList.add('show');void V.offsetWidth;V.classList.add('in');
 }
+// Pantalla final de la valoracion: se elige y precarga mientras la persona valora
+function _vfPreparar(){
+  try{
+    var lista=CFG.final_gracias.map(function(o){return o.f;});
+    var f=histNoRep(lista,'cant_fgr',3),o=CFG.final_gracias.filter(function(x){return x.f===f;})[0]||CFG.final_gracias[0];
+    var n=o.s[rnd(o.s.length)],src='fotos/sellos_web/sello'+n+'.webp';
+    var bg=document.getElementById('vf-bg'),im=document.getElementById('vf-sello-img'),se=document.getElementById('vf-sello'),tx=document.getElementById('vf-gracias');
+    var a=new Image();a.onload=function(){bg.style.backgroundImage="url('"+o.f+"')";};a.src=o.f;
+    im.src=src;
+    se.style.left=o.cx+'%';se.style.top=o.cy+'%';se.style.width='min('+o.w+'vw,'+Math.round(o.w*4.8)+'px)';
+    tx.style.color=o.t;
+  }catch(e){}
+}
+function _vfMostrar(){
+  var V=document.getElementById('valora'),bx=V.firstChild,fin=document.getElementById('val-fin');
+  bx.style.transition='opacity .45s ease';bx.style.opacity='0';
+  setTimeout(function(){bx.classList.add('gr');document.body.classList.add('val-gr');void fin.offsetWidth;fin.classList.add('on');},480);
+}
 // Respiro antes de la accion elegida: el contenido se desvanece, se queda un momento en negro y solo entonces continua
 function _valRespiro(fundido,pausa){
-  var V=document.getElementById('valora'),bx=V.firstChild;
-  bx.style.transition='opacity '+fundido+'ms ease';bx.style.opacity='0';
+  var V=document.getElementById('valora'),fin=document.getElementById('val-fin');
+  fin.style.transition='opacity '+fundido+'ms ease';fin.classList.remove('on');
   setTimeout(function(){_valAccion&&_valAccion();},fundido+pausa);
 }
 function _valCerrar(enviar){
@@ -1690,12 +1731,10 @@ function _valCerrar(enviar){
     var d={jota:(new URLSearchParams(location.search).get('jota'))||'',estrellas:_valNota,comentario:document.getElementById('val-com').value.trim(),fecha:new Date().toISOString(),pantalla:innerWidth+'x'+innerHeight};
     try{var l=JSON.parse(localStorage.getItem('cant_valoraciones')||'[]');l.push(d);localStorage.setItem('cant_valoraciones',JSON.stringify(l.slice(-50)));}catch(e){}
     cantTrack('valoracion',d.estrellas,d.comentario,window._jotaNom);
-    document.getElementById('val-tit').innerHTML='Muchas gracias';
-    V.classList.add('gr');V.firstChild.classList.add('gr');document.body.classList.add('val-gr');
-    _valHecha=true;
-    setTimeout(function(){_valRespiro(1200,1000);},1600);
+    V.classList.add('gr');_valHecha=true;_vfMostrar();
+    setTimeout(function(){_valRespiro(1500,1000);},480+1400+5200);
   }else{
-    _valHecha=true;V.classList.add('gr');_valRespiro(700,800);
+    _valHecha=true;V.classList.add('gr');_vfMostrar();setTimeout(function(){_valRespiro(1500,1000);},480+1400+3600);
   }
 }
 document.getElementById('val-ok').onclick=function(){_valCerrar(true);};
