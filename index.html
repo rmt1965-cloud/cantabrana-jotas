@@ -1064,11 +1064,16 @@ var POSTAL_INI=null,POSTAL_FIN=null;
   POSTAL_FIN=n>1?histNoRep(CFG.postales,'cant_postal',22):null;
   [POSTAL_INI,POSTAL_FIN].forEach(function(u){if(u){var i=new Image();i.src=u;}});
 })();
-function mostrarPostal(src,dur,alSalir,saltable){
+function mostrarPostal(src,dur,alSalir,saltable,tardio){
   var el=document.getElementById('pant-postal'),im=document.getElementById('postal-img'),hecho=false,t=null;
   if(!src||!el||!im){alSalir();return;}
   function salir(){
     if(hecho)return;hecho=true;clearTimeout(t);el.onclick=null;
+    if(tardio){
+      // en la fase final la postal se retira cuando la siguiente escena ya esta lista
+      _escSet(function(){el.style.opacity='0';setTimeout(function(){el.style.display='none';},1500);},0);
+      alSalir();return;
+    }
     alSalir();
     el.style.opacity='0';
     setTimeout(function(){el.style.display='none';},1500);
@@ -1079,6 +1084,7 @@ function mostrarPostal(src,dur,alSalir,saltable){
     el.style.display='flex';
     void el.offsetWidth;
     el.style.opacity='1';
+    if(tardio)_escLiberar();
     t=setTimeout(salir,dur);
     if(saltable)el.onclick=salir;
   };
@@ -1478,7 +1484,7 @@ function finJota(){
     var iniciarVid=function(){if(vidIni)return;vidIni=true;vp.src=vidSrc;vp.load();};
     var pend=3;
     for(var q=0;q<3;q++){var vs=histNoRep(CFG.vistas,'cant_vistas_n',10);_pre.v.push(vs);var imq=new Image();
-      imq.onload=imq.onerror=function(){if(--pend<=0)iniciarVid();};imq.src=vs;}
+      imq.onload=imq.onerror=function(){try{if(this.decode)this.decode().catch(function(){});}catch(e){}if(--pend<=0)iniciarVid();};(window._preImgs=window._preImgs||[]).push(imq);imq.src=vs;}
     setTimeout(iniciarVid,4000);   // por si alguna foto tardase
     _pre.vid=vp;
     new Image().src=CFG.escudo;if(typeof POSTAL_FIN!=='undefined'&&POSTAL_FIN)new Image().src=POSTAL_FIN;
@@ -1537,7 +1543,7 @@ function finJota(){
         pasosFin[iFoto]=function(cb){mostrarEscudoFinal(fraseEsc,cb,fotoOrig);};
       }
       // La postal se inserta en un hueco al azar (antes, entre o despues de las ventanas), sin sustituir ninguna
-      pasosFin.splice(rnd(pasosFin.length+1),0,function(cb){mostrarPostal(POSTAL_FIN,4000,cb,false);});
+      pasosFin.splice(rnd(pasosFin.length+1),0,function(cb){mostrarPostal(POSTAL_FIN,4500,cb,false,true);});
       var finCreditos=function(){
             // Ventana final con frase DISTINTA
             var otrosGrupos=CFG.frases_final.filter(function(_,i){return i!==idxFinal;});
@@ -1552,6 +1558,7 @@ function finJota(){
             }
             psc.style.display='flex';
             setTimeout(function(){psc.style.opacity='1';},100);
+            _escLiberar();
             // Tras 4s pasar a ventana final
             setTimeout(function(){
               var pf=document.getElementById('pant-final');
@@ -1572,6 +1579,10 @@ function finJota(){
 // FASE FINAL: FOTO → VIDEO → SELLO
 // ================================================================
 var _faseN=0;
+// La escena anterior NO se retira por un temporizador fijo: se queda debajo hasta que la siguiente ya esta visible (nunca queda la pantalla en negro)
+window._escPrev=null;
+function _escSet(f,d){window._escPrev={f:f,d:(d==null?1700:d)};}
+function _escLiberar(){var p=window._escPrev;window._escPrev=null;if(p)setTimeout(p.f,p.d);}
 // Escenas finales con dos capas alternas: la nueva se disuelve ENCIMA de la anterior (sin pasar por negro)
 function faseCapa(){
   _faseN=1-_faseN;var k=_faseN?'2':'';
@@ -1598,10 +1609,11 @@ function escenaFoto(frase,callback,srcPre){
     void div.offsetWidth;
     div.style.transition='opacity 1.5s ease';div.style.opacity='1';
     if(window._alArrancarFase)try{window._alArrancarFase();}catch(e){}
+    _escLiberar();
     setTimeout(function(){
+      _escSet(function(){div.style.display='none';div.style.opacity='0';img.style.animation='none';});
       callback();
-      setTimeout(function(){div.style.display='none';div.style.opacity='0';img.style.animation='none';},1800);
-    },5000);
+    },6500);
   }
   var vista=srcPre||histNoRep(CFG.vistas,'cant_vistas_n',10);
   img.style.width='88%';img.style.maxWidth='500px';img.style.maxHeight='72vh';img.style.objectFit='contain';
@@ -1633,6 +1645,7 @@ function mostrarVideoFinal(frase,callback,pre){
       div.style.transition='opacity 1.5s ease';div.style.opacity='1';
       txt.textContent=frase;
       if(window._alArrancarFase)try{window._alArrancarFase();}catch(e){}
+      _escLiberar();
       // La escena dura lo que dura el video: la disolucion hacia la siguiente empieza 1,5 s antes de su final (nunca queda congelado)
       var dur=(isFinite(vvf.duration)&&vvf.duration>0)?vvf.duration*1000:6900;
       var rest=Math.max(dur-(vvf.currentTime||0)*1000,0);
@@ -1642,12 +1655,12 @@ function mostrarVideoFinal(frase,callback,pre){
   var saltado=false,terminado=false;
   function terminar(){
     if(saltado||terminado)return;terminado=true;
-    callback();
-    setTimeout(function(){
+    _escSet(function(){
       if(vvf.pause)vvf.pause();
       if(div.contains(vvf))div.removeChild(vvf);
       div.style.display='none';div.style.opacity='0';
-    },1800);
+    });
+    callback();
   }
   vvf.onended=function(){if(shown)terminar();};
   vvf.onerror=function(){   // si el video no carga, se pasa a la siguiente escena sin dejar la pantalla en negro
@@ -1687,14 +1700,15 @@ function mostrarEscudoFinal(frase,callback,alternativa){
       void div.offsetWidth;
       div.style.transition='opacity 1.5s ease';div.style.opacity='1';
       if(window._alArrancarFase)try{window._alArrancarFase();}catch(e){}
+      _escLiberar();
     };
     img.onload=function(){(img.decode?img.decode():Promise.resolve()).catch(function(){}).then(aparecer);};
     setTimeout(aparecer,2500);
   },200);
   setTimeout(function(){
     if(terminado)return;terminado=true;
+    _escSet(function(){img.style.filter='';img.style.animation='none';div.style.display='none';div.style.opacity='0';});
     callback();
-    setTimeout(function(){img.style.filter='';img.style.animation='none';div.style.display='none';div.style.opacity='0';},1800);
   },6600);
 }
 
