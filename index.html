@@ -979,7 +979,15 @@ async function init(){
     histSet('cant_vids',[...histV,vid].slice(-Math.floor(CFG.videos_intro.length*0.6)));
 
     // Escudo: al inicio, al final o ninguno (nunca los dos a la vez)
-    window._escudoDonde=['inicio','final','ninguno'][rnd(3)];
+    // Escudo de madera: muy espaciado (minimo 6 visitas sin escudo; despues 50 % de probabilidad por visita)
+    (function(){
+      var n=99;try{n=parseInt(localStorage.getItem('cant_esc_gap')||'99',10);if(isNaN(n))n=99;}catch(e){}
+      var donde='ninguno';
+      if(n>=6&&rnd(2)===0)donde=rnd(2)===0?'inicio':'final';
+      n=(donde==='ninguno')?n+1:0;
+      try{localStorage.setItem('cant_esc_gap',String(n));}catch(e){}
+      window._escudoDonde=donde;
+    })();
     const mediaPool=[
       {src:fotos_intro[0],leyenda:grupo[0],tipo:'foto'},
       {src:fotos_intro[1],leyenda:grupo[1],tipo:'foto'},
@@ -1184,7 +1192,7 @@ function finJota(){
         function(cb){mostrarFotoFinal2(grupoFinal[2],cb);}
       ];
       // Escudo de Cantabrana: aparece al azar (1 de cada 2) y sustituye UNA de las dos fotos; nunca el video, la postal ni el sello
-      if(window._escudoDonde?window._escudoDonde==='final':rnd(2)===0){
+      if(window._escudoDonde==='final'){
         var iFoto=rnd(2)===0?0:2, fotoOrig=pasosFin[iFoto], fraseEsc=grupoFinal[iFoto];
         pasosFin[iFoto]=function(cb){mostrarEscudoFinal(fraseEsc,cb,fotoOrig);};
       }
