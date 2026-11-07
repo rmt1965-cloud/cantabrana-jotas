@@ -1478,6 +1478,7 @@ function mostrarFoto(idx){
     blur2.style.backgroundImage="url('"+url+"')";void blur2.offsetWidth;
     blur2.style.transition='opacity 1.6s ease';blur2.style.opacity='1';
     setTimeout(function(){
+      if(jotaFin)return;   // si la jota ya acabo, la portada manda: no tocar su fondo
       blur.style.backgroundImage="url('"+url+"')";
       blur2.style.transition='none';blur2.style.opacity='0';
     },1700);
@@ -1485,7 +1486,8 @@ function mostrarFoto(idx){
     if(idx===0){a.style.transition='none';}
     a.classList.add('show');
     if(idx===0){void a.offsetWidth;a.style.transition='';if(window._onPrimeraFoto){window._onPrimeraFoto();}}
-    setTimeout(function(){b.classList.remove('show');},1700);
+    // OJO: si la jota acaba en estos 1,7 s, esta capa es la que se usa para la portada: no se debe ocultar (dejaba solo el fondo desenfocado)
+    setTimeout(function(){if(!jotaFin)b.classList.remove('show');},1700);
     _capa=1-_capa;
     fotoTimer=setTimeout(function(){mostrarFoto(idx+1);},dur*1000);
     // calentar la siguiente y la siguiente a esa
