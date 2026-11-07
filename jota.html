@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cantabrana · Retazos de Vida — Escuchar la jota</title>
+<meta name="description" content="Jotas de Cantabrana (Valle de Caderechas, Burgos) cantadas por sus vecinos.">
+<meta name="theme-color" content="#1a0e05">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<!--
+  PAGINA "SOLO JOTA" (placas del pueblo y codigos QR de jota sola).
+  Direccion: jota.html?j=<nombre del audio sin .mp3>   Ej.: jota.html?j=Alboradas--01
+  Los titulos y cantantes se leen de la lista de index.html (una sola fuente); la letra, de fichas.js.
+  ¡NO renombrar este archivo ni los audios! Los QR impresos en las placas apuntan aqui.
+-->
+<style>
+:root{--gold:#c8922a;--gold-l:#f0c060;--ink:#3b2410;}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:#140b04 radial-gradient(ellipse at 50% 20%,#3a2410 0%,#140b04 70%);color:#f3e6c8;font-family:'Cormorant Garamond',Georgia,serif;display:flex;flex-direction:column;align-items:center;min-height:100%;padding:calc(18px + env(safe-area-inset-top,0px)) 16px calc(24px + env(safe-area-inset-bottom,0px));}
+.marca{text-align:center;margin-bottom:14px}
+.marca b{display:block;font-family:'Cinzel',serif;font-size:clamp(17px,5vw,22px);letter-spacing:4px;color:var(--gold-l);font-weight:700}
+.marca i{font-size:clamp(14px,4vw,17px);color:rgba(240,192,96,.8)}
+.carta{position:relative;width:min(100%,460px);background:url('fotos/pergaminos/pergamino01.jpg') center/100% 100% no-repeat;padding:34px 28px 30px;color:var(--ink);text-align:center;box-shadow:0 14px 50px rgba(0,0,0,.7);}
+.rosa{width:74px;height:74px;margin:0 auto 10px;display:block;border-radius:50%;box-shadow:0 2px 10px rgba(0,0,0,.25)}
+.num{font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;color:#7a5220;font-weight:600}
+h1{font-family:'Cinzel',serif;font-size:clamp(20px,6.4vw,28px);line-height:1.2;margin:8px 0 6px;color:#3b2008;font-weight:700}
+.canta{font-style:italic;font-size:clamp(17px,5vw,21px);color:#6b4416;margin-bottom:4px}
+.lugar{font-family:'Cinzel',serif;font-size:11px;letter-spacing:2.5px;color:#8a6430;margin-bottom:20px}
+.play{width:92px;height:92px;border-radius:50%;border:3px solid #7a4a12;background:radial-gradient(circle at 35% 30%,#f6d58d,#c8922a 70%);color:#3b2008;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;box-shadow:0 6px 18px rgba(80,40,0,.45);-webkit-tap-highlight-color:transparent}
+.play:active{transform:scale(.96)}
+.play svg{width:40px;height:40px;fill:#3b2008}
+.barra{display:flex;align-items:center;gap:10px;font-family:'Cinzel',serif;font-size:12px;color:#6b4416}
+.barra input{flex:1;accent-color:#8a5a1a;height:28px}
+.aviso{margin-top:16px;font-style:italic;font-size:15px;color:#6b4416;line-height:1.4}
+.btns{display:flex;flex-direction:column;gap:12px;width:min(100%,460px);margin-top:20px}
+.btn{display:block;text-align:center;text-decoration:none;font-family:'Cinzel',serif;font-size:13px;letter-spacing:2.5px;text-transform:uppercase;padding:14px 18px;border:1.5px solid rgba(200,146,42,.8);background:rgba(200,146,42,.12);color:var(--gold-l);border-radius:4px;cursor:pointer}
+.btn.sec{border-color:rgba(200,146,42,.45);background:transparent;color:rgba(240,210,150,.9)}
+.letra{display:none;width:min(100%,460px);margin-top:14px;background:rgba(14,10,5,.75);border:1px solid rgba(200,146,42,.45);border-radius:8px;padding:20px 20px 22px;}
+.letra.on{display:block}
+.letra p{font-size:clamp(17px,5vw,20px);line-height:1.55;white-space:pre-line;margin-bottom:12px}
+.letra .d{font-size:15px;line-height:1.45;color:rgba(235,220,185,.9);white-space:pre-line;margin:6px 0}
+.letra .d b{display:block;font-family:'Cinzel',serif;font-size:11px;letter-spacing:1.5px;color:var(--gold);font-weight:600}
+.pie{margin-top:auto;padding-top:26px;text-align:center;font-size:13px;color:rgba(240,210,150,.55);line-height:1.5}
+.pie a{color:rgba(240,192,96,.75)}
+.err{padding:20px 0;font-size:18px}
+</style>
+</head>
+<body>
+<div class="marca"><b>CANTABRANA</b><i>Retazos de vida</i></div>
+
+<div class="carta" id="carta">
+  <img class="rosa" src="fotos/rosa_qr.png" alt="">
+  <div class="num" id="num">&nbsp;</div>
+  <h1 id="tit">Cargando…</h1>
+  <div class="canta" id="canta"></div>
+  <div class="lugar">CANTABRANA · VALLE DE CADERECHAS</div>
+  <button class="play" id="play" type="button" aria-label="Escuchar la jota">
+    <svg id="ico" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+  </button>
+  <div class="barra"><span id="t0">0:00</span><input id="pos" type="range" min="0" max="100" value="0" step="0.1" aria-label="Posición"><span id="t1">0:00</span></div>
+  <div class="aviso" id="aviso" style="display:none">Canción de otra época: su letra refleja el humor y las costumbres de su tiempo.</div>
+</div>
+
+<div class="btns">
+  <button class="btn sec" id="bl" type="button" style="display:none">Ver la letra</button>
+  <div class="letra" id="letra"></div>
+  <a class="btn" id="exp" href="./">Vivir la experiencia completa</a>
+</div>
+
+<div class="pie">Proyecto «Cantabrana, retazos de vida» · Rafael Molina Toledo<br>
+Grabaciones cedidas por sus intérpretes. Todos los derechos reservados.<br>
+<a href="mailto:cantabranaretazosdevida@gmail.com">cantabranaretazosdevida@gmail.com</a></div>
+
+<audio id="au" preload="metadata" playsinline></audio>
+
+<script src="stats-config.js"></script>
+<script src="fichas.js"></script>
+<script>
+(function(){
+  var q=new URLSearchParams(location.search), j=(q.get('j')||q.get('jota')||'').replace(/\.mp3$/i,'').trim();
+  var $=function(id){return document.getElementById(id);};
+  var au=$('au'), playing=false, jota=null;
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function dec(s){try{return JSON.parse('"'+s.replace(/"/g,'\\"')+'"');}catch(e){return s;}}
+  function mmss(t){t=Math.max(0,Math.floor(t||0));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0');}
+
+  // --- estadisticas (mismas que la web: sin cookies ni datos personales) ---
+  var URL_=window.CANT_STATS_URL||'', sid='', vid='', owner=false;
+  try{owner=localStorage.getItem('cant_owner')==='1';}catch(e){}
+  function rid(){return Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);}
+  try{sid=sessionStorage.getItem('cant_sid')||rid();sessionStorage.setItem('cant_sid',sid);}catch(e){sid=rid();}
+  try{vid=localStorage.getItem('cant_vid')||rid();localStorage.setItem('cant_vid',vid);}catch(e){vid=sid;}
+  var local=/^(localhost|127\.)/.test(location.hostname)||location.protocol==='file:';
+  function track(t,v,x){
+    if(!URL_||owner||local||navigator.webdriver)return;
+    var ua=navigator.userAgent||'';
+    var d={t:t,j:jota?jota.t:j,s:sid,v:vid,d:/iPhone|iPad|iPod/.test(ua)?'iOS':/Android/.test(ua)?'Android':'Escritorio',n:'',p:innerWidth+'x'+innerHeight,l:(navigator.language||'').slice(0,5),o:'Placa QR (solo jota)',x:String(v==null?'':v).slice(0,200),y:String(x==null?'':x).slice(0,500),h:''};
+    var body=JSON.stringify(d);
+    try{if(navigator.sendBeacon&&navigator.sendBeacon(URL_,new Blob([body],{type:'text/plain;charset=UTF-8'})))return;}catch(e){}
+    try{fetch(URL_,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=UTF-8'},body:body}).catch(function(){});}catch(e){}
+  }
+
+  function fallo(msg){$('tit').textContent='Jota no encontrada';$('canta').textContent=msg||'';$('play').style.display='none';document.querySelector('.barra').style.display='none';}
+  if(!j){fallo('Escanea el código de una placa o entra en la web completa.');return;}
+  $('exp').href='./?jota='+encodeURIComponent(j);
+
+  // La lista de jotas se lee de index.html: asi los titulos se cambian en un solo sitio
+  fetch('index.html',{cache:'no-cache'}).then(function(r){return r.text();}).then(function(h){
+    var re=/\{a:'([^']*)',c:'([^']*)',m:'([^']*)',t:'([^']*)'(,s:true)?\}/g, m;
+    while((m=re.exec(h))){ if(m[1].replace(/\.mp3$/i,'')===j){ jota={a:m[1],c:dec(m[2]),t:dec(m[4]),s:!!m[5]}; break; } }
+    montar();
+  }).catch(function(){montar();});
+
+  function montar(){
+    var archivo=jota?jota.a:(j+'.mp3');
+    if(jota){
+      $('tit').textContent=jota.t; $('canta').textContent=jota.c;
+      document.title=jota.t+' · Cantabrana, retazos de vida';
+      if(jota.s)$('aviso').style.display='block';
+    }else{ $('tit').textContent=j.replace(/--\d+$/,'').replace(/[_-]+/g,' '); }
+    var n=(archivo.match(/(\d+)\.mp3$/i)||[])[1]; if(n)$('num').textContent='JOTA Nº '+n;
+    au.src='audio/'+encodeURIComponent(archivo);
+    au.onerror=function(){fallo('No se ha podido cargar el audio. Comprueba la conexión e inténtalo de nuevo.');};
+    track('visita','placa','');
+    // Letra y ficha (si existe en fichas.js)
+    var f=(window.CANT_FICHAS||{})[archivo];
+    if(f){
+      var html='';
+      if(f.letra&&String(f.letra).trim())html+='<p>'+esc(String(f.letra).trim())+'</p>';
+      [['grabacion','Grabación'],['aprendida','La aprendió de'],['ocasion','Cuándo se cantaba'],['palabras','Palabras del lugar'],['notas','Notas']].forEach(function(c){
+        var v=f[c[0]]; if(v&&String(v).trim())html+='<div class="d"><b>'+c[1]+'</b>'+esc(String(v).trim())+'</div>';});
+      if(html){$('letra').innerHTML=html;$('bl').style.display='block';
+        $('bl').onclick=function(){var on=$('letra').classList.toggle('on');$('bl').textContent=on?'Ocultar la letra':'Ver la letra';};}
+    }
+  }
+
+  var ICO_PLAY='<path d="M8 5v14l11-7z"/>', ICO_PAUSE='<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>', inicio=false;
+  $('play').onclick=function(){
+    if(au.paused){au.play().then(function(){ if(!inicio){inicio=true;track('jota_play','placa','');} }).catch(function(){});}
+    else au.pause();
+  };
+  au.onplay=function(){$('ico').innerHTML=ICO_PAUSE;$('play').setAttribute('aria-label','Pausar');};
+  au.onpause=function(){$('ico').innerHTML=ICO_PLAY;$('play').setAttribute('aria-label','Escuchar la jota');};
+  au.onloadedmetadata=function(){$('t1').textContent=mmss(au.duration);};
+  au.ontimeupdate=function(){ if(isFinite(au.duration)&&au.duration>0){$('pos').value=au.currentTime/au.duration*100;} $('t0').textContent=mmss(au.currentTime); };
+  au.onended=function(){track('jota_fin',Math.round(au.duration||0),'placa');$('pos').value=0;};
+  $('pos').oninput=function(){ if(isFinite(au.duration))au.currentTime=$('pos').value/100*au.duration; };
+})();
+</script>
+</body>
+</html>

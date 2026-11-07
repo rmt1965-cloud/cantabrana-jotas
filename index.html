@@ -132,6 +132,20 @@ body.acc-mode #acc-btn svg text{fill:#f0c060!important;}
 #ui-bot{position:fixed;bottom:0;left:0;right:0;z-index:30;padding:16px 20px;padding-bottom:max(16px,env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(0,0,0,.8),transparent);display:flex;gap:12px;justify-content:center;opacity:0;transition:opacity 1s ease;pointer-events:none;}
 #ui-bot.show{opacity:1;pointer-events:all}
 #saltar-jota{position:fixed;left:50%;bottom:104px;transform:translateX(-50%) translateY(8px);z-index:31;display:none;opacity:0;transition:opacity 1s ease,transform 1s ease;font-family:'Cinzel',serif;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(240,220,170,.92);background:rgba(10,8,4,.45);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid rgba(200,146,42,.55);border-radius:22px;padding:10px 22px;cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap;}
+/* FICHA DE LA JOTA (letra y datos): boton y panel; solo aparece si la jota tiene ficha en fichas.js */
+#ficha-btn{position:fixed;right:14px;bottom:152px;z-index:31;display:none;opacity:0;transition:opacity 1s ease;font-family:'Cinzel',serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,220,170,.95);background:rgba(10,8,4,.5);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid rgba(200,146,42,.6);border-radius:22px;padding:9px 16px;cursor:pointer;}
+#ficha-btn.show{opacity:1;}
+#ficha-pan{position:fixed;left:50%;top:50%;transform:translate(-50%,-46%);width:min(90vw,520px);max-height:72vh;overflow-y:auto;-webkit-overflow-scrolling:touch;z-index:40;opacity:0;pointer-events:none;transition:opacity .6s ease,transform .6s ease;background:rgba(14,10,5,.86);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(200,146,42,.55);border-radius:10px;padding:22px 22px 26px;box-shadow:0 10px 40px rgba(0,0,0,.6);color:rgba(245,230,195,.96);}
+#ficha-pan.show{opacity:1;pointer-events:all;transform:translate(-50%,-50%);}
+#ficha-pan .fx{position:sticky;top:0;float:right;margin:-8px -8px 0 0;background:none;border:none;color:var(--gold-l);font-size:26px;line-height:1;cursor:pointer;padding:4px 8px;}
+#ficha-pan h3{font-family:'Cinzel',serif;font-size:clamp(14px,4.2vw,18px);letter-spacing:2px;color:var(--gold-l);margin:0 30px 4px 0;font-weight:600;}
+#ficha-pan .fc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(14px,4vw,17px);color:rgba(200,146,42,.95);margin-bottom:14px;}
+#ficha-pan .fl{font-family:'Cormorant Garamond',serif;font-size:clamp(17px,5vw,21px);line-height:1.55;white-space:pre-line;margin:0 0 16px;}
+#ficha-pan .fd{font-family:'Cormorant Garamond',serif;font-size:clamp(14px,4vw,16px);line-height:1.5;margin:6px 0;color:rgba(235,220,185,.92);white-space:pre-line;}
+#ficha-pan .fd b{font-family:'Cinzel',serif;font-size:11px;letter-spacing:1.5px;color:var(--gold);font-weight:600;text-transform:uppercase;display:block;}
+#ficha-pan hr{border:none;border-top:1px solid rgba(200,146,42,.3);margin:14px 0;}
+#pant-repro.portada #ficha-btn{opacity:0!important;pointer-events:none;}
+body.acc-mode #ficha-btn{font-size:15px;padding:12px 20px;bottom:186px;}
 #saltar-jota.show{opacity:1;transform:translateX(-50%) translateY(0);}
 #saltar-jota:active{background:rgba(200,146,42,.3);}
 #pant-repro.portada #saltar-jota{opacity:0!important;pointer-events:none;}
@@ -222,6 +236,7 @@ body.val-gr #acc-btn{display:none!important}
   #prog{bottom:52px;}
   #ticker{bottom:28px;}
   #saltar-jota{bottom:84px;padding:7px 16px;font-size:11px;}
+  #ficha-btn{bottom:124px;padding:7px 14px;font-size:11px;}
   #ui-bot{padding:8px 16px;}
   #d-img,#d-img2{max-height:70vh;max-width:55%;}
   .p-aviso{font-size:clamp(13px,3.5vw,20px);}
@@ -322,6 +337,8 @@ body.val-gr #acc-btn{display:none!important}
     </div>
   </div>
   <button id="saltar-jota" type="button" onclick="saltarJota()">Saltar jota &#9197;</button>
+  <button id="ficha-btn" type="button" onclick="fichaAbrir()" aria-label="Ver la letra y la ficha de la jota">Letra &#9998;</button>
+  <div id="ficha-pan" role="dialog" aria-label="Ficha de la jota"></div>
   <div id="prog"><div id="prog-bar"><div id="prog-fill"></div></div></div>
   <div id="ticker"><span id="ticker-in">&#9834; Cantabrana &middot; Retazos de Vida &middot; Patrimonio Musical &#9834;</span></div>
   <div id="ui-bot" style="display:none;">
@@ -423,6 +440,7 @@ body.val-gr #acc-btn{display:none!important}
 <audio id="aAmb" preload="none" loop></audio>
 
 <script src="stats-config.js"></script>
+<script src="fichas.js"></script>
 <script>
 // ================================================================
 // CONFIGURACION
@@ -1404,6 +1422,7 @@ async function iniciarJota(){
   iniciarProgreso();
   (function(){var sb=document.getElementById('saltar-jota');if(!sb)return;sb.classList.remove('show');sb.style.display='none';
     setTimeout(function(){if(jotaFin)return;sb.style.display='block';void sb.offsetWidth;sb.classList.add('show');},3000);})();
+  setTimeout(function(){if(!jotaFin)fichaMostrarBoton(true);},3000);
   aJota.onerror=function(){
     document.getElementById('ticker-in').textContent='⚠ Error al cargar el audio. Comprueba tu conexión.';
     setTimeout(reiniciar,4000);
@@ -1491,6 +1510,38 @@ function iniciarProgreso(){
 // ================================================================
 // FIN JOTA → PORTADA con FADE → FASE FINAL
 // ================================================================
+// ================================================================
+// FICHA DE LA JOTA: letra y datos de cada grabacion (se rellenan en fichas.js a partir del Excel de fichas)
+// El boton solo aparece si la jota tiene algo escrito. Para ver el diseno con un ejemplo: ?ficha=prueba
+// ================================================================
+var FICHA_CAMPOS=[['grabacion','Grabación'],['aprendida','La aprendió de'],['ocasion','Cuándo se cantaba'],['palabras','Palabras del lugar'],['notas','Notas']];
+function fichaDe(j){
+  if(!j)return null;
+  var f=(window.CANT_FICHAS||{})[j.a];
+  if(!f&&/[?&]ficha=prueba/.test(location.search))f={letra:'(Ejemplo de diseño)\nAquí aparecerá la letra de la jota,\nverso a verso,\ntal como se canta en Cantabrana.',grabacion:'Cantabrana, verano de 2024',aprendida:'De su madre, en las rondas',ocasion:'En las fiestas y en las rondas de mozos',palabras:'Ejemplo: «guindalera», el árbol de las guindas',notas:'Texto de prueba: esta ficha aún no está rellenada.'};
+  if(!f)return null;
+  var hay=!!(f.letra&&String(f.letra).trim());
+  FICHA_CAMPOS.forEach(function(c){if(f[c[0]]&&String(f[c[0]]).trim())hay=true;});
+  return hay?f:null;
+}
+function _fEsc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function fichaMostrarBoton(on){
+  var b=document.getElementById('ficha-btn');if(!b)return;
+  if(on&&fichaDe(jota)){b.style.display='block';void b.offsetWidth;b.classList.add('show');}
+  else{b.classList.remove('show');setTimeout(function(){if(!b.classList.contains('show'))b.style.display='none';},1100);fichaCerrar();}
+}
+function fichaAbrir(){
+  var f=fichaDe(jota),pn=document.getElementById('ficha-pan');if(!f||!pn)return;
+  var h='<button class="fx" type="button" onclick="fichaCerrar()" aria-label="Cerrar">&times;</button>'
+    +'<h3>'+_fEsc(jota.t)+'</h3><div class="fc">'+_fEsc(jota.c)+'</div>';
+  if(f.letra&&String(f.letra).trim())h+='<p class="fl">'+_fEsc(String(f.letra).trim())+'</p>';
+  var d='';FICHA_CAMPOS.forEach(function(c){var v=f[c[0]];if(v&&String(v).trim())d+='<p class="fd"><b>'+c[1]+'</b>'+_fEsc(String(v).trim())+'</p>';});
+  if(d)h+=(f.letra?'<hr>':'')+d;
+  pn.innerHTML=h;pn.scrollTop=0;pn.classList.add('show');
+}
+function fichaCerrar(){var pn=document.getElementById('ficha-pan');if(pn)pn.classList.remove('show');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')fichaCerrar();});
+
 // Saltar jota: el audio se apaga con suavidad y el proceso pasa directamente a la parte final (portada y escenas)
 function saltarJota(){
   if(jotaFin)return;
@@ -1502,6 +1553,7 @@ function saltarJota(){
 }
 function finJota(){
   if(jotaFin)return;jotaFin=true;
+  try{fichaMostrarBoton(false);}catch(e){}
   (function(){var sb=document.getElementById('saltar-jota');if(sb){sb.classList.remove('show');setTimeout(function(){sb.style.display='none';},1100);}})();
   cantTrack('jota_fin',Math.round(aJota.currentTime||0),window._jotaSaltada?'saltada':'',window._jotaNom);
   clearTimeout(fotoTimer);fotoIdx=0;
