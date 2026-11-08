@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Marcar tiempos de la letra · Cantabrana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#c8922a;--gold-l:#e8c47a;--bg:#120d07;--panel:#1d150b;--txt:#f3e6c8;--dim:rgba(243,230,200,.55);}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:'Cormorant Garamond',Georgia,serif;font-size:18px;-webkit-tap-highlight-color:transparent;}
+header{padding:16px 18px 10px;border-bottom:1px solid rgba(200,146,42,.35);}
+h1{font-family:'Cinzel',serif;font-size:17px;letter-spacing:2px;color:var(--gold-l);margin:0 0 4px;font-weight:600;}
+header p{margin:0;color:var(--dim);font-size:15px;font-style:italic;}
+main{max-width:760px;margin:0 auto;padding:14px 16px 200px;}
+select,button{font-family:'Cinzel',serif;font-size:13px;letter-spacing:1px;}
+select{width:100%;padding:11px 10px;background:var(--panel);color:var(--txt);border:1px solid rgba(200,146,42,.5);border-radius:8px;}
+.fila{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0;}
+.btn{background:rgba(200,146,42,.12);color:var(--gold-l);border:1px solid rgba(200,146,42,.55);border-radius:20px;padding:9px 14px;cursor:pointer;}
+.btn:disabled{opacity:.35;cursor:default;}
+.btn.on{background:var(--gold);color:#1a1006;}
+audio{width:100%;margin-top:6px;}
+#estado{font-size:16px;color:var(--gold-l);min-height:22px;margin:6px 0;}
+#vista{background:#000 center/cover;border-radius:10px;min-height:120px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:18px;margin:10px 0;border:1px solid rgba(200,146,42,.3);}
+#vista .a{font-weight:600;font-size:clamp(21px,6vw,30px);color:#fff7e2;text-shadow:0 2px 10px #000;min-height:1.3em;}
+#vista .b{font-style:italic;font-size:clamp(15px,4.2vw,20px);color:rgba(240,220,170,.6);margin-top:6px;min-height:1.3em;}
+ol{list-style:none;padding:0;margin:8px 0;}
+li{display:flex;align-items:center;gap:8px;padding:7px 8px;border-bottom:1px solid rgba(200,146,42,.15);border-radius:6px;}
+li .t{font-family:'Cinzel',serif;font-size:12px;color:var(--gold);min-width:58px;cursor:pointer;}
+li .v{flex:1;cursor:pointer;}
+li.sig{background:rgba(200,146,42,.18);outline:1px dashed rgba(200,146,42,.6);}
+li.actual .v{color:#fff;font-weight:600;}
+li.vacio .t{color:var(--dim);}
+li .aj{background:none;border:1px solid rgba(200,146,42,.35);color:var(--gold-l);border-radius:6px;padding:3px 7px;font-size:12px;cursor:pointer;}
+#marcar{position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(18,13,7,.96) 30%);display:flex;gap:10px;justify-content:center;}
+#bVerso{flex:1;max-width:480px;font-size:18px;letter-spacing:2px;padding:22px 10px;border-radius:14px;background:var(--gold);color:#1a1006;border:none;font-weight:600;cursor:pointer;box-shadow:0 6px 24px rgba(0,0,0,.6);}
+#bVerso:active{transform:scale(.98);}
+#bVerso:disabled{opacity:.35;}
+#bDeshacer{border-radius:14px;padding:0 16px;font-size:13px;}
+.ayuda{font-size:15px;color:var(--dim);line-height:1.45;background:rgba(200,146,42,.06);border-left:3px solid rgba(200,146,42,.5);padding:8px 12px;border-radius:4px;}
+.ok{color:#9fd18b;}
+</style>
+</head>
+<body>
+<header>
+  <h1>MARCAR TIEMPOS DE LA LETRA</h1>
+  <p>Cantabrana · Retazos de vida — herramienta de trabajo (no se enlaza desde la web)</p>
+</header>
+<main>
+  <select id="sel"></select>
+  <audio id="au" controls preload="metadata"></audio>
+  <div class="fila">
+    <button class="btn" id="bEmpezar">▶ Empezar a marcar desde el principio</button>
+    <button class="btn" id="bVel">Velocidad 1×</button>
+    <button class="btn" id="bAtras">⟲ 5 s</button>
+  </div>
+  <div id="estado"></div>
+  <div id="vista"><div class="a"></div><div class="b"></div></div>
+  <div class="ayuda">
+    <b>Cómo se hace:</b> pulse «Empezar a marcar» y, mientras suena, toque el botón grande <b>VERSO</b> (o la barra espaciadora) justo cuando el cantante <i>empieza</i> cada verso. El verso que toca marcar va recuadrado.<br>
+    Si se equivoca, «Deshacer» borra el último y retrocede un poco. Al tocar un verso de la lista, la jota salta a ese punto para comprobarlo; con −/+ lo ajusta en décimas.<br>
+    Todo se guarda solo en este navegador. Cuando tenga varias jotas hechas, pulse <b>«Descargar tiempos.js»</b> y ponga ese archivo en la carpeta cantabrana-jotas (sustituyendo al que hay) y súbalo a GitHub.
+  </div>
+  <ol id="lista"></ol>
+  <div class="fila">
+    <button class="btn" id="bBorrar">Borrar los tiempos de esta jota</button>
+    <button class="btn on" id="bDescargar">⬇ Descargar tiempos.js</button>
+  </div>
+  <div id="resumen" class="ayuda"></div>
+</main>
+<div id="marcar">
+  <button class="btn" id="bDeshacer">↶ Deshacer</button>
+  <button id="bVerso">VERSO</button>
+</div>
+<script>window.CANT_FICHAS={};window.CANT_TIEMPOS={};</script>
+<script src="fichas.js"></script>
+<script src="tiempos.js"></script>
+<script>
+var JOTAS=[{"a": "Alboradas--01.mp3", "c": "Alboradas", "t": "ALBORADAS"}, {"a": "Gregorio_Ojeda_Pena_y_Julian_Ojeda_Ojeda--02.mp3", "c": "Gregorio Ojeda Peña y Julián Ojeda Ojeda", "t": "CAMINITO DEL ARROYO"}, {"a": "Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--03.mp3", "c": "Julián Ojeda Ojeda y Gregorio Ojeda Peña", "t": "ÉCHALA CON FUERZA AL AIRE"}, {"a": "Julian_Ojeda_Ojeda--04.mp3", "c": "Julián Ojeda Ojeda", "t": "EL CONEJO"}, {"a": "Julian_Ojeda_Ojeda--05.mp3", "c": "Julián Ojeda Ojeda", "t": "LAS MUJERES EN EL HORNO"}, {"a": "Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--06.mp3", "c": "Julián Ojeda Ojeda y Gregorio Ojeda Peña", "t": "CARRUSEL DE CANCIONES"}, {"a": "Pedro-Felix-Garcia-Linaje-07.mp3", "c": "Pedro Félix García Linaje", "t": "QUE SON DE CANTABRANA (Pedrín)"}, {"a": "Julian_Ojeda_Ojeda--08.mp3", "c": "Julián Ojeda Ojeda", "t": "QUE TE LA HAN TENTADO"}, {"a": "Cecilio_Jose_Diaz_Linaje--09.mp3", "c": "Cecilio José Díaz Linaje", "t": "BILBAINADA"}, {"a": "Cecilio_Jose_Diaz_Linaje--10.mp3", "c": "Cecilio José Díaz Linaje", "t": "QUE SON LOS DE CANTABRANA"}, {"a": "Julian-Ojeda-Ojeda-y-Gregorio-Ojeda-Pena--11.mp3", "c": "Julián Ojeda Ojeda y Gregorio Ojeda Peña", "t": "SEGUNDO"}, {"a": "Pedro_Felix_Garcia_Linaje--12.mp3", "c": "Pedro Félix García Linaje", "t": "SI PASAS POR TERMINÓN"}, {"a": "Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--13.mp3", "c": "Julián Ojeda Ojeda y Gregorio Ojeda Peña", "t": "VINO DE GALLIPEPE"}, {"a": "Julian_Ojeda_Ojeda--14.mp3", "c": "Julián Ojeda Ojeda", "t": "A LA FERIA DE EXTREMADURA"}, {"a": "Julian_Ojeda_Ojeda--15.mp3", "c": "Julián Ojeda Ojeda", "t": "Y TANTO QUE SABES COSER"}, {"a": "Julian_Ojeda_Ojeda--16.mp3", "c": "Julián Ojeda Ojeda", "t": "UN CANTARILLO EN LA FUENTE"}, {"a": "Julian_Ojeda_Ojeda--17.mp3", "c": "Julián Ojeda Ojeda", "t": "BRAGUETA"}, {"a": "julian-Ojeda-Ojeda--18.mp3", "c": "Julián Ojeda Ojeda", "t": "LA VERDAD EN VERSO"}, {"a": "Julian_Ojeda_Ojeda--19.mp3", "c": "Julián Ojeda Ojeda", "t": "PARA DINERO LA HABANA"}, {"a": "Julian-Ojeda-Ojeda--20.mp3", "c": "Julián Ojeda Ojeda", "t": "QUE TE TUMBO"}, {"a": "Julian_Ojeda_Ojeda--21.mp3", "c": "Julián Ojeda Ojeda", "t": "UN SACO MELONES"}, {"a": "Julian-Ojeda-Ojeda--22.mp3", "c": "Julián Ojeda Ojeda", "t": "VENIA DE REGAR"}, {"a": "Julian-Ojeda-Ojeda--23.mp3", "c": "Julián Ojeda Ojeda", "t": "JUANITA YA SE HA CASADO"}, {"a": "Julian_Ojeda_Ojeda--24.mp3", "c": "Julián Ojeda Ojeda", "t": "LA CADERECHANA"}, {"a": "Julian_Ojeda_Ojeda--25.mp3", "c": "Julián Ojeda Ojeda", "t": "HAY QUE VER"}, {"a": "Julian_Ojeda_Ojeda--26.mp3", "c": "Julián Ojeda Ojeda", "t": "EL QUE SE CASA DE VIEJO"}, {"a": "Grupal_himno_Cantabrana--27.mp3", "c": "Grupal · Himno de Cantabrana", "t": "HIMNO CANTABRANA (Mujeres)"}, {"a": "Julian_Ojeda_Ojeda--28.mp3", "c": "Julián Ojeda Ojeda", "t": "CALASTE SIETE COLCHONES"}, {"a": "Lucia_Ojeda_Pena_y_Julian_Ojeda_Ojeda--29.mp3", "c": "Lucía Ojeda Peña y Julián Ojeda Ojeda", "t": "SIENTO EL CALOR DE MI PATRIA"}, {"a": "Julian_Ojeda_Ojeda--30.mp3", "c": "Julián Ojeda Ojeda", "t": "SI TIENES MUJER GUAPA"}, {"a": "Julian_Ojeda_Ojeda--31.mp3", "c": "Julián Ojeda Ojeda", "t": "LA PUERTA DE SIETE LLAVES"}, {"a": "Pedro_Felix_Garcia_Linaje--32.mp3", "c": "Pedro Félix García Linaje", "t": "GUINDALERA"}, {"a": "Pedro_Felix_Garcia_Linaje--33.mp3", "c": "Pedro Félix García Linaje", "t": "HIMNO CANTABRANA (Pedrín)"}, {"a": "Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--34.mp3", "c": "Julián Ojeda Ojeda y Gregorio Ojeda Peña", "t": "NO HAY QUIEN PUEDA"}, {"a": "Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--35.mp3", "c": "Julián Ojeda Ojeda y Gregorio Ojeda Peña", "t": "SI TE QUIERES CASAR"}, {"a": "Pedro-Felix-Garcia-Linaje--38.mp3", "c": "Pedro Félix García Linaje", "t": "QUE SON LOS DE CANTABRANA"}, {"a": "Elena_Diaz_Linaje--39.mp3", "c": "Elena Díaz Linaje", "t": "DONDE VA LA NIÑA"}, {"a": "Gregorio_Ojeda_Pena_y_Julian_Ojeda_Ojeda--40.mp3", "c": "Julián Ojeda Ojeda y Gregorio Ojeda Peña", "t": "YA NO RONDAN LOS CHAVALES"}, {"a": "Julian_Ojeda_Ojeda--41.mp3", "c": "Julián Ojeda Ojeda y Gregorio Ojeda Peña", "t": "SOY DEL VALLE (Julián y Gregorio)"}, {"a": "Gregorio_Ojeda_Pena_y_Julian_Ojeda_Ojeda--42.mp3", "c": "Julián Ojeda Ojeda y Gregorio Ojeda Peña", "t": "ÉCHALA CON FUERZA AL AIRE"}, {"a": "Julian_Ojeda_Ojeda--43.mp3", "c": "Julián Ojeda Ojeda", "t": "CANTAR AL MAESTRO"}, {"a": "Julian_Ojeda_Ojeda--44.mp3", "c": "Julián Ojeda Ojeda", "t": "OÑA, TERMINÓN, BENTRETEA Y CANTABRANA (Julián)"}, {"a": "Gregorio_Ojeda_Pena_y_Julian_Ojeda_Ojeda--45.mp3", "c": "Gregorio Ojeda Peña y Julián Ojeda Ojeda", "t": "QUE SON LOS DE CANTABRANA"}, {"a": "Grupo_Cantabrana--46.mp3", "c": "Grupo de Cantabrana", "t": "VIENTO DEL NORTE"}, {"a": "Julian_Ojeda_Ojeda--47.mp3", "c": "Julián Ojeda Ojeda", "t": "TE CASAS EN CANTABRANA"}, {"a": "Gregorio_Ojeda_Pena_y_Julian_Ojeda_Ojeda--48.mp3", "c": "Julián Ojeda Ojeda y Gregorio Ojeda Peña", "t": "LOS QUE MANDAN…"}, {"a": "Grupo_Cantabrana--49.mp3", "c": "Grupo de Cantabrana", "t": "OÑA, TERMINÓN, BENTRETEA Y CANTABRANA (Grupo Cantabrana)"}, {"a": "Pedro_Felix_Garcia_Linaje--50.mp3", "c": "Pedro Félix García Linaje", "t": "YO HE NACIDO EN CANTABRANA"}, {"a": "Pedro_Felix_Garcia_Linaje--51.mp3", "c": "Pedro Félix García Linaje", "t": "SOY DEL VALLE (Pedrín)"}, {"a": "Lucia_Ojeda_Pena--51.mp3", "c": "Lucía Ojeda Peña", "t": "CARRETERA DE PAMPLONA"}, {"a": "Lucia_Ojeda_Pena--52.mp3", "c": "Lucía Ojeda Peña", "t": "SOÑÉ QUE EL FUEGO SE HELABA"}, {"a": "Lucia_Ojeda_Pena--53.mp3", "c": "Lucía Ojeda Peña", "t": "LAS CARICIAS DE MI MADRE"}, {"a": "Pedro_Felix_Garcia_Linaje--54.mp3", "c": "Pedro Félix García Linaje", "t": "EL RELOJ DE LA AUDIENCIA"}, {"a": "Pedro_Felix_Garcia_Linaje--55.mp3", "c": "Pedro Félix García Linaje", "t": "14 GALLINAS TENGO"}, {"a": "Lucia_Ojeda_Pena--56.mp3", "c": "Lucía Ojeda Peña", "t": "SIENTO EL CALOR DE MI PATRIA"}, {"a": "Eleuterio_Pena_Rodriguez_y_Miguel_Alonso_Pena--59.mp3", "c": "Eleuterio Peña Rodríguez y Miguel Alonso Peña", "t": "YA NO BAJAN LOS DE ALFARO"}];
+var LSK='cant_tiempos_v1';
+var loc={};try{loc=JSON.parse(localStorage.getItem(LSK)||'{}')||{};}catch(e){}
+function guardar(){try{localStorage.setItem(LSK,JSON.stringify(loc));}catch(e){}}
+function tiemposDe(a){return loc[a]?loc[a].slice():((window.CANT_TIEMPOS||{})[a]||[]).slice();}
+function versos(a){var f=(window.CANT_FICHAS||{})[a];if(!f||!f.letra)return [];
+  return String(f.letra).split('\n').map(function(x){return x.trim();}).filter(Boolean);}
+var $=function(id){return document.getElementById(id);};
+var au=$('au'),sel=$('sel'),cur=null,V=[],T=[],marcando=false,vel=1;
+
+function estadoJota(j){var v=versos(j.a),t=tiemposDe(j.a);
+  if(!v.length)return ' — (sin letra)';if(!t.length)return '';return t.length>=v.length?'  ✓':'  ('+t.length+'/'+v.length+')';}
+function pintarSel(){var val=sel.value;sel.innerHTML='';JOTAS.forEach(function(j){var o=document.createElement('option');o.value=j.a;
+  var n=(j.a.match(/(\d\d)\.mp3$/)||[])[1]||'';o.textContent=n+' · '+j.t+' — '+j.c+estadoJota(j);sel.appendChild(o);});
+  if(val)sel.value=val;}
+function cargar(a){
+  cur=a;V=versos(a);T=tiemposDe(a);marcando=false;
+  au.src='audio/'+encodeURIComponent(a);au.playbackRate=vel;
+  pintarLista();vista();estado();
+}
+function fmt(s){if(s==null)return '—';var m=Math.floor(s/60),r=(s-m*60).toFixed(1);return m+':'+(r<10?'0':'')+r;}
+function pintarLista(){
+  var ol=$('lista');ol.innerHTML='';
+  V.forEach(function(v,i){var li=document.createElement('li');li.id='v'+i;if(T[i]==null)li.className='vacio';
+    li.innerHTML='<span class="t">'+fmt(T[i])+'</span><span class="v"></span>'+(T[i]!=null?'<button class="aj" data-d="-0.2">−</button><button class="aj" data-d="0.2">+</button>':'');
+    li.querySelector('.v').textContent=v;
+    li.querySelector('.t').onclick=li.querySelector('.v').onclick=function(){if(T[i]!=null){au.currentTime=Math.max(0,T[i]-1.5);au.play();}};
+    li.querySelectorAll('.aj').forEach(function(b){b.onclick=function(){T[i]=Math.max(0,Math.round((T[i]+parseFloat(b.dataset.d))*10)/10);fijar();pintarLista();au.currentTime=Math.max(0,T[i]-1.5);au.play();};});
+    ol.appendChild(li);});
+  marcarSiguiente();
+}
+function marcarSiguiente(){document.querySelectorAll('li.sig').forEach(function(x){x.classList.remove('sig');});
+  var k=T.length;var li=$('v'+k);if(li&&marcando){li.classList.add('sig');li.scrollIntoView({block:'center',behavior:'smooth'});}
+  $('bVerso').disabled=!V.length||T.length>=V.length;$('bDeshacer').disabled=!T.length;}
+function fijar(){loc[cur]=T.slice();guardar();pintarSel();estado();resumen();}
+function estado(){var e=$('estado');
+  if(!V.length){e.textContent='Esta jota todavía no tiene letra en fichas.js.';return;}
+  if(T.length>=V.length){e.innerHTML='<span class="ok">✓ Todos los versos marcados ('+V.length+'). Escúchela para comprobar.</span>';return;}
+  e.textContent=marcando?('Marcando: verso '+(T.length+1)+' de '+V.length):(T.length?('Marcados '+T.length+' de '+V.length+' versos.'):(V.length+' versos sin marcar.'));}
+function verso(){if(!V.length||T.length>=V.length)return;
+  if(au.paused){au.play();marcando=true;}
+  var t=Math.max(0,au.currentTime-0.15);if(T.length&&t<=T[T.length-1])t=T[T.length-1]+0.1;
+  T.push(Math.round(t*10)/10);fijar();pintarLista();
+  if(T.length>=V.length){marcando=false;marcarSiguiente();}}
+function deshacer(){if(!T.length)return;var t=T.pop();fijar();pintarLista();au.currentTime=Math.max(0,t-3);if(au.paused)au.play();}
+function vista(){var ct=au.currentTime||0,i=-1;for(var k=0;k<T.length;k++){if(ct>=T[k]-0.25)i=k;else break;}
+  if(i>=0&&ct-T[i]>9&&((i+1<T.length?T[i+1]:Infinity)-ct)>1.5)i=-1;
+  var a=document.querySelector('#vista .a'),b=document.querySelector('#vista .b');
+  a.textContent=i>=0?V[i]:'';b.textContent=(i>=0&&i+1<T.length)?V[i+1]:'';
+  document.querySelectorAll('li.actual').forEach(function(x){if(x.id!=='v'+i)x.classList.remove('actual');});
+  var li=$('v'+i);if(li)li.classList.add('actual');}
+function resumen(){var h=0,p=0,n=0;JOTAS.forEach(function(j){var v=versos(j.a);if(!v.length)return;n++;var t=tiemposDe(j.a);if(t.length>=v.length)h++;else if(t.length)p++;});
+  $('resumen').innerHTML='Jotas con letra: '+n+' · completas: <b>'+h+'</b> · a medias: '+p+' · sin empezar: '+(n-h-p)+'.';}
+function descargar(){
+  var todo={};var base=window.CANT_TIEMPOS||{};Object.keys(base).forEach(function(k){todo[k]=base[k];});
+  Object.keys(loc).forEach(function(k){if(loc[k]&&loc[k].length)todo[k]=loc[k];else delete todo[k];});
+  var orden=Object.keys(todo).sort(function(x,y){return (x.match(/(\d\d)\.mp3$/)||[0,0])[1]-(y.match(/(\d\d)\.mp3$/)||[0,0])[1];});
+  var txt='// TIEMPOS DE LA LETRA SINCRONIZADA: segundo en que empieza cada verso de la letra (fichas.js).\n'+
+    '// Este archivo lo genera marcar.html (boton "Descargar tiempos.js"). No hace falta editarlo a mano.\n'+
+    '// Una jota sin tiempos aqui se reproduce sin letra en pantalla.\n'+
+    '// Generado el '+new Date().toLocaleString('es-ES')+'\n'+
+    'window.CANT_TIEMPOS = {\n'+orden.map(function(k){return ' '+JSON.stringify(k)+': ['+todo[k].join(', ')+']';}).join(',\n')+'\n};\n';
+  var bl=new Blob([txt],{type:'text/javascript'}),u=URL.createObjectURL(bl),a=document.createElement('a');
+  a.href=u;a.download='tiempos.js';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(u);a.remove();},500);
+}
+sel.onchange=function(){au.pause();cargar(sel.value);};
+$('bEmpezar').onclick=function(){if(T.length&&!confirmar())return;T=[];fijar();marcando=true;pintarLista();au.currentTime=0;au.play();estado();};
+function confirmar(){return window.confirm('Esta jota ya tiene tiempos marcados. ¿Empezar de nuevo y borrarlos?');}
+$('bBorrar').onclick=function(){if(!T.length||!confirmar())return;T=[];fijar();pintarLista();};
+$('bVel').onclick=function(){vel=vel===1?0.75:1;au.playbackRate=vel;this.textContent='Velocidad '+(vel===1?'1×':'0,75×');};
+$('bAtras').onclick=function(){au.currentTime=Math.max(0,au.currentTime-5);};
+$('bVerso').onclick=verso;$('bDeshacer').onclick=deshacer;$('bDescargar').onclick=descargar;
+document.addEventListener('keydown',function(e){if(e.target.tagName==='SELECT')return;
+  if(e.code==='Space'||e.key==='Enter'){e.preventDefault();verso();}
+  else if(e.key==='Backspace'){e.preventDefault();deshacer();}});
+au.addEventListener('timeupdate',vista);setInterval(function(){if(!au.paused)vista();},120);
+au.addEventListener('play',function(){marcando=T.length<V.length;marcarSiguiente();estado();});
+au.addEventListener('ended',function(){marcando=false;marcarSiguiente();estado();});
+pintarSel();resumen();
+var q=(location.search.match(/[?&]j=([^&]+)/)||[])[1];
+var ini=q?JOTAS.find(function(j){return j.a.toLowerCase().indexOf(decodeURIComponent(q).toLowerCase())>=0;}):null;
+ini=ini||JOTAS.find(function(j){return versos(j.a).length;})||JOTAS[0];
+if(ini){sel.value=ini.a;cargar(ini.a);}
+</script>
+</body>
+</html>

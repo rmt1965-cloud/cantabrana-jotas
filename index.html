@@ -146,6 +146,16 @@ body.acc-mode #acc-btn svg text{fill:#f0c060!important;}
 #ficha-pan hr{border:none;border-top:1px solid rgba(200,146,42,.3);margin:14px 0;}
 #pant-repro.portada #ficha-btn{opacity:0!important;pointer-events:none;}
 body.acc-mode #ficha-btn{font-size:15px;padding:12px 20px;bottom:186px;}
+/* LETRA SINCRONIZADA: el verso que se canta aparece sobre las fotos (tiempos en tiempos.js; se marcan con marcar.html) */
+#letra-sync{position:fixed;left:50%;bottom:196px;transform:translateX(-50%);width:min(92vw,660px);z-index:30;text-align:center;pointer-events:none;opacity:0;transition:opacity .9s ease;padding:14px 18px;border-radius:40px;background:radial-gradient(ellipse at center,rgba(0,0,0,.5) 0%,rgba(0,0,0,.28) 55%,transparent 75%);}
+#letra-sync.show{opacity:1;}
+#letra-sync .ls-a{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(21px,6vw,32px);line-height:1.25;color:#fff7e2;text-shadow:0 2px 10px rgba(0,0,0,.95),0 0 24px rgba(0,0,0,.7),0 0 3px rgba(0,0,0,.9);transition:opacity .35s ease,transform .35s ease;}
+#letra-sync .ls-b{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(15px,4.2vw,21px);line-height:1.3;margin-top:6px;color:rgba(240,220,170,.62);text-shadow:0 2px 8px rgba(0,0,0,.95);transition:opacity .35s ease;}
+#letra-sync.cambia .ls-a,#letra-sync.cambia .ls-b{opacity:0;}
+#letra-sync.cambia .ls-a{transform:translateY(6px);}
+#pant-repro.portada #letra-sync,#ficha-pan.show ~ #letra-sync{opacity:0!important;}
+body.acc-mode #letra-sync{bottom:236px;}
+body.acc-mode #letra-sync .ls-a{font-size:clamp(26px,7.4vw,40px);color:#fff;}
 #saltar-jota.show{opacity:1;transform:translateX(-50%) translateY(0);}
 #saltar-jota:active{background:rgba(200,146,42,.3);}
 #pant-repro.portada #saltar-jota{opacity:0!important;pointer-events:none;}
@@ -237,6 +247,7 @@ body.val-gr #acc-btn{display:none!important}
   #ticker{bottom:28px;}
   #saltar-jota{bottom:84px;padding:7px 16px;font-size:11px;}
   #ficha-btn{bottom:124px;padding:7px 14px;font-size:11px;}
+  #letra-sync{bottom:150px;}
   #ui-bot{padding:8px 16px;}
   #d-img,#d-img2{max-height:70vh;max-width:55%;}
   .p-aviso{font-size:clamp(13px,3.5vw,20px);}
@@ -339,6 +350,7 @@ body.val-gr #acc-btn{display:none!important}
   <button id="saltar-jota" type="button" onclick="saltarJota()">Saltar jota &#9197;</button>
   <button id="ficha-btn" type="button" onclick="fichaAbrir()" aria-label="Ver la letra y la ficha de la jota">Letra &#9998;</button>
   <div id="ficha-pan" role="dialog" aria-label="Ficha de la jota"></div>
+  <div id="letra-sync" aria-live="polite"><div class="ls-a"></div><div class="ls-b"></div></div>
   <div id="prog"><div id="prog-bar"><div id="prog-fill"></div></div></div>
   <div id="ticker"><span id="ticker-in">&#9834; Cantabrana &middot; Retazos de Vida &middot; Patrimonio Musical &#9834;</span></div>
   <div id="ui-bot" style="display:none;">
@@ -441,6 +453,7 @@ body.val-gr #acc-btn{display:none!important}
 
 <script src="stats-config.js"></script>
 <script src="fichas.js"></script>
+<script src="tiempos.js"></script>
 <script>
 // ================================================================
 // CONFIGURACION
@@ -1442,6 +1455,7 @@ async function iniciarJota(){
   (function(){var sb=document.getElementById('saltar-jota');if(!sb)return;sb.classList.remove('show');sb.style.display='none';
     setTimeout(function(){if(jotaFin)return;sb.style.display='block';void sb.offsetWidth;sb.classList.add('show');},3000);})();
   setTimeout(function(){if(!jotaFin)fichaMostrarBoton(true);},3000);
+  try{lsIniciar();}catch(e){}
   aJota.onerror=function(){
     document.getElementById('ticker-in').textContent='⚠ Error al cargar el audio. Comprueba tu conexión.';
     setTimeout(reiniciar,4000);
@@ -1561,6 +1575,36 @@ function fichaAbrir(){
   pn.innerHTML=h;pn.scrollTop=0;pn.classList.add('show');
 }
 function fichaCerrar(){var pn=document.getElementById('ficha-pan');if(pn)pn.classList.remove('show');}
+
+// LETRA SINCRONIZADA: cada verso de la letra (fichas.js) tiene su segundo de entrada en tiempos.js
+// Los tiempos se marcan con marcar.html. Si una jota no tiene tiempos, no sale nada (como hasta ahora).
+// ?letra=prueba muestra la franja con tiempos de ejemplo (un verso cada 4 s) para ver el diseno.
+// ?letra=no la desactiva.
+var _ls={v:[],t:[],i:-2,timer:null};
+function lsVersos(j){var f=(window.CANT_FICHAS||{})[j.a];if(!f||!f.letra)return [];
+  return String(f.letra).split('\n').map(function(x){return x.trim();}).filter(function(x){return x;});}
+function lsIniciar(){
+  lsParar();if(/[?&]letra=no/.test(location.search))return;
+  var v=lsVersos(jota),t=(window.CANT_TIEMPOS||{})[jota.a];
+  if((!t||!t.length)&&/[?&]letra=prueba/.test(location.search)&&v.length)t=v.map(function(_,k){return 3+k*4;});
+  if(!v.length||!t||!t.length)return;
+  _ls.v=v;_ls.t=t.slice(0,v.length);_ls.i=-2;
+  _ls.timer=setInterval(lsTick,120);
+}
+function lsTick(){
+  if(jotaFin){lsParar();return;}
+  var ct=aJota.currentTime||0,t=_ls.t,i=-1;
+  for(var k=0;k<t.length;k++){if(ct>=t[k]-0.25)i=k;else break;}
+  // tras el ultimo verso (o un silencio largo) la franja se retira
+  if(i>=0){var sig=(i+1<t.length)?t[i+1]:Infinity;if(ct-t[i]>9&&sig-ct>1.5)i=-1;}
+  if(i===_ls.i)return;_ls.i=i;
+  var el=document.getElementById('letra-sync');if(!el)return;
+  if(i<0){el.classList.remove('show');return;}
+  var a=_ls.v[i],b=(i+1<t.length)?_ls.v[i+1]:'';
+  el.classList.add('cambia');
+  setTimeout(function(){el.querySelector('.ls-a').textContent=a;el.querySelector('.ls-b').textContent=b;el.classList.remove('cambia');el.classList.add('show');},el.classList.contains('show')?300:0);
+}
+function lsParar(){if(_ls.timer)clearInterval(_ls.timer);_ls.timer=null;_ls.i=-2;var el=document.getElementById('letra-sync');if(el)el.classList.remove('show');}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')fichaCerrar();});
 
 // Saltar jota: el audio se apaga con suavidad y el proceso pasa directamente a la parte final (portada y escenas)
@@ -1575,6 +1619,7 @@ function saltarJota(){
 function finJota(){
   if(jotaFin)return;jotaFin=true;
   try{fichaMostrarBoton(false);}catch(e){}
+  try{lsParar();}catch(e){}
   (function(){var sb=document.getElementById('saltar-jota');if(sb){sb.classList.remove('show');setTimeout(function(){sb.style.display='none';},1100);}})();
   cantTrack('jota_fin',Math.round(aJota.currentTime||0),window._jotaSaltada?'saltada':'',window._jotaNom);
   clearTimeout(fotoTimer);fotoIdx=0;
