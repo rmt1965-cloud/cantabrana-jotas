@@ -28,7 +28,7 @@ window.CANT_FICHAS = {
   "letra": "Que te la han tentao (tentado),\nque te la han tentao (tentado),\nCochina, marrana,\nNo haberte dejao (dejado)\nNo haberte dejao (dejado)\nNo haberte dejao (dejado)\nQue ha sido un soltero\nQue ha sido un casao (casado)."
  },
  "Cecilio_Jose_Diaz_Linaje--09.mp3": {
-  "letra": "Un inglés vino a Bilbao,\npor pura casualidad.\nEn un barco que traía\ncargamento general.\nQuiso conocer el Botxo,\nen su ambiente se quedó.\nY una vez de conocerlo,\nya no se quiso marchar.\nComo estaba en relaciones\nCon personas extranjeras,\nles invitó a conocer el Botxo,\ny han hecho la del noruego.\nNos los han dejado en Bilbao\nde manera permanente,\ny hay en Bilbao extranjeros,\nque saben ya el vascuence."
+  "letra": "Un inglés vino a Bilbao,\npor pura casualidad.\nEn un barco que traía\ncargamento general.\nQuiso conocer el Botxo,\nen su ambiente se quedó.\nY una vez de conocerlo,\nya no se quiso marchar.\nComo estaba en relaciones\nCon personas extranjeras,\nles invitó a ver el Botxo,\ny han hecho la del noruego.\nNos los han dejado en Bilbao\nde manera permanente,\ny hay en Bilbao extranjeros,\nque saben ya el vascuence."
  },
  "Cecilio_Jose_Diaz_Linaje--10.mp3": {
   "letra": "Que son los de Cantabrana,\nYa no cantan los de Alfaro.\nQue son los de Cantabrana,\nque beben el vino en bota,\nporque no les gusta el agua,\nporque no les gusta el agua\nYa no cantan los de Alfaro."
@@ -55,13 +55,13 @@ window.CANT_FICHAS = {
   "letra": "No me tires cantillos,\nde la bragueta.\nQue está el niño dormido\nY se despierta.\nY se despierta niña y se despierta\nY que no me tires cantillos,\nde la bragueta."
  },
  "julian-Ojeda-Ojeda--18.mp3": {
-  "letra": "Y un español sube al cielo,\nY le dijo con anhelo,\nA Dios nuestro Señor:\n“ Señor mío, Jesucristo,\nvengo del suelo español,\ny a tu poder infinito,\nquiero pedirle un favor:\n“Que, en España, ya no hay leyes,\nvergüenza ni dignidad.\nY sólo tú eres quien puede\nBajar a aquello, pronto a arreglar”\nY Jesucristo, esto que oyó,\nSin perder un instante, le contestó:\n“ Calla, ignorante, vete de aquí,\nTú no recuerdas lo que os sufrí.\nQue yo, no vuelvo otra vez al mundo,\nno tengas dudas.\nQue allí, sois muchos Herodes y muchos Judas.\nTiempos pasados ya bajé al mundo a daros luz,\ny me crucificasteis en una cruz.\nQue yo, no vuelvo otra vez al mundo,\nY esto es así.\nAllá tú te las arregles, con tantos pillos como sois allí.\nallá tú te las arregles, con tantos pillos como sois allí."
+  "letra": "Y un español sube al cielo,\nY le dijo con anhelo,\nA Dios nuestro Señor:\n“ Señor mío, Jesucristo,\nvengo del suelo español,\ny a tu poder infinito,\nquiero pedirle un favor:\n“Que, en España, ya no hay leyes,\nvergüenza ni dignidad.\nY sólo tú eres quien puedes\nBajar a aquello, pronto a arreglar”\nY Jesucristo, esto que oyó,\nSin perder un instante, le contestó:\n“ Calla, ignorante, vete de aquí,\nTú no recuerdas lo que os sufrí.\nQue yo, no vuelvo otra vez al mundo,\nno tengas dudas.\nQue allí, sois muchos Herodes y muchos Judas.\nTiempos pasados que bajé al mundo a daros luz,\ny me crucificasteis en una cruz.\nQue yo, no vuelvo otra vez al mundo,\nY esto es así.\nAllá tú te las arregles, con tantos pillos como sois allí.\nAllá tú te las arregles, con tantos pillos como sois allí."
  },
  "Julian_Ojeda_Ojeda--19.mp3": {
-  "letra": "Para dinero La Habana,\npara vino La Rioja.\nY para dinero La Habana\npara cantar y bailar\nY el pueblo de Cantabrana,\nel pueblo de Cantabrana,\ny  vino La Rioja."
+  "letra": "Para dinero La Habana,\npara vino La Rioja.\nY para dinero La Habana\npara cantar y bailar\nY el pueblo de Cantabrana,\nel pueblo de Cantabrana,\ny  para vino La Rioja."
  },
  "Julian-Ojeda-Ojeda--20.mp3": {
-  "letra": "Si andas apresurada,\npor lo que has hecho.\nApriétate el justillo,\ny a lo hecho, pecho.\nQue te tumbo, niña, que te tumbo,\nQue te tumbo y te tumbaré,\ny le dijo la gran cochinota.\nNo me tumbes, que ya me echaré."
+  "letra": "Si andas apresurada,\npor lo que has hecho.\nApriétate el justillo,\ny a lo hecho, pecho.\ny a lo hecho, pecho.\nQue te tumbo, niña, que te tumbo,\nQue te tumbo y te tumbaré,\ny le dijo la gran cochinota.\nNo me tumbes, que yo me echaré."
  },
  "Julian_Ojeda_Ojeda--21.mp3": {
   "letra": "Parece un saco melones,\nUna mujer en pelotas.\nParece un saco melones,\nTodo son altos y bajos,\nescondijos y rincones\nescondijos y rincones,\nUna mujer en pelotas."
@@ -100,7 +100,7 @@ window.CANT_FICHAS = {
   "letra": "La guindalera, la está arando,\nde rosas y claveles,\nla están plantando.\n¡Ay, qué alegría!, ¡Ay, qué alegría!\nque también nos han puesto, la lechería.\nLa lechería, la lechería…\nY un poquito más abajo, alpargatería.\nAlpargatería, alpargatería…\nY un poquito más abajo, pescadería.\nPescadería, pescadería…\nY un poquito más abajo, panadería.\nPanadería, panadería…\nY un poquito más abajo, carnicerías.\nCarnicerías, carnicerías…\nY un poquito más abajo, bombonería.\nBombonería,  bombonería…\nEl barrio de la guindalera,\nla están plantando."
  },
  "Pedro_Felix_Garcia_Linaje--33.mp3": {
-  "letra": "¡Viva Cantabrana!\ncon su vega y su trigal.\nLas aguas de sus ríos\nles saludan al pasar.\nLa torre de mi iglesia\nme recuerda sin cesar,\nel pueblo donde vivo,\nfiel a Dios siempre será.\nJuventud firme el ademán,\nnunca descansar\npor tu pueblo y tu ideal,\n¡Viva Cantabrana!\nSiempre pueblo leal,\nQue ¡Viva Cantabrana!\ny su vecindad.\n¡Viva Cantabrana!\nSiempre pueblo leal,\n¡Viva Cantabrana!\ny su vecindad."
+  "letra": "¡Viva Cantabrana!\ncon su vega y su trigal.\nLas aguas de sus ríos\nles saludan al pasar.\nLa torre de mi iglesia\nme recuerda sin cesar,\nel pueblo donde vivo,\nfiel a Dios siempre será.\nJuventud firme el ademán,\nnunca descansar\npor tu pueblo y tu ideal,\n¡Viva Cantabrana!\nSiempre pueblo leal,\n¡Viva Cantabrana!\ny su vecindad.\n¡Viva Cantabrana!\nSiempre pueblo leal,\n¡Viva Cantabrana!\ny su vecindad."
  },
  "Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--34.mp3": {
   "letra": "Que no hay quien pueda…\nCon la gente marinera.\nMarinera, pescadora…\nQue no hay quien pueda,\npor ahora."
@@ -130,7 +130,7 @@ window.CANT_FICHAS = {
   "letra": "Desde que te vi con la pata de madera,\nDije para mí, para tu abuela, para tu abuela.\nDesde que te vi con la pata de palo,\nDije para mí, malo, malo, malo, malo."
  },
  "Julian_Ojeda_Ojeda--44.mp3": {
-  "letra": "Oña, Terminón, Bentretea y Cantabrana…\nse cría tan buena fruta,\ncomo en la huerta murciana.\n¡Ay nuestro Valle!, de Caderechas,\n¡Ay nuestro vallen, que es digno de admiración.\nUnos pasean por el puente nuevo,\nY otros pasean por el puente del Cuadrón."
+  "letra": "Oña, Terminón, Bentretea y Cantabrana…\nse cría tan buena fruta,\ncomo en la huerta murciana.\n¡Ay nuestro Valle!, de Caderechas,\n¡Ay nuestro valle!, que es digno de admiración.\nUnos pasean por el puente nuevo,\nY otros pasean por el puente del Cuadrón."
  },
  "Gregorio_Ojeda_Pena_y_Julian_Ojeda_Ojeda--45.mp3": {
   "letra": "Que son los de Cantabrana,\nYa no cantan los de Alfaro.\nQue son los de Cantabrana,\nque beben el vino en bota,\nporque no les gusta el agua,\nporque no les gusta el agua\nYa no cantan los de Alfaro."
@@ -160,7 +160,7 @@ window.CANT_FICHAS = {
   "letra": "Y soñé que la nieve ardía,\nSoñé que el fuego se helaba,\nSoñé que la nieve ardía.\nSoñé cosas imposibles,\nSoñé, soñé, que tú me querías,\nSoñé que tú me querías,\nSoñé, soñé, que el fuego se helaba."
  },
  "Lucia_Ojeda_Pena--53.mp3": {
-  "letra": "Nadie las puede olvidar,\nLas caricias, las caricias de una madre,\nNadie las puede olvidar.\nPorque en ellas, porque en ellas,  puso Dios,\nCariño, amor y verdad.\nCariño, amor…\nCariño, amor y verdad.\n\nlas caricias de una madre."
+  "letra": "Nadie las puede olvidar,\nlas caricias, las caricias de una madre,\nNadie las puede olvidar.\nPorque en ellas, porque en ellas,  puso Dios.\nCariño, amor y verdad,\ncariño, amor…\nCariño, amor y verdad.\nLas caricias de una madre."
  },
  "Pedro_Felix_Garcia_Linaje--54.mp3": {
   "letra": "Y tiene venganza conmigo,\nY hasta el reloj de la audiencia,\ntiene venganza conmigo.\nQue me cuenta los minutos,\nsalada que estoy contigo.\nSalada que estoy contigo,\ny hasta el reloj de la audiencia"
