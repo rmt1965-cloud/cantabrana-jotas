@@ -131,7 +131,6 @@ function verso(){if(!V.length||T.length>=V.length)return;
   if(T.length>=V.length){marcando=false;marcarSiguiente();}}
 function deshacer(){if(!T.length)return;var t=T.pop();fijar();pintarLista();au.currentTime=Math.max(0,t-3);if(au.paused)au.play();}
 function vista(){var ct=au.currentTime||0,i=-1;for(var k=0;k<T.length;k++){if(ct>=T[k]-0.25)i=k;else break;}
-  if(i>=0&&ct-T[i]>9&&((i+1<T.length?T[i+1]:Infinity)-ct)>1.5)i=-1;
   var a=document.querySelector('#vista .a'),b=document.querySelector('#vista .b');
   a.textContent=i>=0?V[i]:'';b.textContent=(i>=0&&i+1<T.length)?V[i+1]:'';
   document.querySelectorAll('li.actual').forEach(function(x){if(x.id!=='v'+i)x.classList.remove('actual');});

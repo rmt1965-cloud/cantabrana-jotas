@@ -1597,8 +1597,7 @@ function lsTick(){
   if(jotaFin){lsParar();return;}
   var ct=aJota.currentTime||0,t=_ls.t,i=-1;
   for(var k=0;k<t.length;k++){if(ct>=t[k]-0.25)i=k;else break;}
-  // tras el ultimo verso (o un silencio largo) la franja se retira
-  if(i>=0){var sig=(i+1<t.length)?t[i+1]:Infinity;if(ct-t[i]>9&&sig-ct>1.5)i=-1;}
+  // cada verso se queda en pantalla hasta que empieza el siguiente; el ultimo, hasta que acaba la jota
   if(i===_ls.i)return;_ls.i=i;
   var el=document.getElementById('letra-sync');if(!el)return;
   if(i<0){el.classList.remove('show');return;}
