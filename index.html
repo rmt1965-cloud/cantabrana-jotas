@@ -1586,6 +1586,8 @@ function lsVersos(j){var f=(window.CANT_FICHAS||{})[j.a];if(!f||!f.letra)return 
 function lsIniciar(){
   lsParar();if(/[?&]letra=no/.test(location.search))return;
   var v=lsVersos(jota),t=(window.CANT_TIEMPOS||{})[jota.a];
+  // tiempos recien marcados con marcar.html en ESTE navegador: se ven aqui antes de subir tiempos.js
+  try{var _lt=JSON.parse(localStorage.getItem('cant_tiempos_v1')||'{}')[jota.a];if(_lt&&_lt.length)t=_lt;}catch(e){}
   if((!t||!t.length)&&/[?&]letra=prueba/.test(location.search)&&v.length)t=v.map(function(_,k){return 3+k*4;});
   if(!v.length||!t||!t.length)return;
   _ls.v=v;_ls.t=t.slice(0,v.length);_ls.i=-2;

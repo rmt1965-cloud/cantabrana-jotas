@@ -23,7 +23,8 @@ select{width:100%;padding:11px 10px;background:var(--panel);color:var(--txt);bor
 .btn.on{background:var(--gold);color:#1a1006;}
 audio{width:100%;margin-top:6px;}
 #estado{font-size:16px;color:var(--gold-l);min-height:22px;margin:6px 0;}
-#vista{background:#000 center/cover;border-radius:10px;min-height:120px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:18px;margin:10px 0;border:1px solid rgba(200,146,42,.3);}
+#vista.flash{box-shadow:0 0 0 3px var(--gold);}
+#vista{transition:box-shadow .25s;background:#000 center/cover;border-radius:10px;min-height:120px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:18px;margin:10px 0;border:1px solid rgba(200,146,42,.3);}
 #vista .a{font-weight:600;font-size:clamp(21px,6vw,30px);color:#fff7e2;text-shadow:0 2px 10px #000;min-height:1.3em;}
 #vista .b{font-style:italic;font-size:clamp(15px,4.2vw,20px);color:rgba(240,220,170,.6);margin-top:6px;min-height:1.3em;}
 ol{list-style:none;padding:0;margin:8px 0;}
@@ -41,6 +42,8 @@ li .aj{background:none;border:1px solid rgba(200,146,42,.35);color:var(--gold-l)
 #bDeshacer{border-radius:14px;padding:0 16px;font-size:13px;}
 .ayuda{font-size:15px;color:var(--dim);line-height:1.45;background:rgba(200,146,42,.06);border-left:3px solid rgba(200,146,42,.5);padding:8px 12px;border-radius:4px;}
 .ok{color:#9fd18b;}
+details.ayuda summary{cursor:pointer;color:var(--gold-l);}
+#lista{max-height:46vh;overflow-y:auto;border:1px solid rgba(200,146,42,.25);border-radius:8px;}
 </style>
 </head>
 <body>
@@ -55,20 +58,22 @@ li .aj{background:none;border:1px solid rgba(200,146,42,.35);color:var(--gold-l)
     <button class="btn" id="bEmpezar">▶ Empezar a marcar desde el principio</button>
     <button class="btn" id="bVel">Velocidad 1×</button>
     <button class="btn" id="bAtras">⟲ 5 s</button>
+    <button class="btn on" id="bWeb">▶ Ver en la web</button>
   </div>
   <div id="estado"></div>
   <div id="vista"><div class="a"></div><div class="b"></div></div>
-  <div class="ayuda">
-    <b>Cómo se hace:</b> pulse «Empezar a marcar» y, mientras suena, toque el botón grande <b>VERSO</b> (o la barra espaciadora) justo cuando el cantante <i>empieza</i> cada verso. El verso que toca marcar va recuadrado.<br>
-    Si se equivoca, «Deshacer» borra el último y retrocede un poco. Al tocar un verso de la lista, la jota salta a ese punto para comprobarlo; con −/+ lo ajusta en décimas.<br>
-    Todo se guarda solo en este navegador. Cuando tenga varias jotas hechas, pulse <b>«Descargar tiempos.js»</b> y ponga ese archivo en la carpeta cantabrana-jotas (sustituyendo al que hay) y súbalo a GitHub.
-  </div>
+
   <ol id="lista"></ol>
   <div class="fila">
     <button class="btn" id="bBorrar">Borrar los tiempos de esta jota</button>
     <button class="btn on" id="bDescargar">⬇ Descargar tiempos.js</button>
   </div>
   <div id="resumen" class="ayuda"></div>
+  <details class="ayuda"><summary><b>¿Cómo se usa?</b></summary>
+    <b>Cómo se hace:</b> pulse «Empezar a marcar» y, mientras suena, toque el botón grande <b>VERSO</b> (o la barra espaciadora) justo cuando el cantante <i>empieza</i> cada verso. El verso que toca marcar va recuadrado.<br>
+    Si se equivoca, «Deshacer» borra el último y retrocede un poco. Al tocar un verso de la lista, la jota salta a ese punto para comprobarlo; con −/+ lo ajusta en décimas.<br>
+    Todo se guarda solo en este navegador. Cuando tenga varias jotas hechas, pulse <b>«Descargar tiempos.js»</b> y ponga ese archivo en la carpeta cantabrana-jotas (sustituyendo al que hay) y súbalo a GitHub.
+  </details>
 </main>
 <div id="marcar">
   <button class="btn" id="bDeshacer">↶ Deshacer</button>
@@ -110,8 +115,9 @@ function pintarLista(){
   marcarSiguiente();
 }
 function marcarSiguiente(){document.querySelectorAll('li.sig').forEach(function(x){x.classList.remove('sig');});
-  var k=T.length;var li=$('v'+k);if(li&&marcando){li.classList.add('sig');li.scrollIntoView({block:'center',behavior:'smooth'});}
-  $('bVerso').disabled=!V.length||T.length>=V.length;$('bDeshacer').disabled=!T.length;}
+  var k=T.length;var li=$('v'+k);if(li){li.classList.add('sig');var ol=$('lista');ol.scrollTop=Math.max(0,li.offsetTop-ol.offsetTop-ol.clientHeight/2);}
+  $('bVerso').disabled=!V.length||T.length>=V.length;
+  $('bVerso').textContent=V.length?(T.length>=V.length?'✓ COMPLETA':'VERSO  '+(T.length+1)+' / '+V.length):'VERSO';$('bDeshacer').disabled=!T.length;}
 function fijar(){loc[cur]=T.slice();guardar();pintarSel();estado();resumen();}
 function estado(){var e=$('estado');
   if(!V.length){e.textContent='Esta jota todavía no tiene letra en fichas.js.';return;}
@@ -121,6 +127,7 @@ function verso(){if(!V.length||T.length>=V.length)return;
   if(au.paused){au.play();marcando=true;}
   var t=Math.max(0,au.currentTime-0.15);if(T.length&&t<=T[T.length-1])t=T[T.length-1]+0.1;
   T.push(Math.round(t*10)/10);fijar();pintarLista();
+  var vs=$('vista');vs.classList.add('flash');setTimeout(function(){vs.classList.remove('flash');},250);
   if(T.length>=V.length){marcando=false;marcarSiguiente();}}
 function deshacer(){if(!T.length)return;var t=T.pop();fijar();pintarLista();au.currentTime=Math.max(0,t-3);if(au.paused)au.play();}
 function vista(){var ct=au.currentTime||0,i=-1;for(var k=0;k<T.length;k++){if(ct>=T[k]-0.25)i=k;else break;}
@@ -148,6 +155,7 @@ $('bEmpezar').onclick=function(){if(T.length&&!confirmar())return;T=[];fijar();m
 function confirmar(){return window.confirm('Esta jota ya tiene tiempos marcados. ¿Empezar de nuevo y borrarlos?');}
 $('bBorrar').onclick=function(){if(!T.length||!confirmar())return;T=[];fijar();pintarLista();};
 $('bVel').onclick=function(){vel=vel===1?0.75:1;au.playbackRate=vel;this.textContent='Velocidad '+(vel===1?'1×':'0,75×');};
+$('bWeb').onclick=function(){if(!cur)return;au.pause();window.open('index.html?jota='+encodeURIComponent(cur.replace(/\.mp3$/,''))+'&v='+Date.now(),'_blank');};
 $('bAtras').onclick=function(){au.currentTime=Math.max(0,au.currentTime-5);};
 $('bVerso').onclick=verso;$('bDeshacer').onclick=deshacer;$('bDescargar').onclick=descargar;
 document.addEventListener('keydown',function(e){if(e.target.tagName==='SELECT')return;
