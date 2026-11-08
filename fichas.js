@@ -34,7 +34,7 @@ window.CANT_FICHAS = {
   "letra": "Que son los de Cantabrana,\nYa no cantan los de Alfaro.\nQue son los de Cantabrana,\nque beben el vino en bota,\nporque no les gusta el agua,\nporque no les gusta el agua\nYa no cantan los de Alfaro."
  },
  "Julian-Ojeda-Ojeda-y-Gregorio-Ojeda-Pena--11.mp3": {
-  "letra": "Cuando Segundo se acuesta,\ncuando Segundo se acuesta\nse levanta la Teodora.\nChunga, la chunga la chun\nChunga, la chunga la chun.\nY le dice Gregorín\ny le dice Gregorín,\ndónde has estado a estas horas.\nChunga, la chunga la chun\nChunga, la chunga la chun\nHe estado con Alfonso,\nhe estado con Alfonso,\ny el hijo de la Guapeta.\nChunga, la chunga la chun\nChunga, la chunga la chun\nAl sol le llaman Lorenzo,\ny la luna Catalina.\nChunga, la chunga la chun\nChunga, la chunga la chun\nCuando Lorenzo se acuesta,\ncuando Lorenzo se acuesta,\nSe levanta Catalina\nChunga, la chunga la chun\nChunga, la chunga la chun\nNo me toque los cojones\nQue soy el amo de la casa."
+  "letra": "Cuando Segundo se acuesta,\ncuando Segundo se acuesta\nse levanta la Teodora.\n¡Chunga, la chunga la chun!\n¡Chunga, la chunga la chun!\nY le dice Gregorín\ny le dice Gregorín,\ndónde has estado a estas horas.\n¡Chunga, la chunga la chun!\n¡Chunga, la chunga la chun!\nHe estado con Alfonso,\nhe estado con Alfonso,\ny el hijo de la Guapeta.\n¡Chunga, la chunga la chun!\n¡Chunga, la chunga la chun!\nY al sol le llaman Lorenzo,\ny al sol le llaman Lorenzo,\ny la luna Catalina.\n¡Chunga, la chunga la chun!\n¡Chunga, la chunga la chun!\nCuando Lorenzo se acuesta,\ncuando Lorenzo se acuesta,\nSe levanta Catalina\n¡Chunga, la chunga la chun!\n¡Chunga, la chunga la chun!\nNo me toque los cojones,\nno me toque los cojones\nQue soy el amo de la casa."
  },
  "Pedro_Felix_Garcia_Linaje--12.mp3": {
   "letra": "Escucha, niña y repara,\nSi pasas por Terminón.\nEscucha, niña y repara,\nY verás con qué primor,\ncantan los de Cantabrana\ncantan los de Cantabrana,\nSi pasas por Terminón."
@@ -46,7 +46,7 @@ window.CANT_FICHAS = {
   "letra": "Y a la feria de Extremadura,\ny a mi suegra la llevé.\nA la feria de Extremadura,\ny no la pude vender,\npor no tener dentadura.\nPor no tener dentadura,\ny a mi suegra la llevé."
  },
  "Julian_Ojeda_Ojeda--15.mp3": {
-  "letra": "Y tanto que sabes coser,\ny tanto que sabes bordar.\nQue me has hecho unos pantalones\nCon la bragueta pa'trás,\nCon la bragueta pa'trás\nCon la bragueta pa'trás.\nY tanto que sabes coser,\ny tanto que sabes bordar."
+  "letra": "Y tanto que sabes coser,\ny tanto que sabes bordar.\nQue me has hecho unos pantalones\nCon la bragueta para atrás,\nCon la bragueta para atrás\nCon la bragueta para atrás.\nY tanto que sabes coser,\ny tanto que sabes bordar."
  },
  "Julian_Ojeda_Ojeda--16.mp3": {
   "letra": "Ay madre que me lo han roto,\nHija, no digas el qué…\nAy madre que me lo han roto,\nEl cantarillo en la fuente.\nMadre que creía usted\nmadre que creía usted,\nY ay, madre que me lo han roto."
@@ -55,13 +55,13 @@ window.CANT_FICHAS = {
   "letra": "No me tires cantillos,\nde la bragueta.\nQue está el niño dormido\nY se despierta.\nY se despierta niña y se despierta\nY que no me tires cantillos,\nde la bragueta."
  },
  "julian-Ojeda-Ojeda--18.mp3": {
-  "letra": "Y un español sube al cielo,\nY le dijo con anhelo,\nA Dios nuestro Señor:\n“ Señor mío, Jesucristo,\nvengo del suelo español,\ny a tu poder infinito,\nquiero pedirle un favor:\n“Que, en España, ya no hay leyes,\nvergüenza ni dignidad.\nY sólo tú eres quien puede\nBajar a aquello, pronto a arreglar”\nY Jesucristo, esto que oyó,\nSin perder un instante, le contestó:\n“ Calla, ignorante, vete de aquí,\nTú no recuerdas lo que os sufrí.\nQue yo, no vuelvo otra vez al mundo,\nno tengas dudas.\nQue allí, hay muchos Herodes y muchos Judas.\nTiempos pasados ya bajé al mundo a daros luz,\ny me crucificasteis en una cruz.\nQue yo, no vuelvo otra vez al mundo,\nY esto es así.\nAllá tú te las arregles, con tantos pillos como sois allí.\nallá tú te las arregles, con tantos pillos como sois allí."
+  "letra": "Y un español sube al cielo,\nY le dijo con anhelo,\nA Dios nuestro Señor:\n“ Señor mío, Jesucristo,\nvengo del suelo español,\ny a tu poder infinito,\nquiero pedirle un favor:\n“Que, en España, ya no hay leyes,\nvergüenza ni dignidad.\nY sólo tú eres quien puede\nBajar a aquello, pronto a arreglar”\nY Jesucristo, esto que oyó,\nSin perder un instante, le contestó:\n“ Calla, ignorante, vete de aquí,\nTú no recuerdas lo que os sufrí.\nQue yo, no vuelvo otra vez al mundo,\nno tengas dudas.\nQue allí, sois muchos Herodes y muchos Judas.\nTiempos pasados ya bajé al mundo a daros luz,\ny me crucificasteis en una cruz.\nQue yo, no vuelvo otra vez al mundo,\nY esto es así.\nAllá tú te las arregles, con tantos pillos como sois allí.\nallá tú te las arregles, con tantos pillos como sois allí."
  },
  "Julian_Ojeda_Ojeda--19.mp3": {
-  "letra": "Para dinero La Habana,\npara vino La Rioja.\nY para dinero La Habana\npara cantar y bailar\nY el pueblo de Cantabrana,\nel pueblo de Cantabrana,\ny para el vino La Rioja."
+  "letra": "Para dinero La Habana,\npara vino La Rioja.\nY para dinero La Habana\npara cantar y bailar\nY el pueblo de Cantabrana,\nel pueblo de Cantabrana,\ny  vino La Rioja."
  },
  "Julian-Ojeda-Ojeda--20.mp3": {
-  "letra": "Si andas apresurada,\npor lo que has hecho.\nApriétate el justillo,\ny a lo hecho, pecho.\nQue te tumbo, niña, que te tumbo,\nQue te tumbo y te tumbaré,\ny le dijo la gran cochinota.\nNo me tumbes, que ya me tumbaré."
+  "letra": "Si andas apresurada,\npor lo que has hecho.\nApriétate el justillo,\ny a lo hecho, pecho.\nQue te tumbo, niña, que te tumbo,\nQue te tumbo y te tumbaré,\ny le dijo la gran cochinota.\nNo me tumbes, que ya me echaré."
  },
  "Julian_Ojeda_Ojeda--21.mp3": {
   "letra": "Parece un saco melones,\nUna mujer en pelotas.\nParece un saco melones,\nTodo son altos y bajos,\nescondijos y rincones\nescondijos y rincones,\nUna mujer en pelotas."
@@ -73,7 +73,7 @@ window.CANT_FICHAS = {
   "letra": "Juanita ya se ha casado,\ny le dice a la Lorenza:\nLa primera noche de novios,\nMe daba mucha vergüenza,\nCalla, tontona, no sufras vida,\nSi estas nerviosa, toma tequila.\nNo te recuerdas\naquella noche de amor,\nque rompimos las dos almohadas,\nel colchón y el muelle y\nel despertador.\nque rompimos las dos almohadas,\nel colchón y el muelle y\nel despertador."
  },
  "Julian_Ojeda_Ojeda--24.mp3": {
-  "letra": "Me dijo una caderechana,\ncon  mucha gracia y salero.\nMe dijo una caderechana,\nSi quieres venir a verme,\nyo te espero en Cantabrana.\nYo te espero en Cantabrana,\nme dijo una caderechana,\ncon  mucha gracia y salero."
+  "letra": "Me dijo una caderechana,\ncon  mucha gracia y salero.\nMe dijo una caderechana,\nSi quieres venir a verme,\nyo te espero en Cantabrana.\nYo te espero en Cantabrana,\ncon  mucha gracia y salero."
  },
  "Julian_Ojeda_Ojeda--25.mp3": {
   "letra": "Hay que ver, hay que ver,\nLas faldas que hace un siglo,\nusaba la mujer.\nCreo yo, creo yo…\nque con una de esas faldas.\nSalen lo menos dos…\nHay que ver mi abuelita la pobre,\nqué faldas usaban,\nPues a los que estarían bailando\nen la plaza llenaban."
@@ -97,16 +97,16 @@ window.CANT_FICHAS = {
   "letra": "Y dicen que el matrimonio,\nEs una puerta con siete llaves.\nQue si alguna se te pierde,\nSiempre hay quien entra,\ncuando tú sales."
  },
  "Pedro_Felix_Garcia_Linaje--32.mp3": {
-  "letra": "La guindalera, la está arando,\nde rosas y claveles,\nla están plantando.\n¡Ay, qué alegría, ay, qué alegría!\nque también nos han puesto, la lechería.\nLa lechería, la lechería…\nY un poquito más abajo, alpargatería.\nAlpargatería, alpargatería…\nY un poquito más abajo, pescadería.\nPescadería, pescadería…\nY un poquito más abajo, panadería.\nPanadería, panadería…\nY un poquito más abajo, carnicerías.\nCarnicerías, carnicerías…\nY un poquito más abajo, bombonería.\nBombonería,  bombonería…\nEl barrio de la guindalera,\nla están plantando."
+  "letra": "La guindalera, la está arando,\nde rosas y claveles,\nla están plantando.\n¡Ay, qué alegría!, ¡Ay, qué alegría!\nque también nos han puesto, la lechería.\nLa lechería, la lechería…\nY un poquito más abajo, alpargatería.\nAlpargatería, alpargatería…\nY un poquito más abajo, pescadería.\nPescadería, pescadería…\nY un poquito más abajo, panadería.\nPanadería, panadería…\nY un poquito más abajo, carnicerías.\nCarnicerías, carnicerías…\nY un poquito más abajo, bombonería.\nBombonería,  bombonería…\nEl barrio de la guindalera,\nla están plantando."
  },
  "Pedro_Felix_Garcia_Linaje--33.mp3": {
-  "letra": "¡Viva Cantabrana!\ncon su vega y su trigal.\nLas aguas de los ríos\nnos saludan al pasar.\nLa torre de la iglesia\nme recuerda sin cesar,\nel pueblo donde vivo,\nfiel a Dios siempre será.\nJuventud firme el ademán,\nnunca descansar\npor su pueblo y su ideal,\n¡Viva Cantabrana!\nSiempre pueblo leal,\nQue ¡Viva Cantabrana!\ny su vecindad.\n¡Viva Cantabrana!\nSiempre pueblo leal,\nQue ¡Viva Cantabrana!\ny su vecindad."
+  "letra": "¡Viva Cantabrana!\ncon su vega y su trigal.\nLas aguas de sus ríos\nles saludan al pasar.\nLa torre de mi iglesia\nme recuerda sin cesar,\nel pueblo donde vivo,\nfiel a Dios siempre será.\nJuventud firme el ademán,\nnunca descansar\npor tu pueblo y tu ideal,\n¡Viva Cantabrana!\nSiempre pueblo leal,\nQue ¡Viva Cantabrana!\ny su vecindad.\n¡Viva Cantabrana!\nSiempre pueblo leal,\n¡Viva Cantabrana!\ny su vecindad."
  },
  "Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--34.mp3": {
   "letra": "Que no hay quien pueda…\nCon la gente marinera.\nMarinera, pescadora…\nQue no hay quien pueda,\npor ahora."
  },
  "Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--35.mp3": {
-  "letra": "Si te quieres casar,\ncon las chicas de aquí,\nTienes que ir a buscar,\nun empleo a Madrid.\nUn empleo a Madrid,\nSi te quieres casar,\ncon las chicas de aquí."
+  "letra": "Si te quieres casar,\ncon las chicas de aquí,\nTienes que ir a buscar,\nun empleo a Madrid.\nUn empleo a Madrid,\nun empleo a Madrid.\nSi te quieres casar,\ncon las chicas de aquí."
  },
  "Salve--37.mp3": {
   "letra": "Dios te salve, Reina y Madre,\nde misericordia, vida, dulzura y esperanza nuestra; Dios te salve.\nA ti llamamos los desterrados hijos de Eva;\na ti suspiramos, gimiendo y llorando en este valle de lágrimas.\nEa, pues, Señora, abogada nuestra,\nvuelve a nosotros esos tus ojos  misericordiosos;\ny después de este destierro, muéstranos a Jesús,\nfruto bendito de tu vientre.\n¡Oh, clementísima, oh piadosa, oh dulce Virgen María!\nRuega por nosotros santa Madre de Dios,\npara que seamos dignos de alcanzar\nlas promesas de nuestro Señor Jesucristo.\nAmén Jesús."
@@ -130,13 +130,13 @@ window.CANT_FICHAS = {
   "letra": "Desde que te vi con la pata de madera,\nDije para mí, para tu abuela, para tu abuela.\nDesde que te vi con la pata de palo,\nDije para mí, malo, malo, malo, malo."
  },
  "Julian_Ojeda_Ojeda--44.mp3": {
-  "letra": "Oña, Terminón, Bentretea y Cantabrana…\nse cría tan buena fruta,\ncomo en la huerta murciana.\nAy nuestro Valle, de Caderechas,\nAy nuestro valle, que es digno de admiración.\nUnos pasean por el puente nuevo,\nY otros pasean por el puente del Cuadrón."
+  "letra": "Oña, Terminón, Bentretea y Cantabrana…\nse cría tan buena fruta,\ncomo en la huerta murciana.\n¡Ay nuestro Valle!, de Caderechas,\n¡Ay nuestro vallen, que es digno de admiración.\nUnos pasean por el puente nuevo,\nY otros pasean por el puente del Cuadrón."
  },
  "Gregorio_Ojeda_Pena_y_Julian_Ojeda_Ojeda--45.mp3": {
   "letra": "Que son los de Cantabrana,\nYa no cantan los de Alfaro.\nQue son los de Cantabrana,\nque beben el vino en bota,\nporque no les gusta el agua,\nporque no les gusta el agua\nYa no cantan los de Alfaro."
  },
  "Grupo_Cantabrana--46.mp3": {
-  "letra": "Me embruja el murmullo,\ndel río y del monte.\nCon lluvia de mayo, me quiero mojar.\nVoy a correr, como el lobo en la noche\nQuiero sentir toda su inmensidad.\nMe guía la luz de un rayo de luna,\nla clara del alba al amanecer.\nMe llena de vida, toda la hermosura,\nesta tierra verde, que quiero aprender.\nQuiero saltar, de la rama de un roble,\ngritar tu nombre y echar a volar.\nTengo la fuerza del viento del Norte,\nY esa bravura, que viene del mar.\nUn puño de tierra, de arena, de nieve,\nHace tan pequeño lo poco que soy.\nQue a veces me alienta y otras me hiere.\nYo vengo de ti y no sé dónde voy.\nQuiero saltar, de la rama de un roble,\ngritar tu nombre y echar a volar.\nTengo la fuerza del viento del Norte,\nY esa bravura, que viene del mar."
+  "letra": "Me embruja el murmullo,\ndel río y del monte.\nCon lluvia de mayo, me quiero mojar.\nVoy a correr, como el lobo en la noche\nQuiero sentir toda tu inmensidad.\nMe guía la luz de un rayo de luna,\nla clara del alba al amanecer.\nMe llena de vida toda la hermosura,\nesta tierra verde, que aprendo a querer.\nQuiero saltar, de la rama de un roble,\ngritar tu nombre y echar a volar.\nTengo la fuerza del viento del norte.\nY esa bravura, que viene del mar.\nUn puño de tierra, de arena, de nieve,\nHace tan pequeño lo poco que soy.\nQue a veces me alienta y otras me hiere.\nYo vengo de ti y no sé dónde voy.\nQuiero saltar, de la rama de un roble,\ngritar tu nombre y echar a volar.\nTengo la fuerza del viento del norte,\nY esa bravura, que viene del mar."
  },
  "Julian_Ojeda_Ojeda--47.mp3": {
   "letra": "Si te casas en buena tierra,\nte casas en Cantabrana.\nY te casas en buena tierra,\nTienes mujer para la cama,\ny burra para traer leña.\nY burra para traer leña,\nsi te casas en Cantabrana."
@@ -145,7 +145,7 @@ window.CANT_FICHAS = {
   "letra": "Y el alcalde en la ciudad,\nEl cura manda en la iglesia.\nY el alcalde en la ciudad.\nY el marido manda en casa,\ncuando la mujer no está.\nCuando la mujer no está,\ny el cura manda en la iglesia."
  },
  "Grupo_Cantabrana--49.mp3": {
-  "letra": "Oña, Terminón, Bentretea y Cantabrana…\nse cría tan buena fruta,\ncomo en la huerta murciana.\nAy nuestro Valle, de Caderechas,\nAy nuestro valle, que es digno de admiración.\nUnos pasean por el puente nuevo,\nY otros pasean por el puente del Cuadrón."
+  "letra": "Oña, Terminón, Bentretea y Cantabrana…\nse cría tan buena fruta,\ncomo en la huerta murciana.\nOña, Terminón, Bentretea y Cantabrana…\nse cría tan buena fruta,\ncomo en la huerta murciana.\n¡Ay nuestro Valle!, de Caderechas,\n¡Ay nuestro valle!, que es digno de admiración.\nUnos pasean por el puente nuevo,\nY otros pasean por el puente del Cuadrón."
  },
  "Pedro_Felix_Garcia_Linaje--50.mp3": {
   "letra": "Yo he nacido en Cantabrana,\ny en una casa de aldea.\nDelante tiene una parra,\nque alegra la casa entera.\nQue alegra la casa entera,\nyo he nacido en Cantabrana."
@@ -160,7 +160,7 @@ window.CANT_FICHAS = {
   "letra": "Y soñé que la nieve ardía,\nSoñé que el fuego se helaba,\nSoñé que la nieve ardía.\nSoñé cosas imposibles,\nSoñé, soñé, que tú me querías,\nSoñé que tú me querías,\nSoñé, soñé, que el fuego se helaba."
  },
  "Lucia_Ojeda_Pena--53.mp3": {
-  "letra": "Nadie las puede olvidar,\nLas caricias, las caricias de una madre,\nNadie las puede olvidar.\nPorque en ellas, porque en ellas,  puso Dios,\nCariño, amor y verdad.\nCariño, amor y verdad,\nlas caricias de una madre."
+  "letra": "Nadie las puede olvidar,\nLas caricias, las caricias de una madre,\nNadie las puede olvidar.\nPorque en ellas, porque en ellas,  puso Dios,\nCariño, amor y verdad.\nCariño, amor…\nCariño, amor y verdad.\n\nlas caricias de una madre."
  },
  "Pedro_Felix_Garcia_Linaje--54.mp3": {
   "letra": "Y tiene venganza conmigo,\nY hasta el reloj de la audiencia,\ntiene venganza conmigo.\nQue me cuenta los minutos,\nsalada que estoy contigo.\nSalada que estoy contigo,\ny hasta el reloj de la audiencia"
@@ -170,5 +170,8 @@ window.CANT_FICHAS = {
  },
  "Lucia_Ojeda_Pena--56.mp3": {
   "letra": "Siento el calor…\nSiento el calor de mi patria.\nSiempre que escucho,\nsiempre que escucho la jota…\nSiento el calor…\nSiento el calor de mi patria.\nLos acentos…\nLos acentos de mi madre.\nY el nombre de….\nY el nombre de Cantabrana.\nY el nombre de….\nY el nombre de Cantabrana.\nSiempre que escucho,\nsiempre que escucho la jota…"
+ },
+ "Eleuterio_Pena_Rodriguez_y_Miguel_Alonso_Pena--59.mp3": {
+  "letra": "Ya no bajan, los de Alfaro\nY a Caparro\nY a Caparroso a moler.\nNo bajan por moler trigo\nQue también van,\nQue también van a moler…\nQue también van\npor ver lo que pasa\nLo que pasa en el molino\nLo que pasa en el molino\nY a Caparro"
  }
 };
