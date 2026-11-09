@@ -1157,7 +1157,9 @@ function mostrarPostal(src,dur,alSalir,saltable,tardio){
 }
 
 // ---- Compatibilidad iPhone/iPad (iOS): volumen de audio de solo lectura y audio bloqueado fuera de un toque ----
-var _volOK=(function(){try{var t=document.createElement('audio');t.volume=0.5;return t.volume===0.5;}catch(e){return true;}})();
+// iOS (iPhone/iPad, cualquier navegador) ignora el volumen aunque lo acepte: alli la ambiente se controla con 'muted'
+var _esIOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+var _volOK=!_esIOS&&(function(){try{var t=document.createElement('audio');t.volume=0.5;return t.volume===0.5;}catch(e){return true;}})();
 function ambVolSet(v){if(_volOK){aAmb.volume=v;}else{aAmb.muted=(v<0.06);}}
 function ambVolGet(){return _volOK?aAmb.volume:(aAmb.muted?0.02:0.45);}
 var _SIL='data:audio/wav;base64,UklGRmQGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YUAGAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';
@@ -1436,7 +1438,8 @@ async function iniciarJota(){
   // Al empezar la jota la musica ambiente se CORTA del todo (fundido rapido de 0,6 s y pausa) y se quita su franja
   ocultarFranjaAmb();
   window._jotaSuena=true;
-  if(!_volOK){try{aAmb.muted=true;aAmb.pause();}catch(e){}}
+  // En iOS NO se pausa (si se pausa, iOS no deja reanudarla sin un toque): sigue sonando en silencio (muted) y al acabar la jota se le quita el silencio
+  if(!_volOK){try{aAmb.muted=true;}catch(e){}}
   else{var av=ambVolGet();
     const fa=setInterval(()=>{av=Math.max(av-0.06,0);ambVolSet(av);if(av<=0){clearInterval(fa);if(window._jotaSuena){try{aAmb.pause();}catch(e){}}}},50);}
   document.getElementById('amb-ind').classList.remove('show');
