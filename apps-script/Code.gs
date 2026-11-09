@@ -50,11 +50,13 @@ function doPost(e) {
     if (TIPOS.indexOf(tipo) < 0) return bloquear_('tipo_desconocido', d.s, tipo.slice(0, 40));
 
     var sid = limpiar_(d.s, 24);
-    // Límite de frecuencia: máx. 40 eventos por sesión y minuto
+    if (enListaNegra_(sid)) return ok_(); // sesión vetada por el vigilante: se ignora en silencio
+    // Límite de frecuencia: máx. 40 eventos por sesión y minuto (15 si el escudo automático está activo)
     var cache = CacheService.getScriptCache();
+    var lim = escudoActivo_() ? 15 : 40;
     var kr = 'r_' + sid, n = parseInt(cache.get(kr) || '0', 10) + 1;
     cache.put(kr, String(n), 60);
-    if (n > 40) { if (n === 41) bloquear_('flood', sid, 'más de 40 eventos/min'); return ok_(); }
+    if (n > lim) { if (n === lim + 1) bloquear_('flood', sid, 'más de ' + lim + ' eventos/min'); return ok_(); }
 
     var valor = limpiar_(d.x, 200), detalle = limpiar_(d.y, 500), jota = limpiar_(d.j, 120);
 
@@ -115,7 +117,7 @@ function doGet(e) {
     }
   }
   out.reverse();
-  return json_({ ok: true, cols: COLS, filas: out, truncado: out.length >= MAX_FILAS_RESPUESTA, carga: estado_() });
+  return json_({ ok: true, cols: COLS, filas: out, truncado: out.length >= MAX_FILAS_RESPUESTA, carga: estado_(), seguridad: seguridad_() });
 }
 
 // ------------------------------------------------------------------ CARGA
@@ -156,6 +158,132 @@ function estado_() {
 /** Interruptor manual: ejecuta estas funciones desde el editor para mostrar / quitar el aviso a todos los visitantes. */
 function activarAviso() { PropertiesService.getScriptProperties().setProperty('AVISO_FORZADO', '1'); CacheService.getScriptCache().remove('estado'); }
 function desactivarAviso() { PropertiesService.getScriptProperties().deleteProperty('AVISO_FORZADO'); CacheService.getScriptCache().remove('estado'); }
+
+// ------------------------------------------------------------------ VIGILANTE (seguridad activa y automática)
+// Se ejecuta solo cada hora (disparador). Revisa los eventos de las últimas 24 h y:
+//  1) veta sesiones que acumulan bloqueos (24 h; el doble, el cuádruple... si reinciden; se olvidan solas a los 30 días)
+//  2) aprende el nivel normal de ruido (media móvil) y activa un ESCUDO de 1 h (límites más estrictos) si hay un pico anormal
+//  3) te envía un correo si hay pico, intentos de entrar al panel o cuota mensual alta (máx. 1 aviso del mismo tipo cada 6 h)
+//  4) los lunes por la mañana te envía un resumen semanal
+// Para ponerlo en marcha: ejecuta UNA vez  activarVigilancia()  desde el editor (pedirá permiso para enviar correos).
+var VIG_BLOQUEOS_POR_SESION = 5;   // bloqueos en 24 h para vetar una sesión
+var VIG_UMBRAL_MIN = 15;           // pico mínimo de bloqueos/hora para considerarlo anómalo
+var VIG_FACTOR_PICO = 4;           // o 4 veces el nivel normal aprendido, lo que sea mayor
+var VIG_CLAVE_MALA_AVISO = 5;      // intentos de clave errónea en 1 h que provocan aviso
+
+function activarVigilancia() {
+  desactivarVigilancia();
+  ScriptApp.newTrigger('vigilar').timeBased().everyHours(1).create();
+  vigilar();
+  Logger.log('Vigilancia activa: se ejecuta cada hora. Los avisos llegarán a ' + correo_());
+}
+function desactivarVigilancia() {
+  ScriptApp.getProjectTriggers().forEach(function (t) { if (t.getHandlerFunction() === 'vigilar') ScriptApp.deleteTrigger(t); });
+}
+function correo_() { try { return Session.getEffectiveUser().getEmail(); } catch (e) { return ''; } }
+
+function leerDesde_(isoDesde) {
+  var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(HOJA), out = [];
+  if (!sh || sh.getLastRow() < 2) return out;
+  var fin = sh.getLastRow(), bloque = 3000;
+  while (fin > 1 && out.length < 50000) {
+    var ini = Math.max(2, fin - bloque + 1), vals = sh.getRange(ini, 1, fin - ini + 1, COLS.length).getValues(), viejo = false;
+    for (var i = vals.length - 1; i >= 0; i--) { var f = String(vals[i][0]); if (f < isoDesde) { viejo = true; continue; } out.push(vals[i].map(String)); }
+    if (viejo) break;
+    fin = ini - 1;
+  }
+  return out;
+}
+
+function leerLista_() {
+  var props = PropertiesService.getScriptProperties();
+  try { return JSON.parse(props.getProperty('LISTA_NEGRA') || '{}'); } catch (e) { return {}; }
+}
+function enListaNegra_(sid) {
+  if (!sid) return false;
+  var cache = CacheService.getScriptCache(), l;
+  try { l = JSON.parse(cache.get('ln') || 'null'); } catch (e) { l = null; }
+  if (!l) { l = leerLista_(); try { cache.put('ln', JSON.stringify(l), 600); } catch (e) {} }
+  return !!(l[sid] && l[sid].h > Date.now());
+}
+function escudoActivo_() {
+  var cache = CacheService.getScriptCache(), c = cache.get('esc');
+  if (c !== null) return c === '1';
+  var h = parseInt(PropertiesService.getScriptProperties().getProperty('ESCUDO_HASTA') || '0', 10), on = h > Date.now();
+  cache.put('esc', on ? '1' : '0', 60);
+  return on;
+}
+function avisar_(tipo, asunto, cuerpo) {
+  try {
+    var props = PropertiesService.getScriptProperties(), k = 'AV_' + tipo, ult = parseInt(props.getProperty(k) || '0', 10);
+    var espera = tipo === 'semanal' ? 6 * 864e5 : 6 * 36e5;
+    if (Date.now() - ult < espera) return;
+    var to = correo_(); if (!to) return;
+    MailApp.sendEmail(to, '[Cantabrana] ' + asunto, cuerpo);
+    props.setProperty(k, String(Date.now()));
+  } catch (e) {}
+}
+
+function vigilar() {
+  var props = PropertiesService.getScriptProperties(), cache = CacheService.getScriptCache(), ahora = Date.now();
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(20000)) return;
+  try {
+    var filas = leerDesde_(new Date(ahora - 24 * 36e5).toISOString()), h1 = new Date(ahora - 36e5).toISOString();
+    var porSid = {}, motivos = {}, bl1h = 0, claveMala = 0;
+    filas.forEach(function (f) {
+      if (f[1] !== 'bloqueo') return;
+      var m = f[10]; motivos[m] = (motivos[m] || 0) + 1;
+      if (f[0] >= h1) { bl1h++; if (m === 'clave_incorrecta') claveMala++; }
+      if (f[3] && m !== 'clave_incorrecta') porSid[f[3]] = (porSid[f[3]] || 0) + 1;
+    });
+
+    // 1) lista negra con caducidad progresiva
+    var lista = leerLista_(), nuevos = 0;
+    Object.keys(porSid).forEach(function (s) {
+      if (porSid[s] < VIG_BLOQUEOS_POR_SESION) return;
+      var e = lista[s];
+      if (e && e.h > ahora) return;
+      var n = (e ? e.n : 0) + 1;
+      lista[s] = { h: ahora + Math.min(30, Math.pow(2, n - 1)) * 864e5, n: n };
+      nuevos++;
+    });
+    Object.keys(lista).forEach(function (s) { if (lista[s].h < ahora - 30 * 864e5) delete lista[s]; });
+    var claves = Object.keys(lista);
+    if (claves.length > 150) { claves.sort(function (a, b) { return lista[b].h - lista[a].h; }).slice(150).forEach(function (s) { delete lista[s]; }); }
+    props.setProperty('LISTA_NEGRA', JSON.stringify(lista)); cache.remove('ln');
+
+    // 2) nivel normal aprendido y escudo temporal
+    var base = parseFloat(props.getProperty('BASE_BL') || '0');
+    var umbral = Math.max(VIG_UMBRAL_MIN, VIG_FACTOR_PICO * base), pico = bl1h > umbral;
+    if (!pico) props.setProperty('BASE_BL', String(Math.round((0.9 * base + 0.1 * bl1h) * 100) / 100)); // solo aprende de horas normales
+    if (pico) { props.setProperty('ESCUDO_HASTA', String(ahora + 36e5)); cache.remove('esc'); }
+
+    // 3) avisos por correo
+    var res = Object.keys(motivos).map(function (m) { return ' - ' + m + ': ' + motivos[m]; }).join('\n') || ' (ninguno)';
+    if (pico) avisar_('pico', 'Pico de amenazas bloqueadas', 'En la última hora se han bloqueado ' + bl1h + ' intentos (lo normal ronda ' + Math.round(base) + ').\nEl escudo automático se ha activado durante 1 hora (límites más estrictos). No tienes que hacer nada.\n\nÚltimas 24 h:\n' + res);
+    if (claveMala >= VIG_CLAVE_MALA_AVISO) avisar_('clave', 'Intentos de entrar al panel con clave errónea', 'Se han registrado ' + claveMala + ' intentos con clave errónea en la última hora. Si no has sido tú, cambia la clave del panel (ejecuta configurar con una clave nueva).');
+    var est = estado_();
+    if (est.mes && est.mes.pct >= 80) avisar_('cuota', 'Cuota mensual de visitas alta', 'Se estima que llevas el ' + est.mes.pct + ' % de la cuota mensual orientativa de GitHub Pages (' + est.mes.gb + ' de ' + est.mes.cuota + ' GB).');
+
+    // 4) resumen semanal (lunes, a primera hora)
+    var d = new Date();
+    if (d.getDay() === 1 && d.getHours() >= 8 && d.getHours() <= 10) {
+      var sem = leerDesde_(new Date(ahora - 7 * 864e5).toISOString()), c = { visita: 0, jota_play: 0, error: 0, bloqueo: 0 }, sum = 0, nv = 0;
+      sem.forEach(function (f) { if (c[f[1]] !== undefined) c[f[1]]++; if (f[1] === 'valoracion') { var v = parseInt(f[10], 10); if (v >= 1 && v <= 5) { sum += v; nv++; } } });
+      avisar_('semanal', 'Resumen semanal', 'Últimos 7 días:\n - Visitas: ' + c.visita + '\n - Jotas escuchadas: ' + c.jota_play + '\n - Valoraciones: ' + nv + (nv ? ' (media ' + (sum / nv).toFixed(1) + '/5)' : '') + '\n - Errores: ' + c.error + '\n - Amenazas bloqueadas: ' + c.bloqueo + '\n\nPanel: https://rmt1965-cloud.github.io/cantabrana-jotas/estadisticas.html');
+    }
+    props.setProperty('VIG_ULTIMA', new Date().toISOString());
+    props.setProperty('VIG_RESUMEN', JSON.stringify({ bl1h: bl1h, bl24: filas.filter(function (f) { return f[1] === 'bloqueo'; }).length, nuevos: nuevos, vetadas: Object.keys(lista).filter(function (s) { return lista[s].h > ahora; }).length, base: base, umbral: Math.round(umbral) }));
+  } finally { lock.releaseLock(); }
+}
+function seguridad_() {
+  var p = PropertiesService.getScriptProperties(), r = {};
+  try { r = JSON.parse(p.getProperty('VIG_RESUMEN') || '{}'); } catch (e) {}
+  r.ultima = p.getProperty('VIG_ULTIMA') || ''; r.escudo = escudoActivo_();
+  r.activo = ScriptApp.getProjectTriggers().some(function (t) { return t.getHandlerFunction() === 'vigilar'; });
+  return r;
+}
 
 // ------------------------------------------------------------------ utilidades
 function ok_() { return ContentService.createTextOutput('ok'); }
