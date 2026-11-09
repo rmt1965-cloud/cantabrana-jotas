@@ -977,7 +977,7 @@ function ambElegir(){
 }
 function ambEsActual(f){try{return !!f&&f===ambActual&&aAmb.src===new URL(f,location.href).href;}catch(e){return false;}}
 function ambPlay(){
-  if(!_volOK&&window._jotaSuena)return;
+  if(window._jotaSuena)return;   // mientras suena la jota la ambiente esta cortada
   var f=ambActual;
   aAmb.play().catch(function(e){
     if(!ambEsActual(f))return;
@@ -1433,13 +1433,13 @@ async function iniciarJota(){
   if(tipoEl&&jota.t){tipoEl.textContent=jota.t;}
   document.getElementById('ticker-in').textContent='\u266a  '+(jota.t||jota.c)+' \u00b7 '+jota.c+' \u00b7 Cantabrana  \u266a';
 
-  // Bajar ambiente (volumen ambiente 0.02) y quitar la franja de la musica ambiente
+  // Al empezar la jota la musica ambiente se CORTA del todo (fundido rapido de 0,6 s y pausa) y se quita su franja
   ocultarFranjaAmb();
-  // iOS (Safari y Chrome): no hay control de volumen, asi que la ambiente se PAUSA mientras suena la jota
-  if(!_volOK){window._jotaSuena=true;try{aAmb.muted=true;aAmb.pause();}catch(e){}}
-  var av=ambVolGet();
-  const fa=setInterval(()=>{av=Math.max(av-0.02,0.02);ambVolSet(av);if(av<=0.02)clearInterval(fa);},80);
-  document.getElementById('amb-ind').classList.add('show');
+  window._jotaSuena=true;
+  if(!_volOK){try{aAmb.muted=true;aAmb.pause();}catch(e){}}
+  else{var av=ambVolGet();
+    const fa=setInterval(()=>{av=Math.max(av-0.06,0);ambVolSet(av);if(av<=0){clearInterval(fa);if(window._jotaSuena){try{aAmb.pause();}catch(e){}}}},50);}
+  document.getElementById('amb-ind').classList.remove('show');
 
   aJota.src=CFG.jotas_url+encodeURIComponent(jota.a);
   aJota.load();aJota.volume=0.4;
@@ -1646,8 +1646,10 @@ function finJota(){
 
   // Subir ambiente y volver a mostrar la franja de la musica ambiente
   mostrarFranjaAmb();
-  if(!_volOK){window._jotaSuena=false;try{aAmb.muted=false;aAmb.play().catch(function(){var rt=function(){aAmb.play().catch(function(){});document.removeEventListener('touchend',rt);document.removeEventListener('click',rt);};document.addEventListener('touchend',rt);document.addEventListener('click',rt);});}catch(e){}}
-  var v=ambVolGet();
+  // Al acabar la jota la musica ambiente se reactiva (sigue donde se corto) y sube poco a poco
+  window._jotaSuena=false;
+  try{ambVolSet(0);aAmb.muted=!_volOK?false:aAmb.muted;aAmb.play().catch(function(){var rt=function(){aAmb.play().catch(function(){});document.removeEventListener('touchend',rt);document.removeEventListener('click',rt);};document.addEventListener('touchend',rt);document.addEventListener('click',rt);});}catch(e){}
+  var v=0;
   const fu=setInterval(()=>{v=Math.min(v+0.02,0.45);ambVolSet(v);if(v>=0.45)clearInterval(fu);},100);
 
   // Portada: se disuelve ENCIMA de la ultima foto (sin pasar por negro), entera y sin la interfaz encima
