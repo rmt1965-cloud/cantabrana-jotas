@@ -1308,8 +1308,10 @@ async function init(){
   }
   if(!jota){
     var hist=histGet('cant_hist');
-    const disp=CFG.jotas.filter(j=>!hist.includes(j.a));
-    const pool=disp.length>0?disp:CFG.jotas;
+    // La Salve NUNCA sale al azar: solo se abre escaneando su QR (?jota=Salve...)
+    const normales=CFG.jotas.filter(j=>!esSalve(j));
+    const disp=normales.filter(j=>!hist.includes(j.a));
+    const pool=disp.length>0?disp:normales;
     jota=pool[rnd(pool.length)];
     hist.push(jota.a);if(hist.length>20)hist=hist.slice(-20);
     histSet('cant_hist',hist);
