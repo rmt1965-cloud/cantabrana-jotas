@@ -718,9 +718,19 @@ const CFG = {
     {a:'Pedro_Felix_Garcia_Linaje--54.mp3',c:'Pedro F\u00e9lix Garc\u00eda Linaje',m:'Cantabrana',t:'EL RELOJ DE LA AUDIENCIA'},
     {a:'Pedro_Felix_Garcia_Linaje--55.mp3',c:'Pedro F\u00e9lix Garc\u00eda Linaje',m:'Cantabrana',t:'14 GALLINAS TENGO'},
     {a:'Eleuterio_Pena_Rodriguez_y_Miguel_Alonso_Pena--59.mp3',c:'Eleuterio Pe\u00f1a Rodr\u00edguez y Miguel Alonso Pe\u00f1a',m:'Cantabrana',t:'YA NO BAJAN LOS DE ALFARO'},
-    //{a:'Salve--37.mp3',c:'Salve',m:'Cantabrana',t:'SALVE'},
+    {a:'Salve--37.mp3',c:'Salve',m:'Cantabrana',t:'SALVE'},
   ],
 };
+
+// ================================================================
+// SALVE (proceso aparte): 40 s de organo de inicio (al azar) -> la Salve -> 40 s de organo final (otro distinto)
+// Fotos solo de la iglesia (fotos/salve_web, 9:16), sin repetirse: cada etapa con fotos distintas.
+// Los organos NO forman parte de la musica ambiente: solo suenan aqui.
+// ================================================================
+CFG.salve_organos=['audio/salve_organo/organo01.mp3','audio/salve_organo/organo02.mp3','audio/salve_organo/organo03.mp3','audio/salve_organo/organo04.mp3','audio/salve_organo/organo05.mp3','audio/salve_organo/organo06.mp3','audio/salve_organo/organo07.mp3','audio/salve_organo/organo08.mp3','audio/salve_organo/organo09.mp3','audio/salve_organo/organo10.mp3'];
+CFG.salve_fotos=["fotos/salve_web/salve01.webp","fotos/salve_web/salve02.webp","fotos/salve_web/salve03.webp","fotos/salve_web/salve04.webp","fotos/salve_web/salve05.webp","fotos/salve_web/salve06.webp","fotos/salve_web/salve07.webp","fotos/salve_web/salve08.webp","fotos/salve_web/salve09.webp","fotos/salve_web/salve10.webp","fotos/salve_web/salve11.webp","fotos/salve_web/salve12.webp","fotos/salve_web/salve13.webp","fotos/salve_web/salve14.webp","fotos/salve_web/salve15.webp","fotos/salve_web/salve16.webp","fotos/salve_web/salve17.webp","fotos/salve_web/salve18.webp","fotos/salve_web/salve19.webp","fotos/salve_web/salve20.webp","fotos/salve_web/salve21.webp","fotos/salve_web/salve22.webp","fotos/salve_web/salve23.webp","fotos/salve_web/salve24.webp","fotos/salve_web/salve25.webp","fotos/salve_web/salve26.webp","fotos/salve_web/salve27.webp","fotos/salve_web/salve28.webp","fotos/salve_web/salve29.webp","fotos/salve_web/salve30.webp","fotos/salve_web/salve31.webp","fotos/salve_web/salve32.webp","fotos/salve_web/salve33.webp","fotos/salve_web/salve34.webp","fotos/salve_web/salve35.webp","fotos/salve_web/salve36.webp","fotos/salve_web/salve37.webp","fotos/salve_web/salve38.webp","fotos/salve_web/salve39.webp","fotos/salve_web/salve40.webp","fotos/salve_web/salve41.webp","fotos/salve_web/salve42.webp","fotos/salve_web/salve43.webp","fotos/salve_web/salve44.webp","fotos/salve_web/salve45.webp","fotos/salve_web/salve46.webp","fotos/salve_web/salve47.webp","fotos/salve_web/salve48.webp","fotos/salve_web/salve49.webp","fotos/salve_web/salve50.webp","fotos/salve_web/salve51.webp","fotos/salve_web/salve52.webp","fotos/salve_web/salve53.webp","fotos/salve_web/salve54.webp","fotos/salve_web/salve55.webp","fotos/salve_web/salve56.webp","fotos/salve_web/salve57.webp","fotos/salve_web/salve58.webp","fotos/salve_web/salve59.webp","fotos/salve_web/salve60.webp","fotos/salve_web/salve61.webp","fotos/salve_web/salve62.webp","fotos/salve_web/salve63.webp","fotos/salve_web/salve64.webp","fotos/salve_web/salve65.webp","fotos/salve_web/salve66.webp","fotos/salve_web/salve67.webp","fotos/salve_web/salve68.webp","fotos/salve_web/salve69.webp","fotos/salve_web/salve70.webp","fotos/salve_web/salve71.webp","fotos/salve_web/salve72.webp","fotos/salve_web/salve73.webp","fotos/salve_web/salve74.webp","fotos/salve_web/salve75.webp","fotos/salve_web/salve76.webp","fotos/salve_web/salve77.webp","fotos/salve_web/salve78.webp"];
+function esSalve(j){return !!(j&&/^Salve--/i.test(j.a||''));}
+
 
 // ================================================================
 // ESTADO
@@ -1413,6 +1423,15 @@ async function iniciarJota(){
   if(noVistas.length<15){histF=[];noVistas=CFG.fotos_arcos;}
   fotos=shuffle(noVistas);
   histSet('cant_fotos',[...histF,...fotos.slice(0,20)].slice(-97));
+  var _esSalve=esSalve(jota);
+  if(_esSalve){
+    // Salve: solo fotos de la iglesia; primero las no vistas en las ultimas visitas; ninguna se repite en la misma Salve
+    var hS=histGet('cant_salve_f');
+    var nv=CFG.salve_fotos.filter(function(f){return hS.indexOf(f)<0;}),vs=CFG.salve_fotos.filter(function(f){return hS.indexOf(f)>=0;});
+    fotos=shuffle(nv).concat(shuffle(vs));
+    histSet('cant_salve_f',[...hS.filter(function(f){return fotos.slice(0,52).indexOf(f)<0;}),...fotos.slice(0,52)].slice(-60));
+    window._durFoto=6;
+  }
   // Precargar primera foto en f-img2 para crossfade suave
   var preImg=document.getElementById('f-img2');
   if(preImg&&fotos.length>0){preImg.src=fotos[0];}
@@ -1444,8 +1463,9 @@ async function iniciarJota(){
     const fa=setInterval(()=>{av=Math.max(av-0.06,0);ambVolSet(av);if(av<=0){clearInterval(fa);if(window._jotaSuena){try{aAmb.pause();}catch(e){}}}},50);}
   document.getElementById('amb-ind').classList.remove('show');
 
-  aJota.src=CFG.jotas_url+encodeURIComponent(jota.a);
-  aJota.load();aJota.volume=0.4;
+  if(_esSalve){salveIniciar();aJota.volume=0.4;}
+  else{aJota.src=CFG.jotas_url+encodeURIComponent(jota.a);
+  aJota.load();aJota.volume=0.4;}
   // Indicador carga audio
   var tickerEl=document.getElementById('ticker-in');
   var tickerOrig=tickerEl.textContent;
@@ -1458,10 +1478,11 @@ async function iniciarJota(){
   aJota.play().catch(function(e){console.warn(e);var rt=function(){aJota.play().catch(function(){});document.removeEventListener('touchend',rt);document.removeEventListener('click',rt);};document.addEventListener('touchend',rt);document.addEventListener('click',rt);});
   var vj=0.4;
   var fj=setInterval(function(){vj=Math.min(vj+0.04,1);aJota.volume=vj;if(vj>=1)clearInterval(fj);},150);
-  iniciarProgreso();
+  if(_esSalve)salveProgreso();else iniciarProgreso();
   (function(){var sb=document.getElementById('saltar-jota');if(!sb)return;sb.classList.remove('show');sb.style.display='none';
     setTimeout(function(){if(jotaFin)return;sb.style.display='block';void sb.offsetWidth;sb.classList.add('show');},3000);})();
   setTimeout(function(){if(!jotaFin)fichaMostrarBoton(true);},3000);
+  if(_esSalve)return;   // la Salve lleva su propio control de etapas (salveIniciar)
   try{lsIniciar();}catch(e){}
   aJota.onerror=function(){
     document.getElementById('ticker-in').textContent='⚠ Error al cargar el audio. Comprueba tu conexión.';
@@ -1483,6 +1504,59 @@ async function iniciarJota(){
       window._durFoto=Math.min(7,Math.max(4,aJota.duration/30));
     }
   },{once:true});
+}
+
+// ================================================================
+// SALVE: secuencia organo de inicio -> Salve -> organo final (en el mismo reproductor de la jota)
+// ================================================================
+var _salve={k:-1,durs:[40,220,40],segs:[],hecho:false};
+function salveElegirOrganos(){
+  var h=histGet('cant_salve_org'),pool=CFG.salve_organos.filter(function(o){return h.indexOf(o)<0;});
+  if(pool.length<2)pool=CFG.salve_organos.slice();
+  var a=shuffle(pool);histSet('cant_salve_org',[...h,a[0],a[1]].slice(-6));
+  return [a[0],a[1]];   // dos organos distintos: uno para el inicio y otro para el final
+}
+function salveIniciar(){
+  var org=salveElegirOrganos();
+  _salve={k:-1,durs:[40,220,40],hecho:false,segs:[
+    {src:org[0],tipo:'org_ini',txt:'♪  Órgano · preludio a la Salve · Cantabrana  ♪'},
+    {src:CFG.jotas_url+encodeURIComponent(jota.a),tipo:'salve',txt:'♪  '+(jota.t||jota.c)+' · '+jota.c+' · Cantabrana  ♪'},
+    {src:org[1],tipo:'org_fin',txt:'♪  Órgano · despedida de la Salve · Cantabrana  ♪'}]};
+  // calentar la Salve y el organo final para que cada etapa entre sin esperas
+  try{window._salvePre=[1,2].map(function(i){var au=new Audio();au.preload='auto';au.src=_salve.segs[i].src;return au;});}catch(e){}
+  salveSig();
+}
+function salveSig(){
+  if(jotaFin)return;
+  _salve.k++;_salve.hecho=false;
+  var k=_salve.k;
+  if(k>=_salve.segs.length){finJota();return;}
+  var s=_salve.segs[k];
+  try{document.getElementById('ticker-in').textContent=s.txt;}catch(e){}
+  // cambio de etapa: entra una foto nueva en ese momento (cada etapa con sus propias fotos)
+  if(k>0){try{clearTimeout(fotoTimer);mostrarFoto(fotoIdx+1);}catch(e){}}
+  if(s.tipo==='salve'){try{lsIniciar();}catch(e){}}else{try{lsParar();}catch(e){}}
+  var pasar=function(){if(_salve.hecho||_salve.k!==k)return;_salve.hecho=true;salveSig();};
+  aJota.onended=pasar;
+  aJota.onerror=function(){
+    if(s.tipo==='salve'){document.getElementById('ticker-in').textContent='⚠ Error al cargar el audio. Comprueba tu conexión.';setTimeout(reiniciar,4000);}
+    else pasar();   // si un organo fallase, se sigue con la etapa siguiente (nunca se queda parado)
+  };
+  aJota.onloadedmetadata=function(){if(_salve.k===k&&isFinite(aJota.duration)&&aJota.duration>0)_salve.durs[k]=aJota.duration;};
+  aJota.src=s.src;aJota.load();
+  if(k>0){aJota.volume=1;aJota.play().catch(function(){var rt=function(){aJota.play().catch(function(){});document.removeEventListener('touchend',rt);document.removeEventListener('click',rt);};document.addEventListener('touchend',rt);document.addEventListener('click',rt);});}
+}
+function salveProgreso(){
+  clearInterval(progresoInter);
+  progresoInter=setInterval(function(){
+    if(jotaFin){clearInterval(progresoInter);return;}
+    var k=_salve.k,d=_salve.durs,tot=d[0]+d[1]+d[2],pas=0;
+    for(var i=0;i<k&&i<3;i++)pas+=d[i];
+    var ct=aJota.currentTime||0;
+    document.getElementById('prog-fill').style.width=Math.min(100,(pas+ct)/tot*100)+'%';
+    // seguridad: si el navegador no avisa del final de una etapa, se pasa igualmente a la siguiente
+    if(aJota.ended||(aJota.duration&&isFinite(aJota.duration)&&aJota.duration-ct<=0.15&&aJota.paused)){if(!_salve.hecho&&aJota.onended)aJota.onended();}
+  },500);
 }
 
 // ================================================================
