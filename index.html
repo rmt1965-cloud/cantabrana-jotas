@@ -337,8 +337,8 @@ body.val-gr #acc-btn{display:none!important}
       <img id="f-img" src="" alt="">
     </div>
   </div>
-  <canvas id="sfx" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;display:none;"></canvas>
-  <div id="svela" style="position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 1.5s ease;mix-blend-mode:soft-light;background:radial-gradient(120% 70% at 50% 108%,rgba(255,170,70,.55),rgba(255,120,30,.18) 45%,rgba(0,0,0,0) 70%),radial-gradient(140% 100% at 50% 50%,rgba(0,0,0,0) 55%,rgba(20,8,0,.55) 100%);"></div>
+  <canvas id="sfx" style="position:absolute;inset:0;z-index:4;width:100%;height:100%;pointer-events:none;display:none;"></canvas>
+  <div id="svela" style="position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;transition:opacity 1.5s ease;mix-blend-mode:soft-light;background:radial-gradient(120% 70% at 50% 108%,rgba(255,170,70,.55),rgba(255,120,30,.18) 45%,rgba(0,0,0,0) 70%),radial-gradient(140% 100% at 50% 50%,rgba(0,0,0,0) 55%,rgba(20,8,0,.55) 100%);"></div>
   <div id="f-trans"></div>
   <div id="f-vig"></div>
   <div id="f-grain"></div>
@@ -1584,14 +1584,18 @@ function salveFxParam(){
   var m=(new URLSearchParams(location.search).get('efectos')||'').toLowerCase();
   return {seda:1,incienso:2,humo:2,colores:3,color:3,mezcla:9}[m]||0;
 }
+function salveFxAviso(t){try{var d=document.createElement('div');d.textContent=t;
+  d.style.cssText='position:fixed;top:calc(64px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:60;background:rgba(200,146,42,.92);color:#1b1206;font:600 13px Georgia,serif;padding:8px 14px;border-radius:16px;text-align:center;max-width:90vw;transition:opacity 1s ease;';
+  document.body.appendChild(d);setTimeout(function(){d.style.opacity='0';setTimeout(function(){d.remove();},1200);},7000);}catch(e){}}
 function salveFxIniciar(){
   var m=salveFxParam();if(!m)return;
+  var _nom={1:'SEDA DORADA',2:'HUMO DE INCIENSO',3:'HUMO DE COLORES',9:'MEZCLA'}[m],_vel=!/[?&]vela=no/i.test(location.search);
   var cv=document.getElementById('sfx'),gl=null;
   try{gl=cv.getContext('webgl',{premultipliedAlpha:true,alpha:true});}catch(e){}
   // luz de vela (salvo &vela=no)
   if(!/[?&]vela=no/i.test(location.search)){var V=document.getElementById('svela');if(V){V.style.opacity='1';
     var lv=.85;_sfx.velaT=setInterval(function(){if(jotaFin){clearInterval(_sfx.velaT);V.style.opacity='0';return;}lv+=((.72+Math.random()*.28)-lv)*.35;V.style.transition='opacity .18s linear';V.style.opacity=lv.toFixed(2);},180);}}
-  if(!gl)return;   // sin WebGL: fundido normal (y la vela, si esta activa)
+  if(!gl){salveFxAviso('Prueba: '+_nom+' no disponible en este móvil (sin WebGL) · vela '+(_vel?'sí':'no'));return;}
   var VS='attribute vec2 p;varying vec2 v;void main(){v=p*.5+.5;gl_Position=vec4(p,0.,1.);}';
   var FS=[
 'precision mediump float;varying vec2 v;uniform float t,s,m,asp;uniform vec3 c1,c2;',
@@ -1608,7 +1612,7 @@ function salveFxIniciar(){
 '  float f=sin(d*9.+w*5.-t*1.1)*.65+sin(d*17.-uv.y*3.+t*.7)*.35;',
 '  float brillo=pow(max(f,0.),10.)*.9;float sombra=smoothstep(-.2,-.9,f);',
 '  vec3 col=mix(c1,c2,.5+.5*f)*(.75+.35*w)*(1.-.45*sombra)+vec3(1.,.94,.78)*brillo;',
-'  float a=band*(.6+.2*w+.2*brillo);',
+'  float a=band*(.82+.18*brillo);',
 '  gl_FragColor=vec4(col*a,a);',
 ' }else{',
 // HUMO: sube desde abajo, cubre y se disipa dejando la foto nueva
@@ -1632,10 +1636,11 @@ function salveFxIniciar(){
     var lp=gl.getAttribLocation(pr,'p');gl.enableVertexAttribArray(lp);gl.vertexAttribPointer(lp,2,gl.FLOAT,false,0,0);
     ['t','s','m','asp','c1','c2'].forEach(function(k){_sfx.U[k]=gl.getUniformLocation(pr,k);});
     gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
-  }catch(e){console.warn('[salve efectos] desactivados',e);return;}
+  }catch(e){console.warn('[salve efectos] desactivados',e);salveFxAviso('Prueba: '+_nom+' falló en este móvil: '+String(e).slice(0,80));return;}
   var tam=function(){var k=Math.min(window.devicePixelRatio||1,2)*0.5;cv.width=Math.round(innerWidth*k);cv.height=Math.round(innerHeight*k);gl.viewport(0,0,cv.width,cv.height);};
   addEventListener('resize',tam);tam();
   cv.style.display='block';
+  salveFxAviso('Prueba de efectos: '+_nom+' · vela '+(_vel?'sí':'no')+' · el efecto sale en cada cambio de foto');
   _sfx.gl=gl;_sfx.on=true;_sfx.mezcla=(m===9);_sfx.modo=(m===9?1:m);_sfx.t0=performance.now();
 }
 var _SFX_PAL={1:[[[.78,.55,.18],[.98,.86,.55]],[[.62,.42,.15],[.95,.8,.5]]],2:[[[.8,.8,.8],[1,1,1]]],

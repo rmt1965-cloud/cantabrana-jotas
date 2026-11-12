@@ -68,7 +68,7 @@ var FS=[
 '  float f=sin(d*9.+w*5.-t*1.1)*.65+sin(d*17.-uv.y*3.+t*.7)*.35;',
 '  float brillo=pow(max(f,0.),10.)*.9;float sombra=smoothstep(-.2,-.9,f);',
 '  vec3 col=mix(c1,c2,.5+.5*f)*(.75+.35*w)*(1.-.45*sombra)+vec3(1.,.94,.78)*brillo;',
-'  float a=band*(.6+.2*w+.2*brillo);',
+'  float a=band*(.82+.18*brillo);',
 '  gl_FragColor=vec4(col*a,a);',
 ' }else{',
 // HUMO: sube desde abajo, cubre y se disipa dejando la foto nueva
