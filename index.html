@@ -337,6 +337,8 @@ body.val-gr #acc-btn{display:none!important}
       <img id="f-img" src="" alt="">
     </div>
   </div>
+  <canvas id="sfx" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;display:none;"></canvas>
+  <div id="svela" style="position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 1.5s ease;mix-blend-mode:soft-light;background:radial-gradient(120% 70% at 50% 108%,rgba(255,170,70,.55),rgba(255,120,30,.18) 45%,rgba(0,0,0,0) 70%),radial-gradient(140% 100% at 50% 50%,rgba(0,0,0,0) 55%,rgba(20,8,0,.55) 100%);"></div>
   <div id="f-trans"></div>
   <div id="f-vig"></div>
   <div id="f-grain"></div>
@@ -1490,7 +1492,7 @@ async function iniciarJota(){
   aJota.play().catch(function(e){console.warn(e);var rt=function(){aJota.play().catch(function(){});document.removeEventListener('touchend',rt);document.removeEventListener('click',rt);};document.addEventListener('touchend',rt);document.addEventListener('click',rt);});
   var vj=0.4;
   var fj=setInterval(function(){vj=Math.min(vj+0.04,1);aJota.volume=vj;if(vj>=1)clearInterval(fj);},150);
-  if(_esSalve)salveProgreso();else iniciarProgreso();
+  if(_esSalve){salveProgreso();try{salveFxIniciar();}catch(e){}}else iniciarProgreso();
   (function(){var sb=document.getElementById('saltar-jota');if(!sb)return;sb.classList.remove('show');sb.style.display='none';
     setTimeout(function(){if(jotaFin)return;sb.style.display='block';void sb.offsetWidth;sb.classList.add('show');},3000);})();
   setTimeout(function(){if(!jotaFin)fichaMostrarBoton(true);},3000);
@@ -1573,6 +1575,89 @@ function salveProgreso(){
 }
 
 // ================================================================
+// SALVE · EFECTOS EN PRUEBA (no definitivos): solo se activan anadiendo a la direccion de la Salve
+//   &efectos=seda | incienso | colores | mezcla      y opcionalmente  &vela=no
+// Sin ese parametro la Salve funciona exactamente igual que ahora (fundido normal).
+// ================================================================
+var _sfx={on:false,modo:1,mezcla:false,gl:null,U:{},t0:0,anim:null,pase:-1};
+function salveFxParam(){
+  var m=(new URLSearchParams(location.search).get('efectos')||'').toLowerCase();
+  return {seda:1,incienso:2,humo:2,colores:3,color:3,mezcla:9}[m]||0;
+}
+function salveFxIniciar(){
+  var m=salveFxParam();if(!m)return;
+  var cv=document.getElementById('sfx'),gl=null;
+  try{gl=cv.getContext('webgl',{premultipliedAlpha:true,alpha:true});}catch(e){}
+  // luz de vela (salvo &vela=no)
+  if(!/[?&]vela=no/i.test(location.search)){var V=document.getElementById('svela');if(V){V.style.opacity='1';
+    var lv=.85;_sfx.velaT=setInterval(function(){if(jotaFin){clearInterval(_sfx.velaT);V.style.opacity='0';return;}lv+=((.72+Math.random()*.28)-lv)*.35;V.style.transition='opacity .18s linear';V.style.opacity=lv.toFixed(2);},180);}}
+  if(!gl)return;   // sin WebGL: fundido normal (y la vela, si esta activa)
+  var VS='attribute vec2 p;varying vec2 v;void main(){v=p*.5+.5;gl_Position=vec4(p,0.,1.);}';
+  var FS=[
+'precision mediump float;varying vec2 v;uniform float t,s,m,asp;uniform vec3 c1,c2;',
+'float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}',
+'float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}',
+'float fbm(vec2 p){float a=.5,r=0.;for(int i=0;i<5;i++){r+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return r;}',
+'void main(){vec2 uv=v;vec2 q=vec2(uv.x*asp,uv.y);float c=sin(3.14159*s);',
+' if(m<1.5){',
+// SEDA: un velo translucido que cruza en diagonal, con pliegues y brillos dorados
+'  float w=fbm(q*2.+vec2(t*.15,0.));',
+'  float d=uv.x*.75+uv.y*.35+.08*sin(uv.y*7.+t*.9)+.1*w;',
+'  float pos=s*2.1-.55;',
+'  float band=smoothstep(pos-.75,pos-.3,d)*(1.-smoothstep(pos+.1,pos+.5,d));',
+'  float f=sin(d*9.+w*5.-t*1.1)*.65+sin(d*17.-uv.y*3.+t*.7)*.35;',
+'  float brillo=pow(max(f,0.),10.)*.9;float sombra=smoothstep(-.2,-.9,f);',
+'  vec3 col=mix(c1,c2,.5+.5*f)*(.75+.35*w)*(1.-.45*sombra)+vec3(1.,.94,.78)*brillo;',
+'  float a=band*(.6+.2*w+.2*brillo);',
+'  gl_FragColor=vec4(col*a,a);',
+' }else{',
+// HUMO: sube desde abajo, cubre y se disipa dejando la foto nueva
+'  vec2 r=q*1.5+vec2(0.,-t*.25);',
+'  vec2 wq=vec2(fbm(r+t*.06),fbm(r+vec2(5.2,1.3)-t*.05));',
+'  float den=fbm(r+2.6*wq);',
+'  float hilo=1.-abs(2.*fbm(r*2.3+3.*wq+t*.1)-1.);',
+'  den=den*.75+pow(hilo,3.)*.45;',
+'  den+=(1.-uv.y)*.3*(1.-s)+uv.y*.3*s;',
+'  float thr=1.25-c*1.1;',
+'  float a=smoothstep(thr,thr+.22,den)*(.45+.55*smoothstep(.2,.9,den));',
+'  vec3 col= m<2.5 ? mix(vec3(.62,.6,.58),vec3(1.,.98,.94),smoothstep(.3,1.1,den))',
+'                  : mix(mix(c1,c2,smoothstep(.2,.8,wq.x)),vec3(1.,.9,.7),pow(hilo,4.)*.6)*(.55+.6*den);',
+'  a=min(a*(m<2.5?1.05:1.),.95);',
+'  gl_FragColor=vec4(col*a,a);',
+' }}'].join('\n');
+  try{
+    var sh=function(t,c){var o=gl.createShader(t);gl.shaderSource(o,c);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))throw gl.getShaderInfoLog(o);return o;};
+    var pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,VS));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,FS));gl.linkProgram(pr);gl.useProgram(pr);
+    var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+    var lp=gl.getAttribLocation(pr,'p');gl.enableVertexAttribArray(lp);gl.vertexAttribPointer(lp,2,gl.FLOAT,false,0,0);
+    ['t','s','m','asp','c1','c2'].forEach(function(k){_sfx.U[k]=gl.getUniformLocation(pr,k);});
+    gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+  }catch(e){console.warn('[salve efectos] desactivados',e);return;}
+  var tam=function(){var k=Math.min(window.devicePixelRatio||1,2)*0.5;cv.width=Math.round(innerWidth*k);cv.height=Math.round(innerHeight*k);gl.viewport(0,0,cv.width,cv.height);};
+  addEventListener('resize',tam);tam();
+  cv.style.display='block';
+  _sfx.gl=gl;_sfx.on=true;_sfx.mezcla=(m===9);_sfx.modo=(m===9?1:m);_sfx.t0=performance.now();
+}
+var _SFX_PAL={1:[[[.78,.55,.18],[.98,.86,.55]],[[.62,.42,.15],[.95,.8,.5]]],2:[[[.8,.8,.8],[1,1,1]]],
+  3:[[[.85,.35,.08],[.95,.75,.25]],[[.6,.08,.12],[.95,.55,.2]],[[.25,.12,.45],[.9,.6,.25]],[[.1,.3,.55],[.85,.7,.4]]]};
+// Transicion con efecto: el velo o el humo cubren la pantalla y, en el punto de maxima cobertura, entra la foto nueva
+function salveFx(alMedio){
+  var gl=_sfx.gl,U=_sfx.U,TR=3200;
+  var modo=_sfx.mezcla?(1+rnd(3)):_sfx.modo,pals=_SFX_PAL[modo],pal=pals[rnd(pals.length)];
+  var ini=performance.now(),hecho=false;cancelAnimationFrame(_sfx.anim);
+  (function bucle(){
+    if(jotaFin){gl.clear(gl.COLOR_BUFFER_BIT);if(!hecho){hecho=true;}return;}
+    var s=Math.min(1,(performance.now()-ini)/TR);
+    if(!hecho&&s>=(modo===1?0.42:0.45)){hecho=true;alMedio();}
+    gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.uniform1f(U.t,(performance.now()-_sfx.t0)/1000);gl.uniform1f(U.s,s);gl.uniform1f(U.m,modo);
+    gl.uniform1f(U.asp,gl.drawingBufferWidth/gl.drawingBufferHeight);gl.uniform3fv(U.c1,pal[0]);gl.uniform3fv(U.c2,pal[1]);
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+    if(s<1)_sfx.anim=requestAnimationFrame(bucle);else gl.clear(gl.COLOR_BUFFER_BIT);
+  })();
+}
+
+// ================================================================
 // FOTOS CARRUSEL
 // ================================================================
 var _capa=0;
@@ -1585,6 +1670,8 @@ function precargarFoto(i){
 }
 function mostrarFoto(idx){
   if(!fotos.length||jotaFin)return;
+  // Salve con efectos en prueba: el cambio de foto va envuelto en el velo de seda o el humo
+  if(_sfx.on&&idx>0&&_sfx.pase!==idx){_sfx.pase=idx;clearTimeout(fotoTimer);salveFx(function(){mostrarFoto(idx);});return;}
   var url=fotos[idx%fotos.length];
   var a=document.getElementById(_capa?'f-img2':'f-img');   // capa que entra
   var b=document.getElementById(_capa?'f-img':'f-img2');   // capa que sale
