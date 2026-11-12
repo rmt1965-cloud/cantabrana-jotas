@@ -109,7 +109,7 @@ window.CANT_FICHAS = {
   "letra": "Si te quieres casar,\ncon las chicas de aquí,\nTienes que ir a buscar,\nun empleo a Madrid.\nUn empleo a Madrid,\nun empleo a Madrid.\nSi te quieres casar,\ncon las chicas de aquí."
  },
  "Salve--37.mp3": {
-  "letra": "Dios te salve, Reina y Madre,\nde misericordia, vida, dulzura y esperanza nuestra; Dios te salve.\nA ti llamamos los desterrados hijos de Eva;\na ti suspiramos, gimiendo y llorando en este valle de lágrimas.\nEa, pues, Señora, abogada nuestra,\nvuelve a nosotros esos tus ojos  misericordiosos;\ny después de este destierro, muéstranos a Jesús,\nfruto bendito de tu vientre.\n¡Oh, clementísima, oh piadosa, oh dulce Virgen María!\nRuega por nosotros santa Madre de Dios,\npara que seamos dignos de alcanzar\nlas promesas de nuestro Señor Jesucristo.\nAmén Jesús."
+  "letra": "Dios te salve, Reina y Madre,\nde misericordia,\nvida y dulzura\ny esperanza nuestra;\nDios te salve.\nA ti llamamos\nlos desterrados hijos de Eva;\na ti suspiramos,\ngimiendo y llorando\nen este valle\nde lágrimas.\nEa, pues, Señora,\nabogada nuestra,\nvuelve a nosotros esos\ntus ojos misericordiosos;\ny después de este destierro,\nmuéstranos a Jesús,\nfruto bendito de tu vientre.\n¡Oh, clementísima!,\n¡Oh piadosa!,\n¡Oh dulce Virgen María!\nRuega por nos (nosotros)\nSanta Madre de Dios,\npara que seamos dignos\nde alcanzar\nlas promesas de\nnuestro Señor Jesucristo.\nAmén, Jesús."
  },
  "Pedro-Felix-Garcia-Linaje--38.mp3": {
   "letra": "Y que son los de Cantabrana,\nYa no cantan los de Alfaro.\nQue son los de Cantabrana,\nque beben el vino en bota,\nporque no les gusta el agua,\nporque no les gusta el agua.\nYa no cantan los de Alfaro."
