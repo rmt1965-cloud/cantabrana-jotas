@@ -1575,14 +1575,14 @@ function salveProgreso(){
 }
 
 // ================================================================
-// SALVE · EFECTOS EN PRUEBA (no definitivos): solo se activan anadiendo a la direccion de la Salve
-//   &efectos=seda | incienso | colores | mezcla      y opcionalmente  &vela=no
-// Sin ese parametro la Salve funciona exactamente igual que ahora (fundido normal).
+// SALVE · EFECTOS ACTIVOS: en cada cambio de foto, al azar y sin repetir el anterior: velo de seda, humo de incienso o humo de colores, con luz de vela.
+// Para probar uno concreto: &efectos=seda | incienso | colores   ·   &efectos=no los quita   ·   &vela=no quita la vela
 // ================================================================
 var _sfx={on:false,modo:1,mezcla:false,gl:null,U:{},t0:0,anim:null,pase:-1};
 function salveFxParam(){
   var m=(new URLSearchParams(location.search).get('efectos')||'').toLowerCase();
-  return {seda:1,incienso:2,humo:2,colores:3,color:3,mezcla:9}[m]||0;
+  if(m==='no')return 0;
+  return {seda:1,incienso:2,humo:2,colores:3,color:3,mezcla:9}[m]||9;   // por defecto: aleatorios
 }
 function salveFxAviso(t){try{var d=document.createElement('div');d.textContent=t;
   d.style.cssText='position:fixed;top:calc(64px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:60;background:rgba(200,146,42,.92);color:#1b1206;font:600 13px Georgia,serif;padding:8px 14px;border-radius:16px;text-align:center;max-width:90vw;transition:opacity 1s ease;';
@@ -1595,7 +1595,7 @@ function salveFxIniciar(){
   // luz de vela (salvo &vela=no)
   if(!/[?&]vela=no/i.test(location.search)){var V=document.getElementById('svela');if(V){V.style.opacity='1';
     var lv=.85;_sfx.velaT=setInterval(function(){if(jotaFin){clearInterval(_sfx.velaT);V.style.opacity='0';return;}lv+=((.72+Math.random()*.28)-lv)*.35;V.style.transition='opacity .18s linear';V.style.opacity=lv.toFixed(2);},180);}}
-  if(!gl){salveFxAviso('Prueba: '+_nom+' no disponible en este móvil (sin WebGL) · vela '+(_vel?'sí':'no'));return;}
+  if(!gl){if(/[?&]efectos=/i.test(location.search))salveFxAviso('Prueba: '+_nom+' no disponible en este móvil (sin WebGL) · vela '+(_vel?'sí':'no'));return;}
   var VS='attribute vec2 p;varying vec2 v;void main(){v=p*.5+.5;gl_Position=vec4(p,0.,1.);}';
   var FS=[
 'precision mediump float;varying vec2 v;uniform float t,s,m,asp;uniform vec3 c1,c2;',
@@ -1622,11 +1622,11 @@ function salveFxIniciar(){
 '  float hilo=1.-abs(2.*fbm(r*2.3+3.*wq+t*.1)-1.);',
 '  den=den*.75+pow(hilo,3.)*.45;',
 '  den+=(1.-uv.y)*.3*(1.-s)+uv.y*.3*s;',
-'  float thr=1.25-c*1.1;',
-'  float a=smoothstep(thr,thr+.22,den)*(.45+.55*smoothstep(.2,.9,den));',
+'  float thr=1.3-c*.78;',
+'  float a=smoothstep(thr,thr+.38,den)*(.22+.6*pow(hilo,2.5));',
 '  vec3 col= m<2.5 ? mix(vec3(.62,.6,.58),vec3(1.,.98,.94),smoothstep(.3,1.1,den))',
 '                  : mix(mix(c1,c2,smoothstep(.2,.8,wq.x)),vec3(1.,.9,.7),pow(hilo,4.)*.6)*(.55+.6*den);',
-'  a=min(a*(m<2.5?1.05:1.),.95);',
+'  a=min(a*(m<2.5?.75:.7),.55);',
 '  gl_FragColor=vec4(col*a,a);',
 ' }}'].join('\n');
   try{
@@ -1640,7 +1640,7 @@ function salveFxIniciar(){
   var tam=function(){var k=Math.min(window.devicePixelRatio||1,2)*0.5;cv.width=Math.round(innerWidth*k);cv.height=Math.round(innerHeight*k);gl.viewport(0,0,cv.width,cv.height);};
   addEventListener('resize',tam);tam();
   cv.style.display='block';
-  salveFxAviso('Prueba de efectos: '+_nom+' · vela '+(_vel?'sí':'no')+' · el efecto sale en cada cambio de foto');
+  if(/[?&]efectos=/i.test(location.search))salveFxAviso('Prueba de efectos: '+_nom+' · vela '+(_vel?'sí':'no')+' · el efecto sale en cada cambio de foto');
   _sfx.gl=gl;_sfx.on=true;_sfx.mezcla=(m===9);_sfx.modo=(m===9?1:m);_sfx.t0=performance.now();
 }
 var _SFX_PAL={1:[[[.78,.55,.18],[.98,.86,.55]],[[.62,.42,.15],[.95,.8,.5]]],2:[[[.8,.8,.8],[1,1,1]]],
@@ -1648,7 +1648,9 @@ var _SFX_PAL={1:[[[.78,.55,.18],[.98,.86,.55]],[[.62,.42,.15],[.95,.8,.5]]],2:[[
 // Transicion con efecto: el velo o el humo cubren la pantalla y, en el punto de maxima cobertura, entra la foto nueva
 function salveFx(alMedio){
   var gl=_sfx.gl,U=_sfx.U,TR=3200;
-  var modo=_sfx.mezcla?(1+rnd(3)):_sfx.modo,pals=_SFX_PAL[modo],pal=pals[rnd(pals.length)];
+  var modo=_sfx.modo;
+  if(_sfx.mezcla){var op=[1,2,3].filter(function(x){return x!==_sfx.ult;});modo=op[rnd(op.length)];_sfx.ult=modo;}   // al azar, nunca el mismo dos veces seguidas
+  var pals=_SFX_PAL[modo],pal=pals[rnd(pals.length)];
   var ini=performance.now(),hecho=false;cancelAnimationFrame(_sfx.anim);
   (function bucle(){
     if(jotaFin){gl.clear(gl.COLOR_BUFFER_BIT);if(!hecho){hecho=true;}return;}
