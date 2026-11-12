@@ -76,4 +76,20 @@ salve74.webp	Sin título111.png	recortada a pantalla completa
 salve75.webp	Sin título222.png	recortada a pantalla completa
 salve76.webp	Sin título333.png	recortada a pantalla completa
 salve77.webp	Sin título444.png	recortada a pantalla completa
-salve78.webp	VIRGEN DEL ROSARIO.png	recortada a pantalla completa
+salve78.webp	VIRGEN DEL ROSARIO.png	recortada a pantalla completasalve79.webp	20250418_214709_2.jpg	recortada a pantalla completa
+salve80.webp	20250418_214802_2.jpg	recortada a pantalla completa
+salve81.webp	20250430_204355_2.jpg	entera, con fondo difuminado
+salve82.webp	20250430_204420_2.jpg	recortada a pantalla completa
+salve83.webp	IMG_20221006_165057_2.jpg	recortada a pantalla completa
+salve84.webp	IMG_20221006_165112_2.jpg	recortada a pantalla completa
+salve85.webp	IMG_20221006_165120_2.jpg	recortada a pantalla completa
+salve86.webp	IMG_20221006_165629_3.jpg	entera, con fondo difuminado
+salve87.webp	IMG_20221006_165642_2.jpg	recortada a pantalla completa
+salve88.webp	IMG_20221006_171621_2.jpg	recortada a pantalla completa
+salve89.webp	IMG_20221006_172252_2.jpg	recortada a pantalla completa
+salve90.webp	IMG_20221006_172709_2.jpg	recortada a pantalla completa
+salve91.webp	IMG_20221006_172819_3.jpg	entera, con fondo difuminado
+salve92.webp	IMG_20221006_173151_2.jpg	entera, con fondo difuminado
+salve93.webp	IMG_20221006_174429_2.jpg	recortada a pantalla completa
+salve94.webp	IMG_20221006_175828_2.jpg	recortada a pantalla completa
+salve95.webp	IMG_20250126_121435_2.jpg	entera, con fondo difuminado
