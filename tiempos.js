@@ -38,6 +38,7 @@ window.CANT_TIEMPOS = {
  "Pedro_Felix_Garcia_Linaje--33.mp3": [1.1, 2.7, 6.8, 8.7, 12.6, 14.5, 18.6, 20.5, 23.9, 28.1, 30.4, 33.7, 35.5, 38, 39.8, 43.2, 45.2, 47.6, 49.5],
  "Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--34.mp3": [0.7, 2.1, 5.9, 9.3, 11.5],
  "Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--35.mp3": [0.4, 1.7, 3.6, 5.1, 7, 8.6, 10.9, 12.4],
+ "Salve--37.mp3": [1.7, 9.6, 34.8, 53.9, 81.2, 96.5, 116.6, 135.8, 147.5, 161.1, 178.2, 196.8, 203],
  "Pedro-Felix-Garcia-Linaje--38.mp3": [0.4, 5.2, 12.1, 18.9, 26.3, 33.2, 40.3],
  "Elena_Diaz_Linaje--39.mp3": [0.8, 2.1, 4.3, 5.5, 8.1, 9.4, 11.8, 12.8],
  "Gregorio_Ojeda_Pena_y_Julian_Ojeda_Ojeda--40.mp3": [0.3, 8.7, 18.2, 28.8, 39.4, 50.4, 61.3],
