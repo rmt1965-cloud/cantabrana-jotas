@@ -1680,7 +1680,10 @@ function precargarFoto(i){
 function mostrarFoto(idx){
   if(!fotos.length||jotaFin)return;
   // Salve con efectos en prueba: el cambio de foto va envuelto en el velo de seda o el humo
-  if(_sfx.on&&idx>0&&_sfx.pase!==idx){_sfx.pase=idx;clearTimeout(fotoTimer);salveFx(function(){mostrarFoto(idx);});return;}
+  // Se intercalan con fundidos normales para no cansar: tras un efecto, siempre un fundido normal; tras un fundido, 50 % de efecto (aprox. 1 de cada 3 cambios)
+  if(_sfx.on&&idx>0&&_sfx.pase!==idx){_sfx.pase=idx;
+    var toca=!_sfx.ultFx&&rnd(2)===0;_sfx.ultFx=toca;
+    if(toca){clearTimeout(fotoTimer);salveFx(function(){mostrarFoto(idx);});return;}}
   var url=fotos[idx%fotos.length];
   var a=document.getElementById(_capa?'f-img2':'f-img');   // capa que entra
   var b=document.getElementById(_capa?'f-img':'f-img2');   // capa que sale
