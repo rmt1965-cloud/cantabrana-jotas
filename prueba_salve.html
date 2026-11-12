@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Salve · prueba de transiciones</title>
+<style>
+  html,body{margin:0;height:100%;background:#0b0907;overflow:hidden;font-family:Georgia,serif;}
+  #esc{position:fixed;inset:0;}
+  .ft{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.1s ease;}
+  .ft.show{opacity:1;}
+  @media (min-aspect-ratio:3/4){.ft{object-fit:contain;}}
+  .kb{animation:kb 9s ease-out forwards;}
+  @keyframes kb{from{transform:scale(1.0)}to{transform:scale(1.08) translateY(-1.5%)}}
+  #fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+  /* luz de vela: resplandor calido que respira y parpadea */
+  #vela{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 1.5s ease;
+    background:radial-gradient(120% 70% at 50% 108%,rgba(255,170,70,.55),rgba(255,120,30,.18) 45%,rgba(0,0,0,0) 70%),
+               radial-gradient(140% 100% at 50% 50%,rgba(0,0,0,0) 55%,rgba(20,8,0,.55) 100%);
+    mix-blend-mode:soft-light;}
+  #vela2{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 1.5s ease;
+    background:radial-gradient(140% 100% at 50% 50%,rgba(0,0,0,0) 50%,rgba(10,4,0,.6) 100%);}
+  #panel{position:fixed;left:0;right:0;bottom:0;padding:10px 8px calc(10px + env(safe-area-inset-bottom));
+    background:linear-gradient(transparent,rgba(0,0,0,.75) 35%);display:flex;flex-wrap:wrap;gap:6px;justify-content:center;z-index:5;}
+  #panel button{font:600 13px Georgia,serif;color:#f3e2b8;background:rgba(60,35,10,.65);border:1px solid #c8922a;border-radius:18px;padding:8px 12px;}
+  #panel button.on{background:#c8922a;color:#1b1206;}
+  #tit{position:fixed;top:calc(10px + env(safe-area-inset-top));left:0;right:0;text-align:center;color:#f3e2b8;
+    font:600 14px Georgia,serif;letter-spacing:2px;text-shadow:0 1px 4px #000;z-index:5;}
+</style>
+</head>
+<body>
+<div id="esc">
+  <img id="fa" class="ft" alt="">
+  <img id="fb" class="ft" alt="">
+  <div id="vela"></div><div id="vela2"></div>
+  <canvas id="fx"></canvas>
+</div>
+<div id="tit">SALVE · PRUEBA DE TRANSICIONES</div>
+<div id="panel">
+  <button data-m="1" class="on">Seda dorada</button>
+  <button data-m="2">Humo de incienso</button>
+  <button data-m="3">Humo de colores</button>
+  <button data-m="0">Fundido normal</button>
+  <button id="bv" class="on">Luz de vela: sí</button>
+</div>
+<script>
+var FOTOS=[];for(var i=1;i<=78;i++)FOTOS.push('fotos/salve_web/salve'+(i<10?'0':'')+i+'.webp');
+for(var i=FOTOS.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=FOTOS[i];FOTOS[i]=FOTOS[j];FOTOS[j]=t;}
+var modo=1,vela=true,idx=0,capa=0,DUR=6000,TR=3200;
+var A=document.getElementById('fa'),B=document.getElementById('fb');
+
+// ---------------- WebGL: seda y humo ----------------
+var cv=document.getElementById('fx'),gl=null,prog,U={};
+try{gl=cv.getContext('webgl',{premultipliedAlpha:true,alpha:true});}catch(e){}
+var VS='attribute vec2 p;varying vec2 v;void main(){v=p*.5+.5;gl_Position=vec4(p,0.,1.);}';
+var FS=[
+'precision mediump float;varying vec2 v;uniform float t,s,m,asp;uniform vec3 c1,c2;',
+'float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}',
+'float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}',
+'float fbm(vec2 p){float a=.5,r=0.;for(int i=0;i<5;i++){r+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return r;}',
+'void main(){vec2 uv=v;vec2 q=vec2(uv.x*asp,uv.y);float c=sin(3.14159*s);',
+' if(m<1.5){',
+// SEDA: un velo translucido que cruza en diagonal, con pliegues y brillos dorados
+'  float w=fbm(q*2.+vec2(t*.15,0.));',
+'  float d=uv.x*.75+uv.y*.35+.08*sin(uv.y*7.+t*.9)+.1*w;',
+'  float pos=s*2.1-.55;',
+'  float band=smoothstep(pos-.75,pos-.3,d)*(1.-smoothstep(pos+.1,pos+.5,d));',
+'  float f=sin(d*9.+w*5.-t*1.1)*.65+sin(d*17.-uv.y*3.+t*.7)*.35;',
+'  float brillo=pow(max(f,0.),10.)*.9;float sombra=smoothstep(-.2,-.9,f);',
+'  vec3 col=mix(c1,c2,.5+.5*f)*(.75+.35*w)*(1.-.45*sombra)+vec3(1.,.94,.78)*brillo;',
+'  float a=band*(.6+.2*w+.2*brillo);',
+'  gl_FragColor=vec4(col*a,a);',
+' }else{',
+// HUMO: sube desde abajo, cubre y se disipa dejando la foto nueva
+'  vec2 r=q*1.5+vec2(0.,-t*.25);',
+'  vec2 wq=vec2(fbm(r+t*.06),fbm(r+vec2(5.2,1.3)-t*.05));',
+'  float den=fbm(r+2.6*wq);',
+'  float hilo=1.-abs(2.*fbm(r*2.3+3.*wq+t*.1)-1.);',
+'  den=den*.75+pow(hilo,3.)*.45;',
+'  den+=(1.-uv.y)*.3*(1.-s)+uv.y*.3*s;',
+'  float thr=1.25-c*1.1;',
+'  float a=smoothstep(thr,thr+.22,den)*(.45+.55*smoothstep(.2,.9,den));',
+'  vec3 col= m<2.5 ? mix(vec3(.62,.6,.58),vec3(1.,.98,.94),smoothstep(.3,1.1,den))',
+'                  : mix(mix(c1,c2,smoothstep(.2,.8,wq.x)),vec3(1.,.9,.7),pow(hilo,4.)*.6)*(.55+.6*den);',
+'  a=min(a*(m<2.5?1.05:1.),.95);',
+'  gl_FragColor=vec4(col*a,a);',
+' }}'].join('\n');
+function sh(t,src){var o=gl.createShader(t);gl.shaderSource(o,src);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))throw gl.getShaderInfoLog(o);return o;}
+if(gl){try{
+  prog=gl.createProgram();gl.attachShader(prog,sh(gl.VERTEX_SHADER,VS));gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FS));gl.linkProgram(prog);gl.useProgram(prog);
+  var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+  var lp=gl.getAttribLocation(prog,'p');gl.enableVertexAttribArray(lp);gl.vertexAttribPointer(lp,2,gl.FLOAT,false,0,0);
+  ['t','s','m','asp','c1','c2'].forEach(function(k){U[k]=gl.getUniformLocation(prog,k);});
+  gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+}catch(e){console.warn('sin efectos',e);gl=null;}}
+function tam(){var k=Math.min(window.devicePixelRatio||1,2)*0.5;cv.width=Math.round(innerWidth*k);cv.height=Math.round(innerHeight*k);if(gl)gl.viewport(0,0,cv.width,cv.height);}
+addEventListener('resize',tam);tam();
+var PAL_SEDA=[[[.78,.55,.18],[.98,.86,.55]],[[.62,.42,.15],[.95,.8,.5]]];
+var PAL_COLOR=[[[.85,.35,.08],[.95,.75,.25]],[[.6,.08,.12],[.95,.55,.2]],[[.25,.12,.45],[.9,.6,.25]],[[.1,.3,.55],[.85,.7,.4]]];
+var t0=performance.now(),anim=null;
+function efecto(alMedio){
+  if(!gl||modo===0){cambiarFoto();return;}
+  var pal=modo===1?PAL_SEDA[Math.floor(Math.random()*PAL_SEDA.length)]:PAL_COLOR[Math.floor(Math.random()*PAL_COLOR.length)];
+  var ini=performance.now(),cambiada=false;
+  cancelAnimationFrame(anim);
+  (function bucle(){
+    var s=Math.min(1,(performance.now()-ini)/TR);
+    if(!cambiada&&s>=(modo===1?0.42:0.45)){cambiada=true;cambiarFoto();}
+    gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.uniform1f(U.t,(performance.now()-t0)/1000);gl.uniform1f(U.s,s);gl.uniform1f(U.m,modo);gl.uniform1f(U.asp,cv.width/cv.height);
+    gl.uniform3fv(U.c1,pal[0]);gl.uniform3fv(U.c2,pal[1]);
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+    if(s<1)anim=requestAnimationFrame(bucle);else{gl.clear(gl.COLOR_BUFFER_BIT);}
+  })();
+}
+// ---------------- fotos ----------------
+function cargar(el,src,cb){el.onload=function(){(el.decode?el.decode():Promise.resolve()).catch(function(){}).then(cb);};el.src=src;}
+function cambiarFoto(){
+  idx=(idx+1)%FOTOS.length;
+  var entra=capa?A:B,sale=capa?B:A;
+  cargar(entra,FOTOS[idx],function(){
+    entra.classList.remove('kb');void entra.offsetWidth;entra.classList.add('kb');
+    entra.style.zIndex=2;sale.style.zIndex=1;entra.classList.add('show');
+    setTimeout(function(){sale.classList.remove('show');},1200);
+    capa=1-capa;
+    var p=new Image();p.src=FOTOS[(idx+1)%FOTOS.length];
+  });
+}
+var tm=null;
+function ciclo(){clearTimeout(tm);tm=setTimeout(function(){efecto();ciclo();},DUR);}
+cargar(A,FOTOS[0],function(){A.classList.add('show','kb');capa=1;ciclo();});
+
+// ---------------- luz de vela ----------------
+var V1=document.getElementById('vela'),V2=document.getElementById('vela2'),lv=.8;
+function velaOn(on){V1.style.opacity=on?'1':'0';V2.style.opacity=on?'1':'0';}
+velaOn(true);
+setInterval(function(){if(!vela)return;var obj=.72+Math.random()*.28;lv+=(obj-lv)*.35;V1.style.transition='opacity .18s linear';V1.style.opacity=lv.toFixed(2);},180);
+
+// ---------------- botones ----------------
+document.querySelectorAll('#panel button[data-m]').forEach(function(bt){bt.onclick=function(){
+  document.querySelectorAll('#panel button[data-m]').forEach(function(x){x.classList.remove('on');});
+  bt.classList.add('on');modo=+bt.dataset.m;efecto();ciclo();};});
+document.getElementById('bv').onclick=function(){vela=!vela;this.textContent='Luz de vela: '+(vela?'sí':'no');this.classList.toggle('on',vela);V1.style.transition='opacity 1.5s ease';velaOn(vela);};
+</script>
+</body>
+</html>
