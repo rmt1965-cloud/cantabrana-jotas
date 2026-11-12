@@ -728,6 +728,7 @@ const CFG = {
 // Los organos NO forman parte de la musica ambiente: solo suenan aqui.
 // ================================================================
 CFG.salve_organos=['audio/salve_organo/organo01.mp3','audio/salve_organo/organo02.mp3','audio/salve_organo/organo03.mp3','audio/salve_organo/organo04.mp3','audio/salve_organo/organo05.mp3','audio/salve_organo/organo06.mp3','audio/salve_organo/organo07.mp3','audio/salve_organo/organo08.mp3','audio/salve_organo/organo09.mp3','audio/salve_organo/organo10.mp3'];
+CFG.salve_organos_ini=['audio/salve_organo/ini/organo01.mp3','audio/salve_organo/ini/organo02.mp3','audio/salve_organo/ini/organo03.mp3','audio/salve_organo/ini/organo04.mp3','audio/salve_organo/ini/organo05.mp3','audio/salve_organo/ini/organo06.mp3','audio/salve_organo/ini/organo07.mp3','audio/salve_organo/ini/organo08.mp3','audio/salve_organo/ini/organo09.mp3','audio/salve_organo/ini/organo10.mp3'];   // 35 s, para el comienzo
 CFG.salve_fotos=["fotos/salve_web/salve01.webp","fotos/salve_web/salve02.webp","fotos/salve_web/salve03.webp","fotos/salve_web/salve04.webp","fotos/salve_web/salve05.webp","fotos/salve_web/salve06.webp","fotos/salve_web/salve07.webp","fotos/salve_web/salve08.webp","fotos/salve_web/salve09.webp","fotos/salve_web/salve10.webp","fotos/salve_web/salve11.webp","fotos/salve_web/salve12.webp","fotos/salve_web/salve13.webp","fotos/salve_web/salve14.webp","fotos/salve_web/salve15.webp","fotos/salve_web/salve16.webp","fotos/salve_web/salve17.webp","fotos/salve_web/salve18.webp","fotos/salve_web/salve19.webp","fotos/salve_web/salve20.webp","fotos/salve_web/salve21.webp","fotos/salve_web/salve22.webp","fotos/salve_web/salve23.webp","fotos/salve_web/salve24.webp","fotos/salve_web/salve25.webp","fotos/salve_web/salve26.webp","fotos/salve_web/salve27.webp","fotos/salve_web/salve28.webp","fotos/salve_web/salve29.webp","fotos/salve_web/salve30.webp","fotos/salve_web/salve31.webp","fotos/salve_web/salve32.webp","fotos/salve_web/salve33.webp","fotos/salve_web/salve34.webp","fotos/salve_web/salve35.webp","fotos/salve_web/salve36.webp","fotos/salve_web/salve37.webp","fotos/salve_web/salve38.webp","fotos/salve_web/salve39.webp","fotos/salve_web/salve40.webp","fotos/salve_web/salve41.webp","fotos/salve_web/salve42.webp","fotos/salve_web/salve43.webp","fotos/salve_web/salve44.webp","fotos/salve_web/salve45.webp","fotos/salve_web/salve46.webp","fotos/salve_web/salve47.webp","fotos/salve_web/salve48.webp","fotos/salve_web/salve49.webp","fotos/salve_web/salve50.webp","fotos/salve_web/salve51.webp","fotos/salve_web/salve52.webp","fotos/salve_web/salve53.webp","fotos/salve_web/salve54.webp","fotos/salve_web/salve55.webp","fotos/salve_web/salve56.webp","fotos/salve_web/salve57.webp","fotos/salve_web/salve58.webp","fotos/salve_web/salve59.webp","fotos/salve_web/salve60.webp","fotos/salve_web/salve61.webp","fotos/salve_web/salve62.webp","fotos/salve_web/salve63.webp","fotos/salve_web/salve64.webp","fotos/salve_web/salve65.webp","fotos/salve_web/salve66.webp","fotos/salve_web/salve67.webp","fotos/salve_web/salve68.webp","fotos/salve_web/salve69.webp","fotos/salve_web/salve70.webp","fotos/salve_web/salve71.webp","fotos/salve_web/salve72.webp","fotos/salve_web/salve73.webp","fotos/salve_web/salve74.webp","fotos/salve_web/salve75.webp","fotos/salve_web/salve76.webp","fotos/salve_web/salve77.webp","fotos/salve_web/salve78.webp"];
 function esSalve(j){return !!(j&&/^Salve--/i.test(j.a||''));}
 
@@ -1341,6 +1342,15 @@ async function init(){
     if(btn){btn.addEventListener('click',h);btn.addEventListener('touchend',h);}
   });
 
+  // SALVE: comienzo propio. Sin musica ambiente, ventanas, video, collage, postal ni pergamino:
+  // directamente 35 s de fotos de la iglesia con organo, luego la Salve y el organo final
+  if(esSalve(jota)){
+    document.getElementById('loading').classList.add('fade');
+    var accB=document.getElementById('acc-btn');
+    if(accB){accB.style.pointerEvents='none';accB.style.opacity='0';accB.style.visibility='hidden';}
+    setTimeout(irAJota,400);
+    return;
+  }
   iniciarAmbiente();
   document.getElementById('loading').classList.add('fade');
   // Desactivar boton accesibilidad tras arrancar
@@ -1516,11 +1526,12 @@ function salveElegirOrganos(){
   var h=histGet('cant_salve_org'),pool=CFG.salve_organos.filter(function(o){return h.indexOf(o)<0;});
   if(pool.length<2)pool=CFG.salve_organos.slice();
   var a=shuffle(pool);histSet('cant_salve_org',[...h,a[0],a[1]].slice(-6));
-  return [a[0],a[1]];   // dos organos distintos: uno para el inicio y otro para el final
+  // dos organos distintos: el de inicio (version de 35 s) y otro para el final (40 s)
+  return [a[0].replace('/salve_organo/','/salve_organo/ini/'),a[1]];
 }
 function salveIniciar(){
   var org=salveElegirOrganos();
-  _salve={k:-1,durs:[40,220,40],hecho:false,segs:[
+  _salve={k:-1,durs:[35,220,40],hecho:false,segs:[
     {src:org[0],tipo:'org_ini',txt:'♪  Órgano · preludio a la Salve · Cantabrana  ♪'},
     {src:CFG.jotas_url+encodeURIComponent(jota.a),tipo:'salve',txt:'♪  '+(jota.t||jota.c)+' · '+jota.c+' · Cantabrana  ♪'},
     {src:org[1],tipo:'org_fin',txt:'♪  Órgano · despedida de la Salve · Cantabrana  ♪'}]};
@@ -1706,6 +1717,13 @@ function finJota(){
   try{lsParar();}catch(e){}
   (function(){var sb=document.getElementById('saltar-jota');if(sb){sb.classList.remove('show');setTimeout(function(){sb.style.display='none';},1100);}})();
   cantTrack('jota_fin',Math.round(aJota.currentTime||0),window._jotaSaltada?'saltada':'',window._jotaNom);
+  // SALVE: la etapa final tambien es de la iglesia (fotos de la Salve que aun no se han visto), sin video, postal ni escudo
+  var _salveFin=esSalve(jota),_salveRest=[];
+  if(_salveFin){try{
+    var _vistasS=fotos.slice(0,fotoIdx+1),_quedan=fotos.slice(fotoIdx+1);
+    _salveRest=_quedan.concat(_vistasS).slice(0,4);
+    if(_salveRest[0])window._portada=_salveRest[0];
+  }catch(e){}}
   clearTimeout(fotoTimer);fotoIdx=0;
   clearInterval(progresoInter);
   document.getElementById('prog-fill').style.width='100%';
@@ -1716,13 +1734,15 @@ function finJota(){
     var vidSrc=pickVideoNuevoPrimero(CFG.videos_final,'cant_vfinal')||histPick(CFG.videos_final,'cant_vfinal'),vidIni=false;
     var iniciarVid=function(){if(vidIni)return;vidIni=true;vp.src=vidSrc;vp.load();};
     var pend=3;
-    for(var q=0;q<3;q++){var vs=histNoRep(CFG.vistas,'cant_vistas_n',10);_pre.v.push(vs);var imq=new Image();
+    if(_salveFin){vidIni=true;}   // la Salve no lleva video final
+    for(var q=0;q<3;q++){var vs=(_salveFin&&_salveRest[q+1])?_salveRest[q+1]:histNoRep(CFG.vistas,'cant_vistas_n',10);_pre.v.push(vs);var imq=new Image();
       imq.onload=imq.onerror=function(){try{if(this.decode)this.decode().catch(function(){});}catch(e){}if(--pend<=0)iniciarVid();};(window._preImgs=window._preImgs||[]).push(imq);imq.src=vs;}
     setTimeout(iniciarVid,4000);   // por si alguna foto tardase
-    _pre.vid=vp;
+    _pre.vid=_salveFin?null:vp;
     [(typeof POSTAL_FIN!=='undefined'&&POSTAL_FIN)?POSTAL_FIN:''].forEach(function(u){if(!u)return;var im=new Image();im.onload=function(){try{if(im.decode)im.decode().catch(function(){});}catch(e){}};(window._preImgs=window._preImgs||[]).push(im);im.src=u;});
   }catch(e){}
 
+  if(_salveFin&&!ambActual){window._jotaSuena=false;try{iniciarAmbiente();}catch(e){}}
   // Subir ambiente y volver a mostrar la franja de la musica ambiente
   mostrarFranjaAmb();
   // Al acabar la jota la musica ambiente se reactiva (sigue donde se corto) y sube poco a poco
@@ -1773,12 +1793,20 @@ function finJota(){
         function(cb){mostrarFotoFinal2(grupoFinal[2],cb,_pre.v[2]);}
       ];
       // Escudo de Cantabrana: aparece al azar (1 de cada 2) y sustituye UNA de las dos fotos; nunca el video, la postal ni el sello
-      if(window._escudoDonde==='final'){
+      if(_salveFin){
+        // Salve: tres fotos de la iglesia y despues la pantalla final con sus opciones
+        pasosFin=[
+          function(cb){mostrarFotoFinal(grupoFinal[0],cb,_pre.v[0]);},
+          function(cb){mostrarFotoFinal2(grupoFinal[1],cb,_pre.v[1]);},
+          function(cb){mostrarFotoFinal2(grupoFinal[2],cb,_pre.v[2]);}
+        ];
+      }
+      if(!_salveFin&&window._escudoDonde==='final'){
         var iFoto=rnd(2)===0?0:2, fotoOrig=pasosFin[iFoto], fraseEsc=grupoFinal[iFoto];
         pasosFin[iFoto]=function(cb){mostrarEscudoFinal(fraseEsc,cb,fotoOrig);};
       }
       // La postal se inserta en un hueco al azar (antes, entre o despues de las ventanas), sin sustituir ninguna
-      pasosFin.splice(rnd(pasosFin.length+1),0,function(cb){mostrarPostal(POSTAL_FIN,4500,cb,false,true);});
+      if(!_salveFin)pasosFin.splice(rnd(pasosFin.length+1),0,function(cb){mostrarPostal(POSTAL_FIN,4500,cb,false,true);});
       var finCreditos=function(){
             // Ventana final con frase DISTINTA
             var otrosGrupos=CFG.frases_final.filter(function(_,i){return i!==idxFinal;});
