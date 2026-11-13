@@ -1497,6 +1497,7 @@ async function iniciarJota(){
   var fj=setInterval(function(){vj=Math.min(vj+0.04,1);aJota.volume=vj;if(vj>=1)clearInterval(fj);},150);
   if(_esSalve){salveProgreso();try{salveFxIniciar();}catch(e){}}else iniciarProgreso();
   (function(){var sb=document.getElementById('saltar-jota');if(!sb)return;sb.classList.remove('show');sb.style.display='none';
+    sb.innerHTML=_esSalve?'Saltar SALVE &#9197;':'Saltar jota &#9197;';   // solo en la Salve dice "Saltar SALVE"
     setTimeout(function(){if(jotaFin)return;sb.style.display='block';void sb.offsetWidth;sb.classList.add('show');},3000);})();
   setTimeout(function(){if(!jotaFin)fichaMostrarBoton(true);},3000);
   if(_esSalve)return;   // la Salve lleva su propio control de etapas (salveIniciar)
