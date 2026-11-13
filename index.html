@@ -1816,6 +1816,37 @@ function saltarJota(){
     if(pasos>=8){clearInterval(fi);try{aJota.pause();}catch(e){}}},90);}catch(e){}
   finJota();
 }
+// SALVE: fotos extra al terminar (fundido cruzado sobre las dos capas, sin negro); al acabar llama a cb
+function salveFotosFin(lista,cb){
+  var i=0,DUR=6;
+  function sig(){
+    if(i>=lista.length){cb();return;}
+    var url=lista[i++],hecho=false;
+    var a=document.getElementById(_capa?'f-img2':'f-img'),b=document.getElementById(_capa?'f-img':'f-img2');
+    var bl=document.getElementById('f-blur'),bl2=document.getElementById('f-blur2');
+    function mostrar(){
+      if(hecho)return;hecho=true;
+      var r=(a.naturalWidth/a.naturalHeight)/(window.innerWidth/window.innerHeight);
+      a.classList.toggle('fit',!(r>0.65&&r<1.54));
+      a.style.animation='none';void a.offsetWidth;
+      a.style.animation=KBS[rnd(4)]+' '+(DUR+2.5)+'s ease-out forwards';
+      bl2.style.transition='none';bl2.style.opacity='0';
+      bl2.style.backgroundImage="url('"+url+"')";void bl2.offsetWidth;
+      bl2.style.transition='opacity 1.6s ease';bl2.style.opacity='1';
+      setTimeout(function(){bl.style.backgroundImage="url('"+url+"')";bl2.style.transition='none';bl2.style.opacity='0';},1700);
+      a.style.zIndex=2;b.style.zIndex=1;
+      a.classList.add('show');
+      setTimeout(function(){b.classList.remove('show');},1700);
+      _capa=1-_capa;
+      setTimeout(sig,DUR*1000);
+    }
+    a.onload=function(){(a.decode?a.decode():Promise.resolve()).catch(function(){}).then(mostrar);};
+    a.onerror=function(){if(!hecho){hecho=true;setTimeout(sig,50);}};
+    setTimeout(function(){if(!hecho){hecho=true;setTimeout(sig,50);}},5000);   // seguridad si una foto no carga
+    a.src=url;
+  }
+  sig();
+}
 function finJota(){
   if(jotaFin)return;jotaFin=true;
   try{fichaMostrarBoton(false);}catch(e){}
@@ -1856,10 +1887,12 @@ function finJota(){
   var v=0;
   const fu=setInterval(()=>{v=Math.min(v+0.02,0.45);ambVolSet(v);if(v>=0.45)clearInterval(fu);},100);
 
-  // SALVE: al acabar el organo final, directamente el sello dorado y la pantalla final con sus opciones
-  // (sin portada ni fotos finales); el sello se disuelve encima de la ultima foto de la iglesia, sin pasar por negro
+  // SALVE: al acabar el organo final, 3 fotos mas de la iglesia y despues el sello dorado (que emerge tras la ultima foto)
+  // y la pantalla final con sus opciones; sin portada ni escenas finales con frases
   if(_salveFin){
     var prS=document.getElementById('pant-repro');
+    // 0) Antes del sello, 3 fotos mas de la iglesia (aun no vistas), limpias, sin rotulos ni botones, con el mismo fundido
+    var salveSello=function(){
     var gS=CFG.frases_final[rnd(CFG.frases_final.length)];
     document.getElementById('fin-frase').innerHTML=gS.join('<br>')+'<br>Muchas gracias.';
     var pscS=document.getElementById('pant-sello-cred');
@@ -1886,7 +1919,11 @@ function finJota(){
       void pf.offsetWidth;
       setTimeout(function(){pf.style.opacity='1';},50);
       setTimeout(function(){pscS.style.display='none';pscS.style.opacity='0';pscS.style.transition='opacity 1.5s ease';},1900);
+      prS.classList.remove('portada');
     },2700+7000);
+    };
+    prS.classList.add('portada');
+    salveFotosFin(_salveRest.slice(0,3),salveSello);
     return;
   }
 
