@@ -1,7 +1,7 @@
 // TIEMPOS DE LA LETRA SINCRONIZADA: segundo en que empieza cada verso de la letra (fichas.js).
 // Este archivo lo genera marcar.html (boton "Descargar tiempos.js"). No hace falta editarlo a mano.
 // Una jota sin tiempos aqui se reproduce sin letra en pantalla.
-// Generado el 9/11/2026, 0:50:37
+// Generado el 13/11/2026, 1:04:17
 window.CANT_TIEMPOS = {
  "Alboradas--01.mp3": [30.3, 31.4, 32.2, 34.2, 64, 65.6, 66.7, 67.9],
  "Gregorio_Ojeda_Pena_y_Julian_Ojeda_Ojeda--02.mp3": [0.5, 3.5, 7.2, 10.9, 14.1, 17.7, 20.6],
@@ -38,7 +38,7 @@ window.CANT_TIEMPOS = {
  "Pedro_Felix_Garcia_Linaje--33.mp3": [1.1, 2.7, 6.8, 8.7, 12.6, 14.5, 18.6, 20.5, 23.9, 28.1, 30.4, 33.7, 35.5, 38, 39.8, 43.2, 45.2, 47.6, 49.5],
  "Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--34.mp3": [0.7, 2.1, 5.9, 9.3, 11.5],
  "Julian_Ojeda_Ojeda_y_Gregorio_Ojeda_Pena--35.mp3": [0.4, 1.7, 3.6, 5.1, 7, 8.6, 10.9, 12.4],
- "Salve--37.mp3": [1.7, 9.6, 17.3, 25.1, 34.8, 37.8, 41.8, 53.9, 61.8, 69.5, 77, 81.2, 88.7, 96.5, 105.3, 116.6, 127.3, 135.8, 144.4, 154.3, 157.3, 166.1, 171.7, 178.2, 186.4, 192.2, 196.8, 208.3],
+ "Salve--37.mp3": [3.1, 9.9, 17.2, 21.9, 28.6, 34.9, 41.5, 53.8, 61.3, 68.9, 76.1, 80.8, 88.5, 96, 103.7, 116.2, 127.2, 135.5, 147.1, 154, 160.5, 171.4, 178.1, 186.2, 196.4, 202.6, 208.8, 213.7],
  "Pedro-Felix-Garcia-Linaje--38.mp3": [0.4, 5.2, 12.1, 18.9, 26.3, 33.2, 40.3],
  "Elena_Diaz_Linaje--39.mp3": [0.8, 2.1, 4.3, 5.5, 8.1, 9.4, 11.8, 12.8],
  "Gregorio_Ojeda_Pena_y_Julian_Ojeda_Ojeda--40.mp3": [0.3, 8.7, 18.2, 28.8, 39.4, 50.4, 61.3],
