@@ -1555,6 +1555,8 @@ function salveSig(){
   // cambio de etapa: entra una foto nueva en ese momento (cada etapa con sus propias fotos)
   if(k>0){try{clearTimeout(fotoTimer);mostrarFoto(fotoIdx+1);}catch(e){}}
   if(s.tipo==='salve'){try{lsIniciar();}catch(e){}}else{try{lsParar();}catch(e){}}
+  // al acabar el canto de la Salve (empieza el organo final) el boton "Saltar SALVE" desaparece con suavidad
+  if(s.tipo==='org_fin'){var sbS=document.getElementById('saltar-jota');if(sbS){sbS.classList.remove('show');sbS.style.pointerEvents='none';setTimeout(function(){sbS.style.display='none';sbS.style.pointerEvents='';},1100);}}
   var pasar=function(){if(_salve.hecho||_salve.k!==k)return;_salve.hecho=true;salveSig();};
   aJota.onended=pasar;
   aJota.onerror=function(){
