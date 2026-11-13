@@ -1855,6 +1855,40 @@ function finJota(){
   var v=0;
   const fu=setInterval(()=>{v=Math.min(v+0.02,0.45);ambVolSet(v);if(v>=0.45)clearInterval(fu);},100);
 
+  // SALVE: al acabar el organo final, directamente el sello dorado y la pantalla final con sus opciones
+  // (sin portada ni fotos finales); el sello se disuelve encima de la ultima foto de la iglesia, sin pasar por negro
+  if(_salveFin){
+    var prS=document.getElementById('pant-repro');
+    var gS=CFG.frases_final[rnd(CFG.frases_final.length)];
+    document.getElementById('fin-frase').innerHTML=gS.join('<br>')+'<br>Muchas gracias.';
+    var pscS=document.getElementById('pant-sello-cred');
+    var pscPergS=document.getElementById('psc-perg');
+    if(pscPergS){pscPergS.src=histNoRep(CFG.pergaminos,'cant_pergb',10);}
+    // 1) La ultima foto de la iglesia se despide sola: se desvanece despacio, con un leve desenfoque, hasta quedar en penumbra
+    prS.style.transition='opacity 2.4s ease-in-out, filter 2.4s ease-in-out';
+    prS.style.filter='blur(0px)';void prS.offsetWidth;
+    prS.style.opacity='0';prS.style.filter='blur(6px)';
+    // 2) Ya sin la foto, la pantalla del sello dorado emerge suavemente desde la oscuridad (fundido lento, ligero acercamiento y enfoque)
+    setTimeout(function(){
+      prS.style.display='none';prS.style.opacity='1';prS.style.filter='';prS.style.transition='';
+      pscS.style.transition='none';pscS.style.opacity='0';pscS.style.transform='scale(1.04)';pscS.style.filter='blur(8px)';
+      pscS.style.display='flex';void pscS.offsetWidth;
+      pscS.style.transition='opacity 2.6s cubic-bezier(.22,.61,.36,1), transform 3.2s cubic-bezier(.22,.61,.36,1), filter 2.6s ease-out';
+      pscS.style.opacity='1';pscS.style.transform='scale(1)';pscS.style.filter='blur(0px)';
+    },2700);
+    // 3) Tras contemplar el sello, la pantalla final con las opciones de salida
+    setTimeout(function(){
+      pscS.style.transform='';pscS.style.filter='';
+      var pf=document.getElementById('pant-final');
+      pf.style.opacity='0';pf.classList.add('show');
+      pf.style.transition='opacity 1.6s ease';
+      void pf.offsetWidth;
+      setTimeout(function(){pf.style.opacity='1';},50);
+      setTimeout(function(){pscS.style.display='none';pscS.style.opacity='0';pscS.style.transition='opacity 1.5s ease';},1900);
+    },2700+7000);
+    return;
+  }
+
   // Portada: se disuelve ENCIMA de la ultima foto (sin pasar por negro), entera y sin la interfaz encima
   var pa=document.getElementById(_capa?'f-img2':'f-img'), pb=document.getElementById(_capa?'f-img':'f-img2');
   var pbl=document.getElementById('f-blur'), pbl2=document.getElementById('f-blur2');
