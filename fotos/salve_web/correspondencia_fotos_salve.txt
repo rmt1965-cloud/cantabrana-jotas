@@ -24,13 +24,11 @@ salve22.webp	IMG_20221006_172514.jpg	recortada a pantalla completa
 salve23.webp	IMG_20221006_172709.jpg	entera, con fondo difuminado
 salve24.webp	IMG_20221006_173022.jpg	recortada a pantalla completa
 salve25.webp	IMG_20221006_173101.jpg	entera, con fondo difuminado
-salve26.webp	IMG_20221006_173122.jpg	recortada a pantalla completa
 salve27.webp	IMG_20221006_173137.jpg	entera, con fondo difuminado
 salve28.webp	IMG_20221006_173343.jpg	recortada a pantalla completa
 salve29.webp	IMG_20221006_173357.jpg	recortada a pantalla completa
 salve30.webp	IMG_20221006_173440.jpg	entera, con fondo difuminado
 salve31.webp	IMG_20221006_173759.jpg	recortada a pantalla completa
-salve32.webp	IMG_20221006_174429.jpg	recortada a pantalla completa
 salve33.webp	IMG_20221006_174841.jpg	recortada a pantalla completa
 salve34.webp	IMG_20221006_174958.jpg	entera, con fondo difuminado
 salve35.webp	IMG_20250125_120409.jpg	recortada a pantalla completa
@@ -55,7 +53,6 @@ salve53.webp	P9190078.jpg	entera, con fondo difuminado
 salve54.webp	P9190079.jpg	entera, con fondo difuminado
 salve55.webp	P9190081.jpg	entera, con fondo difuminado
 salve56.webp	P9190097.jpg	recortada a pantalla completa
-salve57.webp	P9190099.jpg	recortada a pantalla completa
 salve58.webp	P9190116.jpg	recortada a pantalla completa
 salve59.webp	P9190117.jpg	recortada a pantalla completa
 salve60.webp	P9190141.jpg	recortada a pantalla completa
@@ -93,3 +90,16 @@ salve92.webp	IMG_20221006_173151_2.jpg	entera, con fondo difuminado
 salve93.webp	IMG_20221006_174429_2.jpg	recortada a pantalla completa
 salve94.webp	IMG_20221006_175828_2.jpg	recortada a pantalla completa
 salve95.webp	IMG_20250126_121435_2.jpg	entera, con fondo difuminado
+salve96.webp	112.jpg (fotos/+ fotos iglesia)	recortada a pantalla completa
+salve97.webp	113.jpg (fotos/+ fotos iglesia)	recortada a pantalla completa
+salve98.webp	114.jpg (fotos/+ fotos iglesia)	recortada a pantalla completa
+salve99.webp	115.jpg (fotos/+ fotos iglesia)	recortada a pantalla completa
+salve100.webp	116.jpg (fotos/+ fotos iglesia)	recortada a pantalla completa
+salve101.webp	117.jpg (fotos/+ fotos iglesia)	recortada a pantalla completa
+salve102.webp	118.jpg (fotos/+ fotos iglesia)	entera, con fondo difuminado
+salve103.webp	120 (1).jpg (fotos/+ fotos iglesia)	recortada a pantalla completa
+salve104.webp	120 (2).jpg (fotos/+ fotos iglesia)	entera, con fondo difuminado
+salve105.webp	121.jpg (fotos/+ fotos iglesia)	entera, con fondo difuminado
+salve106.webp	122.jpg (fotos/+ fotos iglesia)	entera, con fondo difuminado
+salve107.webp	IMG_20221006_165728.jpg (fotos/+ fotos iglesia)	recortada a pantalla completa
+# quitadas el 2026-11-15: salve26 (IMG_20221006_173122.jpg), salve32 (IMG_20221006_174429.jpg), salve57 (P9190099.jpg)
