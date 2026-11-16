@@ -52,7 +52,6 @@ salve52.webp	P9190058.jpg	entera, con fondo difuminado
 salve53.webp	P9190078.jpg	entera, con fondo difuminado
 salve54.webp	P9190079.jpg	entera, con fondo difuminado
 salve55.webp	P9190081.jpg	entera, con fondo difuminado
-salve56.webp	P9190097.jpg	recortada a pantalla completa
 salve58.webp	P9190116.jpg	recortada a pantalla completa
 salve59.webp	P9190117.jpg	recortada a pantalla completa
 salve60.webp	P9190141.jpg	recortada a pantalla completa
@@ -103,3 +102,4 @@ salve105.webp	121.jpg (fotos/+ fotos iglesia)	entera, con fondo difuminado
 salve106.webp	122.jpg (fotos/+ fotos iglesia)	entera, con fondo difuminado
 salve107.webp	IMG_20221006_165728.jpg (fotos/+ fotos iglesia)	recortada a pantalla completa
 # quitadas el 2026-11-15: salve26 (IMG_20221006_173122.jpg), salve32 (IMG_20221006_174429.jpg), salve57 (P9190099.jpg)
+# quitada el 2026-11-16: salve56 (P9190097.jpg)
