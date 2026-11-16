@@ -293,7 +293,7 @@ body.val-gr #acc-btn{display:none!important}
   <div class="ld-subtitulo">Retazos de Vida</div>
   <div class="ld-linea2"></div>
   <div class="ld-autor">Rafael Molina Toledo</div>
-  <div id="ld-btn" onclick="arrancar()" ontouchstart="arrancar()">Pulsar para iniciar</div>
+  <div id="ld-btn">Pulsar para iniciar</div>
 </div>
 <script>
 // Al volver al inicio tras la despedida, la pantalla de inicio aparece despacio (sin corte brusco)
@@ -992,11 +992,27 @@ function ambElegir(){
   return v[rnd(v.length)];
 }
 function ambEsActual(f){try{return !!f&&f===ambActual&&aAmb.src===new URL(f,location.href).href;}catch(e){return false;}}
+// ---- Aviso si el navegador bloquea el sonido: boton dorado en el centro; con un toque arranca lo que tocaba (ambiente o jota) ----
+function avisoSonido(){
+  if(document.getElementById('aviso-sonido'))return;
+  try{cantTrack('error','audio bloqueado por el navegador',location.search||'',window._jotaNom);}catch(e){}
+  var b=document.createElement('div');b.id='aviso-sonido';
+  b.textContent='\uD83D\uDD0A Toca para activar el sonido';
+  b.style.cssText='position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:99990;padding:18px 28px;border-radius:40px;background:linear-gradient(135deg,#f3d27a,#c8922a);color:#2b1a12;font:600 clamp(15px,4.5vw,20px)/1.2 Cinzel,serif;letter-spacing:1px;box-shadow:0 6px 30px rgba(0,0,0,.55),0 0 0 2px rgba(255,236,170,.6);cursor:pointer;text-align:center;white-space:nowrap';
+  b.addEventListener('click',function(ev){
+    ev.stopPropagation();
+    try{if(window._jotaSuena||window._jotaIniciada){aJota.muted=false;aJota.play().catch(function(){});}}catch(e){}
+    try{if(!window._jotaSuena&&ambActual){aAmb.play().catch(function(){});}}catch(e){}
+    b.style.transition='opacity .5s';b.style.opacity='0';setTimeout(function(){b.remove();},500);
+  });
+  document.body.appendChild(b);
+}
 function ambPlay(){
   if(window._jotaSuena)return;   // mientras suena la jota la ambiente esta cortada
   var f=ambActual;
   aAmb.play().catch(function(e){
     if(!ambEsActual(f))return;
+    if(e&&e.name==='NotAllowedError'){avisoSonido();return;}
     if(e&&e.name==='NotSupportedError'){ambFallo('formato no reproducible');}
     else if(!(e&&e.name==='AbortError')){setTimeout(function(){if(ambEsActual(f))ambPlay();},1000);}
   });
@@ -1337,14 +1353,15 @@ async function init(){
     const el=document.getElementById('loading');
     const btn=document.getElementById('ld-btn');
     const h=function(){
-      el.removeEventListener('click',h);el.removeEventListener('touchend',h);
-      if(btn){btn.removeEventListener('click',h);btn.removeEventListener('touchend',h);}
+      el.removeEventListener('click',h);
+      if(btn){btn.removeEventListener('click',h);}
       desbloquearAudio();
       cantTrack('inicio','','',window._jotaNom);
       resolve();
     };
-    el.addEventListener('click',h);el.addEventListener('touchend',h);
-    if(btn){btn.addEventListener('click',h);btn.addEventListener('touchend',h);}
+    // solo 'click': es lo que el navegador cuenta como toque real (y permiso para el sonido); un deslizamiento no arranca
+    el.addEventListener('click',h);
+    if(btn){btn.addEventListener('click',h);}
   });
 
   // SALVE: comienzo propio. Sin musica ambiente, ventanas, video, collage, postal ni pergamino:
@@ -1492,7 +1509,7 @@ async function iniciarJota(){
   fotos.slice(0,8).forEach(function(url){var i=new Image();i.src=url;});
   mostrarFoto(0);
   aJota.muted=false;
-  aJota.play().catch(function(e){console.warn(e);var rt=function(){aJota.play().catch(function(){});document.removeEventListener('touchend',rt);document.removeEventListener('click',rt);};document.addEventListener('touchend',rt);document.addEventListener('click',rt);});
+  aJota.play().catch(function(e){console.warn(e);if(e&&e.name==='NotAllowedError')avisoSonido();var rt=function(){aJota.play().catch(function(){});document.removeEventListener('touchend',rt);document.removeEventListener('click',rt);};document.addEventListener('touchend',rt);document.addEventListener('click',rt);});
   var vj=0.4;
   var fj=setInterval(function(){vj=Math.min(vj+0.04,1);aJota.volume=vj;if(vj>=1)clearInterval(fj);},150);
   if(_esSalve){salveProgreso();try{salveFxIniciar();}catch(e){}}else iniciarProgreso();
@@ -1565,7 +1582,7 @@ function salveSig(){
   };
   aJota.onloadedmetadata=function(){if(_salve.k===k&&isFinite(aJota.duration)&&aJota.duration>0)_salve.durs[k]=aJota.duration;};
   aJota.src=s.src;aJota.load();
-  if(k>0){aJota.volume=1;aJota.play().catch(function(){var rt=function(){aJota.play().catch(function(){});document.removeEventListener('touchend',rt);document.removeEventListener('click',rt);};document.addEventListener('touchend',rt);document.addEventListener('click',rt);});}
+  if(k>0){aJota.volume=1;aJota.play().catch(function(e){if(e&&e.name==='NotAllowedError')avisoSonido();var rt=function(){aJota.play().catch(function(){});document.removeEventListener('touchend',rt);document.removeEventListener('click',rt);};document.addEventListener('touchend',rt);document.addEventListener('click',rt);});}
 }
 function salveProgreso(){
   clearInterval(progresoInter);
