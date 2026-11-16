@@ -2322,9 +2322,23 @@ function _reiniciarReal(){aJota.pause();aJota.src='';clearTimeout(fotoTimer);cle
 function reiniciar(){valorar(_reiniciarReal);}
 function salir(){valorar(_salirReal);}
 function _salirReal(){
-  aJota.pause();aAmb.pause();
+  // Fin de la visita: tras la imagen de agradecimiento, fundido a negro (como antes). Se para todo y se intenta cerrar
+  // la pestana; si el navegador no lo permite (lo normal), sobre el negro aparece despacio un aviso discreto de que ha
+  // terminado. La web no salta a ninguna otra pagina (sin pie a anuncios).
+  try{aJota.pause();aAmb.pause();aJota.src='';aAmb.src='';}catch(e){}
+  try{clearTimeout(fotoTimer);clearInterval(progresoInter);}catch(e){}
+  try{document.querySelectorAll('video').forEach(function(v){v.pause();});}catch(e){}
+  try{window.close();}catch(e){}
   document.body.style.transition='opacity .8s ease';document.body.style.opacity='0';
-  setTimeout(()=>{try{window.close();}catch(e){}document.body.innerHTML='<style>body{background:rgba(0,0,0,.95);margin:0}</style>';},900);
+  setTimeout(function(){
+    document.body.innerHTML='<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}'
+      +'#fin-v{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0;transition:opacity 2.5s ease;color:#c8a45a;font-family:Cinzel,Georgia,serif;padding:0 30px}'
+      +'#fin-v .a{font-size:clamp(18px,5.5vw,26px);letter-spacing:5px}'
+      +'#fin-v .b{margin-top:14px;font-family:Georgia,serif;font-size:clamp(12px,3.4vw,15px);letter-spacing:1px;color:#8a7650}</style>'
+      +'<div id="fin-v"><div class="a">&#10022; Fin de la visita &#10022;</div><div class="b">Ya puede cerrar esta ventana</div></div>';
+    document.body.style.opacity='1';
+    setTimeout(function(){var f=document.getElementById('fin-v');if(f)f.style.opacity='1';},1200);
+  },850);
 }
 
 // ================================================================
