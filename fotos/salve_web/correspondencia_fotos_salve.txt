@@ -40,7 +40,7 @@ salve40.webp	Imagen4.jpg	entera, con fondo difuminado
 salve41.webp	Imagen5.jpg	entera, con fondo difuminado
 salve42.webp	Imagen8.jpg	entera, con fondo difuminado
 salve43.webp	P4180900.jpg	recortada a pantalla completa
-salve44.webp	P4180904.JPG	entera, con fondo difuminado
+salve44.webp	P4180904.jpg (mas fotos_salve, nueva version 2026-11-17)	entera, con fondo difuminado
 salve45.webp	P4180906.jpg	recortada a pantalla completa
 salve46.webp	P4180910.JPG	entera, con fondo difuminado
 salve47.webp	P5291912.jpg	recortada a pantalla completa
@@ -55,8 +55,8 @@ salve55.webp	P9190081.jpg	entera, con fondo difuminado
 salve58.webp	P9190116.jpg	recortada a pantalla completa
 salve59.webp	P9190117.jpg	recortada a pantalla completa
 salve60.webp	P9190141.jpg	recortada a pantalla completa
-salve61.webp	P9200156.jpg	entera, con fondo difuminado
-salve62.webp	PA260011.jpg	recortada a pantalla completa
+salve61.webp	P9200156.jpg (mas fotos_salve, nueva version 2026-11-17)	entera, con fondo difuminado
+salve62.webp	PA260011.jpg (mas fotos_salve, nueva version 2026-11-17)	entera, con fondo difuminado
 salve63.webp	PA260015.jpg	recortada a pantalla completa
 salve64.webp	PA260017.jpg	recortada a pantalla completa
 salve65.webp	PA260024.jpg	recortada a pantalla completa
@@ -65,7 +65,7 @@ salve67.webp	PA260026.jpg	recortada a pantalla completa
 salve68.webp	PA260047.jpg	recortada a pantalla completa
 salve69.webp	PA260071.jpg	entera, con fondo difuminado
 salve70.webp	PA260077.jpg	recortada a pantalla completa
-salve71.webp	PA260079.jpg	recortada a pantalla completa
+salve71.webp	PA260079.jpg (mas fotos_salve, nueva version 2026-11-17)	recortada a pantalla completa
 salve72.webp	PA260081.jpg	recortada a pantalla completa
 salve73.webp	PB240156.jpg	recortada a pantalla completa
 salve74.webp	Sin título111.png	recortada a pantalla completa
@@ -103,3 +103,56 @@ salve106.webp	122.jpg (fotos/+ fotos iglesia)	entera, con fondo difuminado
 salve107.webp	IMG_20221006_165728.jpg (fotos/+ fotos iglesia)	recortada a pantalla completa
 # quitadas el 2026-11-15: salve26 (IMG_20221006_173122.jpg), salve32 (IMG_20221006_174429.jpg), salve57 (P9190099.jpg)
 # quitada el 2026-11-16: salve56 (P9190097.jpg)
+salve108.webp	0150.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve109.webp	IMG_20221006_171001.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve110.webp	IMG_20221006_171246.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve111.webp	IMG_20221006_172234.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve112.webp	IMG_20221006_172535.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve113.webp	IMG_20221006_172549.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve114.webp	IMG_20221006_175222.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve115.webp	IMG_20241206_201922.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve116.webp	P2281752.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve117.webp	P6200031.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve118.webp	P9190005.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve119.webp	P9190007.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve120.webp	P9190044.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve121.webp	P9190055.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve122.webp	P9190064_1.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve123.webp	P9190073.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve124.webp	P9190074.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve125.webp	P9190076.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve126.webp	P9190085.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve127.webp	P9190086.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve128.webp	P9190087.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve129.webp	P9190088.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve130.webp	P9190089.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve131.webp	P9190090.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve132.webp	P9190091.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve133.webp	P9190092.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve134.webp	P9190093.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve135.webp	P9190094.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve136.webp	P9190095.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve137.webp	P9190096.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve138.webp	P9190106.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve139.webp	P9190107.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve140.webp	P9190132.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve141.webp	P9190136.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve142.webp	P9190139.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve143.webp	P9190140.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve144.webp	P9190146.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve145.webp	PA010386.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve146.webp	PA010387.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve147.webp	PA010434.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve148.webp	PA260008.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve149.webp	PA260009.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve150.webp	PA260011_1.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve151.webp	PA260019.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve152.webp	PA260044.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve153.webp	PA260086.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve154.webp	PA300061.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve155.webp	PA310109.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve156.webp	PA310109_1.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve157.webp	PA310121.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve158.webp	PA310149.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
+salve159.webp	PB230032.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve160.webp	PB240112.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
