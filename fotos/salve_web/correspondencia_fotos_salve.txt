@@ -156,3 +156,6 @@ salve157.webp	PA310121.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fon
 salve158.webp	PA310149.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado
 salve159.webp	PB230032.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
 salve160.webp	PB240112.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa
+salve161.webp	IMG_20221006_171621_3.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa (2026-11-17)
+salve162.webp	IMG_20221006_172301_2.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	recortada a pantalla completa (2026-11-17)
+salve163.webp	IMG_20221006_174237_2.jpg (fotos/Iglesia_SALVE/mas fotos_salve)	entera, con fondo difuminado (2026-11-17)
