@@ -1,37 +1,85 @@
+# ==========================================================
+# cantabrana-jotas: SOLO se publica lo que usa la web.
+# Todo lo demas (documentos, originales, pruebas) se queda
+# en el ordenador y NO se sube a GitHub.
+# ==========================================================
+/*
+!/.gitignore
+!/.github/
+!/index.html
+!/jota.html
+!/estadisticas.html
+!/marcar.html
+!/fichas.js
+!/tiempos.js
+!/stats-config.js
+!/manifest.json
+!/Verificacion_musica_ambiente_libre_de_derechos.pdf
 
-# Scripts de mantenimiento
-scripts/
-*.py
-qr_definitivos/QR_EXP_62/
-video/_originales/
-video/intro_web/VIDEO_A002.mp4
-qr_solo_jotas/
-fichas_jotas.xlsx
-Cantabrana_comunicados.docx
-musica para app_jotas/
-fotos/Iglesia_SALVE/
-fotos/+ fotos iglesia/
+# --- audio: jotas, musica ambiente libre y organos de la Salve ---
+!/audio/
+/audio/*
+!/audio/*.mp3
+!/audio/ambiente/
+/audio/ambiente/*
+!/audio/ambiente/*.mp3
+!/audio/salve_organo/
 
-# Archivos de trabajo, no son de la web
-firma RMT_1.png
-fotos/portada/muestra 2 portada Cantabrana retazos de una vida.pdf
-fotos/portada/muestra 3 portada Cantabrana retazos de una vida.pdf
-fotos/portada/muestra 4 portada Cantabrana retazos de una vida.pdf
-fotos/portada/Portada2.png
-fotos/portada/portada3.jpg
-JOTAS_LETRA_corregido.docx
-Listado_jotas_Cantabrana.pdf
-audio_repo.txt
-qr_solo_jotas.zip
-NUEVOS AUDIOS JOTAS
-qr/Nueva carpeta
-qr/Nueva carpeta - copia
-fotos/COLLAGE
-fotos/POSTALES
-fotos/FINAL_GRACIAS
-fotos/extra
-fotos/pergaminos/perminos con texto
-audio/ambiente/DERECHOS AUTOR_AMBIENTE
+# --- fotos: solo las versiones preparadas para la web ---
+!/fotos/
+/fotos/*
+!/fotos/arcos_web/
+!/fotos/collage_web/
+!/fotos/escudo/
+!/fotos/extra_web/
+!/fotos/final_web/
+!/fotos/pergaminos_texto/
+!/fotos/plantillas_qr/
+!/fotos/portada_web/
+!/fotos/postales_web/
+!/fotos/qr/
+!/fotos/salve_web/
+!/fotos/sellos_web/
+!/fotos/vistas_web/
+!/fotos/rosa_qr.png
+!/fotos/sellos/
+/fotos/sellos/*
+!/fotos/sellos/sello7.png
+!/fotos/sellos/sello8.png
+!/fotos/sellos/sello9.png
+!/fotos/sellos/sello10.png
+!/fotos/sellos/sello11.png
+!/fotos/sellos/sello13.png
+!/fotos/sellos/sello14.png
+!/fotos/sellos/sello15.png
+!/fotos/sellos/sello16.png
+!/fotos/pergaminos/
+/fotos/pergaminos/*
+!/fotos/pergaminos/pergamino01.jpg
+!/fotos/pergaminos/pergamino03.jpg
+!/fotos/pergaminos/pergamino04.jpg
+!/fotos/pergaminos/pergamino05.jpg
+!/fotos/portada/
+/fotos/portada/*
+!/fotos/portada/portada1.png
+!/fotos/portada/portada_libro1.jpg
+!/fotos/portada/portada_libro2.jpg
+!/fotos/portada/portada_libro3.png
+
+# --- video: solo los que reproduce la web ---
+!/video/
+/video/*
+!/video/intro/
+!/video/intro_web/
+!/video/final_web/
+
+# --- nunca subir, aunque esten dentro de carpetas permitidas ---
 *.docx
+*.xlsx
 *.ps1
+*.py
 *.zip
+*.mhtml
+*.ORF
+desktop.ini
+Thumbs.db
